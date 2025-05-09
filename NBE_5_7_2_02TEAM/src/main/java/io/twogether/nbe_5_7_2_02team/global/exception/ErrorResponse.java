@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 
 @Getter
-@JsonPropertyOrder({"code", "messeage", "errors"})
+@JsonPropertyOrder({"code", "message", "errors"})
 public class ErrorResponse<T> {
     // 클라이언트에게 보내줄 에러응답을 정의한 클래스
     private final String code;
