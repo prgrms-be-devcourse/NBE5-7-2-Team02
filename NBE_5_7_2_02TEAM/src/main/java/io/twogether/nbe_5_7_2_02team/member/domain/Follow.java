@@ -1,9 +1,11 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
 import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
+
 import jakarta.persistence.*;
-import lombok.AccessLevel;
+
 import lombok.*;
+import lombok.AccessLevel;
 
 @Entity
 @Getter
@@ -27,5 +29,4 @@ public class Follow extends BaseEntity {
         this.follower = follower;
         this.following = following;
     }
-
 }
