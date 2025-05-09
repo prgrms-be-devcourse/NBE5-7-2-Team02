@@ -3,6 +3,7 @@ package io.twogether.nbe_5_7_2_02team.global.exception;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import lombok.Getter;
 
 @Getter
@@ -27,5 +28,4 @@ public class ErrorResponse<T> {
         this.message = message;
         this.errors = null;
     }
-
 }
