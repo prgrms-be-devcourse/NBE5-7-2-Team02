@@ -7,8 +7,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 class Nbe57202TeamApplicationTests {
 
     @Test
-    void contextLoads() {
-
-    }
-
+    void contextLoads() {}
 }

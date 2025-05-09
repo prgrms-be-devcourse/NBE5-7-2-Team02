@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,13 @@ public class ExceptionAdvice {
     // ErrorException가 발생하면 해당 예외가 API 요청인지, 웹 요청인지 확인
     @ExceptionHandler(ErrorException.class)
     public Object handleException(
-        ErrorException e,
-        Model model,
-        // 현재 실행 중인 컨트롤러 메서드 정보
-        HandlerMethod handlerMethod
-    ) {
+            ErrorException e,
+            Model model,
+            // 현재 실행 중인 컨트롤러 메서드 정보
+            HandlerMethod handlerMethod) {
         // @ResponseBody 나 @RestController가 있으면 REST API 요청 아니면 웹요청
-        boolean isApiRequest = AnnotatedElementUtils.hasAnnotation(handlerMethod.getMethod(),
-            ResponseBody.class);
+        boolean isApiRequest =
+                AnnotatedElementUtils.hasAnnotation(handlerMethod.getMethod(), ResponseBody.class);
         ErrorCode errorCode = e.getErrorCode();
 
         // 에러 로깅
@@ -32,16 +32,17 @@ public class ExceptionAdvice {
 
         // API 요청인 경우 JSON 응답
         if (isApiRequest) {
-            HttpStatus httpStatus = switch (errorCode.getErrorStatus()){
-                case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
-                case NOT_FOUND -> HttpStatus.NOT_FOUND;
-                case CONFLICT -> HttpStatus.CONFLICT;
-                case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
-                case FORBIDDEN -> HttpStatus.FORBIDDEN;
-            };
+            HttpStatus httpStatus =
+                    switch (errorCode.getErrorStatus()) {
+                        case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+                        case NOT_FOUND -> HttpStatus.NOT_FOUND;
+                        case CONFLICT -> HttpStatus.CONFLICT;
+                        case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+                        case FORBIDDEN -> HttpStatus.FORBIDDEN;
+                    };
 
             return ResponseEntity.status(httpStatus)
-                .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+                    .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
         }
         // 웹 요청인 경우 React API(axios, fetch 사용 )
         else {
@@ -49,8 +50,5 @@ public class ExceptionAdvice {
             model.addAttribute("url", e.getUrl());
             return "error/alert";
         }
-
-
     }
-
 }

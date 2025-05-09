@@ -9,5 +9,4 @@ public class Nbe57202TeamApplication {
     public static void main(String[] args) {
         SpringApplication.run(Nbe57202TeamApplication.class, args);
     }
-
 }

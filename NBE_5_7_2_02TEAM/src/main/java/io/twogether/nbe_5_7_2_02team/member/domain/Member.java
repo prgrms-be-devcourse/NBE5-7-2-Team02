@@ -1,9 +1,12 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
+
 import jakarta.persistence.*;
-import java.util.*;
+
 import lombok.*;
+
+import java.util.*;
 
 @Entity
 @Getter
@@ -38,9 +41,6 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Following> followings = new ArrayList<>();
 
-
-
-
     @Builder
     public Member(String githubId, String name, String profileImage, String job, String course) {
         this.githubId = githubId;
@@ -49,6 +49,4 @@ public class Member {
         this.job = job;
         this.course = course;
     }
-
-
 }
