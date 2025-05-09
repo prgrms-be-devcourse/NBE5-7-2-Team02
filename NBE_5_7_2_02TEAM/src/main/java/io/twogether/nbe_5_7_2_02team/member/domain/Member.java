@@ -1,12 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
-import io.twogether.nbe_5_7_2_02team.post.domain.Post;
-
 import jakarta.persistence.*;
-
-import lombok.*;
-
 import java.util.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -31,15 +27,6 @@ public class Member {
 
     @Column(nullable = false)
     private String course;
-
-    @OneToMany(mappedBy = "member")
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Follower> followers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Following> followings = new ArrayList<>();
 
     @Builder
     public Member(String githubId, String name, String profileImage, String job, String course) {
