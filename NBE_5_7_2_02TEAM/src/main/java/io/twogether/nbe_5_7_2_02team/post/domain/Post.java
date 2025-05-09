@@ -3,19 +3,7 @@ package io.twogether.nbe_5_7_2_02team.post.domain;
 import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,17 +36,27 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostTag> postTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostImage> postImages = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "image_url")
+    @OrderColumn(name = "image_order") // 이미지 순서
+    private List<String> imageUrls = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    public Post(String title, String content, RecruitmentStatus recruitmentStatus) {
+    public Post(
+            String title,
+            String content,
+            RecruitmentStatus recruitmentStatus,
+            List<String> imageUrls) {
         this.title = title;
         this.content = content;
         this.recruitmentStatus = recruitmentStatus;
+        if (imageUrls != null) {
+            this.imageUrls = imageUrls;
+        }
     }
 }
