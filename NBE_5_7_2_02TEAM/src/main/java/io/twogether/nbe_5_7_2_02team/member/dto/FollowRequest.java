@@ -1,7 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.member.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,5 +13,4 @@ public class FollowRequest {
 
     private Long followerId;
     private Long followingId;
-
 }

@@ -17,7 +17,6 @@ public enum SuccessCode {
     FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
     COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows");
 
-
     private final SuccessStatus status;
     private final String code;
     private final String message;
