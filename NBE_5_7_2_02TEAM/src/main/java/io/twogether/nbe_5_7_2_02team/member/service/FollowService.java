@@ -32,7 +32,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public FollowCreateResponse createFollow(FollowRequest followRequest) {
 
         Member follower =
@@ -57,7 +57,7 @@ public class FollowService {
         return FollowMapper.toFollowCreateResponse(follow);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void deleteFollow(FollowRequest followRequest) {
         Member follower =
                 memberRepository
