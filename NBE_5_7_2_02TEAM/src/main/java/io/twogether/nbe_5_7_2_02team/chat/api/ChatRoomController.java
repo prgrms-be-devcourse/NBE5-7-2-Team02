@@ -5,7 +5,6 @@ import io.twogether.nbe_5_7_2_02team.chat.service.ChatRoomService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -35,6 +35,7 @@ public class ChatRoomController {
     public ResponseEntity<?> createChatRoom(@PathVariable("postId") Long postId) {
         Long id = chatRoomService.createChatroom(postId);
 
-        return BaseResponse.of(SuccessCode.CREATE_CHATROOM, null, URI.create("/api/chatroom/" + id));
+        return BaseResponse.of(
+                SuccessCode.CREATE_CHATROOM, null, URI.create("/api/chatroom/" + id));
     }
 }

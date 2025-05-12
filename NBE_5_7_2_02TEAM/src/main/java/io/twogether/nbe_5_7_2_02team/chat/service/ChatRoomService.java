@@ -62,7 +62,6 @@ public class ChatRoomService {
                         });
 
         return chatRoomRepository.save(ChatRoom.builder().post(post).build()).getId();
-
     }
 
     @Transactional
