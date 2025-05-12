@@ -32,6 +32,9 @@ public class Member {
     @Column(nullable = false)
     private String course;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
