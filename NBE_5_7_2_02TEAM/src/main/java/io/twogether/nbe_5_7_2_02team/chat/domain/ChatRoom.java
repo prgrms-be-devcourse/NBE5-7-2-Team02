@@ -33,5 +33,6 @@ public class ChatRoom extends BaseEntity {
     @Builder
     public ChatRoom(Post post) {
         this.post = post;
+        //        this.createdAt = LocalDateTime.now();
     }
 }
