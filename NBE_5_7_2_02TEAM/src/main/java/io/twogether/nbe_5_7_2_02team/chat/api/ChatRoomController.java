@@ -2,10 +2,12 @@ package io.twogether.nbe_5_7_2_02team.chat.api;
 
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatRoomService;
-import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 
+import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
+import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,18 +23,15 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("/")
-    public List<ChatRoomResponse> getChatRoomList() {
-        return chatRoomService.getChatRoomList();
+    @GetMapping
+    public ResponseEntity<?> getChatRoomList() {
+        List<ChatRoomResponse> chatRoomList = chatRoomService.getChatRoomList();
+
+        return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomList, null);
     }
 
     @PostMapping("/{postId}")
     public void createChatRoom(@PathVariable("postId") Long postId) {
-
-        try {
-            chatRoomService.createChatroom(postId);
-        } catch (ErrorException e) {
-            String message = e.getMessage();
-        }
+        chatRoomService.createChatroom(postId);
     }
 }

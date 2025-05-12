@@ -1,9 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.CHATROOM_NOT_FOUND;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.CHAT_ROOM_LIST_EMPTY;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.POST_NOT_FOUND;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHATROOM_NOT_FOUND;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_LIST_EMPTY;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST_NOT_FOUND;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
@@ -31,7 +31,7 @@ public class ChatRoomService {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
 
         if (chatRoomList.isEmpty()) {
-            throw new ErrorException(CHAT_ROOM_LIST_EMPTY, "");
+            throw new ErrorException(CHAT_ROOM_LIST_EMPTY);
         }
 
         return chatRoomList.stream()
@@ -51,14 +51,14 @@ public class ChatRoomService {
         Post post =
                 postRepository
                         .findById(postId)
-                        .orElseThrow(() -> new ErrorException(POST_NOT_FOUND, ""));
+                        .orElseThrow(() -> new ErrorException(POST_NOT_FOUND));
 
         // 포스트에 해당하는 채팅방 존재여부 확인
         chatRoomRepository
                 .findByPost(post)
                 .ifPresent(
                         chatRoom -> {
-                            throw new ErrorException(CHAT_ROOM_ALREADY_EXISTS, "");
+                            throw new ErrorException(CHAT_ROOM_ALREADY_EXISTS);
                         });
 
         chatRoomRepository.save(ChatRoom.builder().post(post).build());
@@ -75,6 +75,6 @@ public class ChatRoomService {
     public ChatRoom checkChatRoomExists(Long id) {
         return chatRoomRepository
                 .findById(id)
-                .orElseThrow(() -> new ErrorException(CHATROOM_NOT_FOUND, ""));
+                .orElseThrow(() -> new ErrorException(CHATROOM_NOT_FOUND));
     }
 }
