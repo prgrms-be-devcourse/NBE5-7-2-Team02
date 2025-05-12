@@ -2,12 +2,12 @@ package io.twogether.nbe_5_7_2_02team.member.dao;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Follow;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
@@ -24,5 +24,4 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     Long countByFollowing(Member following);
 
     void deleteByFollowerAndFollowing(Member follower, Member following);
-
 }

@@ -17,8 +17,8 @@ public class MemberCreateResponse {
     private String course;
 
     @Builder
-    public MemberCreateResponse(Long id, String githubId, String name, String profileImage,
-        String job, String course) {
+    public MemberCreateResponse(
+            Long id, String githubId, String name, String profileImage, String job, String course) {
         this.id = id;
         this.githubId = githubId;
         this.name = name;
@@ -26,5 +26,4 @@ public class MemberCreateResponse {
         this.job = job;
         this.course = course;
     }
-
 }

@@ -17,5 +17,4 @@ public class FollowCreateResponse {
         this.followerId = followerId;
         this.followingId = followingId;
     }
-
 }

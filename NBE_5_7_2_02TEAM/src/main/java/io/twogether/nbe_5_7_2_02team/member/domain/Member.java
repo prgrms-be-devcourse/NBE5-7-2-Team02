@@ -1,8 +1,10 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
 import jakarta.persistence.*;
-import java.util.*;
+
 import lombok.*;
+
+import java.util.*;
 
 @Entity
 @Getter
