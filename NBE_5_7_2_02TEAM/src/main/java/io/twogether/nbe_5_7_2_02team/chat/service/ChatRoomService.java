@@ -45,7 +45,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void createChatroom(Long postId) {
+    public Long createChatroom(Long postId) {
 
         // 포스트 존재여부 확인
         Post post =
@@ -61,7 +61,8 @@ public class ChatRoomService {
                             throw new ErrorException(CHAT_ROOM_ALREADY_EXISTS);
                         });
 
-        chatRoomRepository.save(ChatRoom.builder().post(post).build());
+        return chatRoomRepository.save(ChatRoom.builder().post(post).build()).getId();
+
     }
 
     @Transactional
