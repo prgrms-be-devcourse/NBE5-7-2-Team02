@@ -3,10 +3,10 @@ package io.twogether.nbe_5_7_2_02team.global.response.success;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
-import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,7 +30,7 @@ public class BaseResponse<T> {
             case CREATED ->
                     ResponseEntity.created(createdLocation)
                             .body(
-                                new BaseResponse<>(
+                                    new BaseResponse<>(
                                             code.getCode(),
                                             code.getStatus().name(),
                                             code.getMessage(),
