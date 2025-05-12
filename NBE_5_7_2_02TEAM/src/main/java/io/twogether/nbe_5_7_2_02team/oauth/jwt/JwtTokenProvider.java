@@ -13,9 +13,11 @@ import io.jsonwebtoken.security.SecurityException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.TokenRepository;
+import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
 import java.util.Date;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,10 @@ public class JwtTokenProvider {
             .accessToken(accessToken)
             .refreshToken(refreshToken)
             .build();
+    }
+
+    public Optional<RefreshToken> findRefreshToken(Long memberId) {
+        return tokenRepository.findValidRefToken(memberId);
     }
 
     public String issueAccessToken(Long id, Role role) {
