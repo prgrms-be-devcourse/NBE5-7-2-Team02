@@ -8,11 +8,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    NOT_FOUND_MEMBER(NOT_FOUND, "MEMBER-001", "존재하지 않는 사용자 입니다."),
 
-    // 예시 ( 이해돕기용 )
-    // ErrorStatus : 에러 상태 유형
-    // code : 어떤 에러인지 쉽게 구별하는 용도
-    NOT_READABLE_FILE(BAD_REQUEST, "MEMBER-001", "이미지 파일을 읽을 수 없습니다.");
+    NOT_FOUND_FOLLOWER(NOT_FOUND, "FOLLOW-001", "팔로우 요청자 정보가 없습니다."),
+    NOT_FOUND_FOLLOWING(NOT_FOUND, "FOLLOW-002", "팔로잉 대상 정보가 없습니다."),
+    NOT_YOURSELF_FOLLOW(BAD_REQUEST, "FOLLOW-003", "자기 자신은 팔로우할 수 없습니다."),
+    NOT_DUPLICATION_FOLLOW(BAD_REQUEST, "FOLLOW-004", "이미 팔로우한 사용자 입니다.");
 
     private final ErrorStatus errorStatus;
     private final String code;
