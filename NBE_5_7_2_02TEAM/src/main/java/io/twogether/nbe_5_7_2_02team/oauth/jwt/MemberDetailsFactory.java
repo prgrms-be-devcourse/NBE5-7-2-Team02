@@ -1,6 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 
-import io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.MemberDetails;
 import java.util.Map;
@@ -22,7 +21,8 @@ public class MemberDetailsFactory {
                     .build();
             }
 
-            default -> throw new ErrorException(ErrorCode.UNSUPPORTED_PROVIDER);
+            default -> throw new ErrorException(
+                io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.UNSUPPORTED_PROVIDER);
 
         }
 

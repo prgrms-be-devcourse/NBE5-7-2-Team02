@@ -30,6 +30,9 @@ public class Member {
     @Column(nullable = false)
     private String course;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
     public Member(String githubId, String name, String profileImage, String job, String course) {
         this.githubId = githubId;

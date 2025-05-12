@@ -13,7 +13,10 @@ public enum ErrorCode {
     NOT_FOUND_FOLLOWER(NOT_FOUND, "FOLLOW-001", "팔로우 요청자 정보가 없습니다."),
     NOT_FOUND_FOLLOWING(NOT_FOUND, "FOLLOW-002", "팔로잉 대상 정보가 없습니다."),
     NOT_YOURSELF_FOLLOW(BAD_REQUEST, "FOLLOW-003", "자기 자신은 팔로우할 수 없습니다."),
-    NOT_DUPLICATION_FOLLOW(BAD_REQUEST, "FOLLOW-004", "이미 팔로우한 사용자 입니다.");
+    NOT_DUPLICATION_FOLLOW(BAD_REQUEST, "FOLLOW-004", "이미 팔로우한 사용자 입니다."),
+
+    UNSUPPORTED_PROVIDER(BAD_REQUEST, "OAUTH-001", "지원하지 않는 OAuth2 제공자입니다.")
+    ;
 
     private final ErrorStatus errorStatus;
     private final String code;
