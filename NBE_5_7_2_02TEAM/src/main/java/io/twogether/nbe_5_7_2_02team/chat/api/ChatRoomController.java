@@ -2,9 +2,9 @@ package io.twogether.nbe_5_7_2_02team.chat.api;
 
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatRoomService;
-
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
