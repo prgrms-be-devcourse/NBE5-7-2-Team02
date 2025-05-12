@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@plugin "daisyui";
+@source "../.flowbite-react/class-list.json";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-bright:#ffffff;
+  --color-dark: #343541;
+}
