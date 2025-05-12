@@ -1,5 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.global.exception;
 
+import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
+import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorResponse;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.core.annotation.AnnotatedElementUtils;

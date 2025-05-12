@@ -1,5 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.global.exception;
 
+import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
+
 import lombok.Getter;
 
 @Getter
@@ -11,5 +13,10 @@ public class ErrorException extends RuntimeException {
     public ErrorException(ErrorCode errorCode, String url) {
         this.errorCode = errorCode;
         this.url = url;
+    }
+
+    public ErrorException(ErrorCode errorCode) {
+        this.errorCode = errorCode;
+        this.url = null;
     }
 }
