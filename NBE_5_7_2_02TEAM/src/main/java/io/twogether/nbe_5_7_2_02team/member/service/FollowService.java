@@ -1,10 +1,10 @@
 package io.twogether.nbe_5_7_2_02team.member.service;
 
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.NOT_DUPLICATION_FOLLOW;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.NOT_FOUND_FOLLOWER;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.NOT_FOUND_FOLLOWING;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.NOT_FOUND_MEMBER;
-import static io.twogether.nbe_5_7_2_02team.global.exception.ErrorCode.NOT_YOURSELF_FOLLOW;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_DUPLICATION_FOLLOW;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_FOUND_FOLLOWER;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_FOUND_FOLLOWING;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_FOUND_MEMBER;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_YOURSELF_FOLLOW;
 
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.FollowRepository;

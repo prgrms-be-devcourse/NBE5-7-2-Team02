@@ -1,23 +1,28 @@
 package io.twogether.nbe_5_7_2_02team.global.response.success;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.util.Map;
 
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BaseResponse<T> {
 
-    private int code;
-    private String status;
-    private String message;
-    private T data;
+    private final String code;
+    private final String status;
+    private final String message;
+    private final T data;
 
-    public static <T> ResponseEntity<Map<String, Object>> of(
+    public static <T> ResponseEntity<BaseResponse<T>> of(
             SuccessCode code, T data, URI createdLocation) {
         return switch (code.getStatus()) {
             case OK ->
                     ResponseEntity.ok(
-                            buildBody(
+                            new BaseResponse<>(
                                     code.getCode(),
                                     code.getStatus().name(),
                                     code.getMessage(),
@@ -25,21 +30,12 @@ public class BaseResponse<T> {
             case CREATED ->
                     ResponseEntity.created(createdLocation)
                             .body(
-                                    buildBody(
+                                new BaseResponse<>(
                                             code.getCode(),
                                             code.getStatus().name(),
                                             code.getMessage(),
                                             data));
             case NO_CONTENT -> ResponseEntity.noContent().build();
         };
-    }
-
-    private static <T> Map<String, Object> buildBody(
-            String code, String status, String message, T data) {
-        return Map.of(
-                "code", code,
-                "status", status,
-                "message", message,
-                "data", data);
     }
 }
