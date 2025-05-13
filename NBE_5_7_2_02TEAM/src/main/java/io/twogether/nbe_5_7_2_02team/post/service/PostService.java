@@ -12,10 +12,13 @@ import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostCreateResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +33,10 @@ public class PostService {
     @Transactional
     public PostCreateResponse createPost(PostCreateRequest request, Long memberId) {
 
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         Post post = postMapper.toEntity(request, member);
         postRepository.save(post);
@@ -46,5 +51,4 @@ public class PostService {
 
         return new PostCreateResponse(post.getId());
     }
-
 }

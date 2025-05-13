@@ -2,16 +2,19 @@ package io.twogether.nbe_5_7_2_02team.post.util;
 
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +29,7 @@ public class ImageUploader {
             throw new ErrorException(ErrorCode.IMAGE_UPLOAD_LIMIT_EXCEEDED);
         }
 
-        return images.stream()
-            .map(image -> saveImage(image, postId))
-            .toList();
+        return images.stream().map(image -> saveImage(image, postId)).toList();
     }
 
     private String saveImage(MultipartFile file, Long postId) {

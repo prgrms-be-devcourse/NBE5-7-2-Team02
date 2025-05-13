@@ -6,11 +6,14 @@ import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +23,12 @@ public class PostMapper {
 
     public Post toEntity(PostCreateRequest request, Member member) {
         return Post.builder()
-            .title(request.getTitle())
-            .content(request.getContent())
-            .recruitmentStatus(request.getRecruitmentStatus())
-            .imageUrls(new ArrayList<>())
-            .member(member)
-            .build();
+                .title(request.getTitle())
+                .content(request.getContent())
+                .recruitmentStatus(request.getRecruitmentStatus())
+                .imageUrls(new ArrayList<>())
+                .member(member)
+                .build();
     }
 
     public List<PostTag> toPostTags(Post post, List<String> tags) {
@@ -35,10 +38,19 @@ public class PostMapper {
         }
 
         return tags.stream()
-            .map(name -> {
-                Tag tag = tagRepository.findByName(name)
-                    .orElseGet(() -> tagRepository.save(Tag.builder().name(name).build()));
-                return PostTag.builder().post(post).tag(tag).build();
-            }).toList();
+                .map(
+                        name -> {
+                            Tag tag =
+                                    tagRepository
+                                            .findByName(name)
+                                            .orElseGet(
+                                                    () ->
+                                                            tagRepository.save(
+                                                                    Tag.builder()
+                                                                            .name(name)
+                                                                            .build()));
+                            return PostTag.builder().post(post).tag(tag).build();
+                        })
+                .toList();
     }
 }
