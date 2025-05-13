@@ -1,5 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 
+import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.MemberDetails;
@@ -24,7 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${custom.jwt.redirection.base")
+    private final MemberRepository memberRepository;
+    @Value("${custom.jwt.redirection.base}")
     private String baseUrl;
 
     private final OAuthService oAuthService;
@@ -34,7 +36,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException{
         MemberDetails principal = (MemberDetails) authentication.getPrincipal();
 
-        Member findMember = oAuthService.getById(principal.getId());
+        Member findMember = memberRepository.findById(principal.getId()).orElseThrow(
+            ()->new RuntimeException("Member not found"));
 
         HashMap<String, String> params = new HashMap<>();
 

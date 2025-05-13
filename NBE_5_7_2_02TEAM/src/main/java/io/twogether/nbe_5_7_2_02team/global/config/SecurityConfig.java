@@ -18,7 +18,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final OAuthService oAuthService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,7 +33,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers("/api/**")
-                .hasAnyAuthority("ADMIN", "MEMBER")
+                .permitAll()
+//                .hasAnyAuthority("ADMIN", "MEMBER")
                 .requestMatchers("/api/admin/**")
                 .hasAnyAuthority("ADMIN")
                 .anyRequest()

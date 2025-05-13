@@ -10,7 +10,7 @@ public class MemberMapper {
     public static MemberCreateResponse toMemberCreateResponse(Member member) {
         return MemberCreateResponse.builder()
                 .id(member.getId())
-                .githubId(member.getGithubId())
+                .email(member.getEmail())
                 .name(member.getName())
                 .profileImage(member.getProfileImage())
                 .job(member.getJob())

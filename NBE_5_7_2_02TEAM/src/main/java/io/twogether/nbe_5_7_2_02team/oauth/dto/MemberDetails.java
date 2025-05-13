@@ -14,18 +14,19 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Getter
 @Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberDetails implements OAuth2User {
+public class MemberDetails implements OAuth2User, UserDetails {
 
-    @Setter
     private Long id;
 
     private String name;
-    private String githubId;
+    @Setter
+    private String email;
 
     @Setter
     private Role role;
@@ -38,12 +39,22 @@ public class MemberDetails implements OAuth2User {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return String.valueOf(id);
+    }
+
     public static MemberDetails from(Member member) {
         MemberDetails memberDetails = new MemberDetails();
 
         memberDetails.id = member.getId();
-
-        memberDetails.githubId = member.getGithubId();
+        memberDetails.name = member.getName();
+        memberDetails.email = member.getEmail();
         memberDetails.role = member.getRole();
 
         return memberDetails;
@@ -51,9 +62,9 @@ public class MemberDetails implements OAuth2User {
 
 
     @Builder
-    public MemberDetails(String name, String githubId, Map<String, Object> attributes) {
+    public MemberDetails(String name, String email, Map<String, Object> attributes) {
         this.name = name;
-        this.githubId = githubId;
+        this.email = email;
         this.attributes = attributes;
     }
 

@@ -1,3 +1,51 @@
 package io.twogether.nbe_5_7_2_02team.oauth.api;
 
-public class OAuthController {}
+import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
+import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
+import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
+import io.twogether.nbe_5_7_2_02team.member.dto.SignUpRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.SignUpResponse;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.GitHubLoginResponse;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.githubLoginRequest;
+import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
+import java.net.URI;
+import java.security.Principal;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class OAuthController {
+
+    private final OAuthService oAuthService;
+
+    @GetMapping("/oauth2/callback/github")
+    public ResponseEntity<BaseResponse<GitHubLoginResponse>> githubCallback(@RequestParam String code){
+        GitHubLoginResponse response = oAuthService.getAccessToken(code);
+        return BaseResponse.of(SuccessCode.GITHUB_CALLBACK_SUCCESS, response, null);
+    }
+
+    @PostMapping("/login/github")
+    public ResponseEntity<BaseResponse<TokenPair>> githubLogin(@RequestBody githubLoginRequest request) {
+        TokenPair tokenPair = oAuthService.login(request.getAccessToken());
+        return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, tokenPair, null);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<BaseResponse<SignUpResponse>> signUp(@RequestBody SignUpRequest request, @AuthenticationPrincipal
+        UserDetails userDetails) {
+        SignUpResponse response = oAuthService.signup(request, Long.parseLong(
+            userDetails.getUsername()));
+        return BaseResponse.of(SuccessCode.SIGNUP_SUCCESS, response, URI.create("/api/members/" + response.getId()));
+    }
+}

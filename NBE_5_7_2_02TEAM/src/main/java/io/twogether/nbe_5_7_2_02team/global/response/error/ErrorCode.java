@@ -15,7 +15,16 @@ public enum ErrorCode {
     NOT_YOURSELF_FOLLOW(BAD_REQUEST, "FOLLOW-003", "자기 자신은 팔로우할 수 없습니다."),
     NOT_DUPLICATION_FOLLOW(BAD_REQUEST, "FOLLOW-004", "이미 팔로우한 사용자 입니다."),
 
-    UNSUPPORTED_PROVIDER(BAD_REQUEST, "OAUTH-001", "지원하지 않는 OAuth2 제공자입니다.")
+    UNSUPPORTED_PROVIDER(BAD_REQUEST, "OAUTH-001", "지원하지 않는 OAuth2 제공자입니다."),
+    OAUTH_TOKEN_ERROR(BAD_REQUEST, "OAUTH-002", "GitHub OAuth 인증 처리 중 오류가 발생했습니다."),
+    OAUTH_USER_INFO_ERROR(BAD_REQUEST, "OAUTH-003", "GitHub 사용자 정보를 가져오는데 실패했습니다."),
+    OAUTH_EMAIL_NOT_FOUND(BAD_REQUEST, "OAUTH-004", "GitHub 사용자 이메일 정보를 가져올 수 없습니다."),
+    OAUTH_PRGRMS_ORG_REQUIRED(BAD_REQUEST, "OAUTH-005", "프로그래머스 교육 과정에 등록된 사용자만 가입할 수 있습니다."),
+
+    INVALID_JWT_SIGNATURE(UNAUTHORIZED, "JWT-001", "잘못된 JWT 서명입니다."),
+    EXPIRED_JWT_TOKEN(UNAUTHORIZED, "JWT-002", "만료된 JWT 토큰입니다."),
+    UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, "JWT-003", "지원되지 않는 JWT 토큰입니다."),
+    INVALID_JWT_TOKEN(UNAUTHORIZED, "JWT-004", "유효하지 않은 JWT 토큰입니다."),
     ;
 
     private final ErrorStatus errorStatus;

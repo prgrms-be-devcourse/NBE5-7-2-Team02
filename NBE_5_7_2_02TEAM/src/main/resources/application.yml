@@ -1,3 +1,39 @@
 spring:
   application:
     name: NBE_5_7_2_02TEAM
+
+  datasource:
+    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-name: GitHub
+            client-id: Ov23li06as0VfMDE0kwl
+            client-secret: bda997cdb11f591b2a2872777ca96ccc5874144a
+            redirect-uri: "{baseUrl}/api/oauth2/callback/{registrationId}"
+            scope:
+              - read:user
+              - user:email
+              - read:org
+
+custom:
+  jwt:
+    validation:
+      access: ${JWT_ACCESS_EXP}
+      refresh: ${JWT_REFRESH_EXP}
+    redirection:
+      base: http://localhost8080
+    secrets:
+      origin-key: ${JWT_ORIGIN_KEY}
+      app-key: ${JWT_APP_KEY}
