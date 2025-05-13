@@ -93,10 +93,7 @@ public class JwtTokenProvider {
         String sub = parsed.getPayload().getSubject();
         String role = parsed.getPayload().get("role").toString();
 
-        return TokenBody.builder()
-            .memberId(Long.parseLong(sub))
-            .role(Role.valueOf(role))
-            .build();
+        return TokenBody.builder().memberId(Long.parseLong(sub)).role(Role.valueOf(role)).build();
     }
 
     private SecretKey getSecretKey() {
