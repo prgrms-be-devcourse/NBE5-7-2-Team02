@@ -6,7 +6,6 @@ import io.twogether.nbe_5_7_2_02team.member.dto.LoginResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.SignUpRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.SignUpResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.GitHubLoginResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.githubLoginRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
@@ -33,26 +32,26 @@ public class OAuthController {
 
     @GetMapping("/oauth2/callback/github")
     public ResponseEntity<BaseResponse<GitHubLoginResponse>> githubCallback(
-        @RequestParam String code) {
+            @RequestParam String code) {
         GitHubLoginResponse response = oAuthService.getAccessToken(code);
         return BaseResponse.of(SuccessCode.GITHUB_CALLBACK_SUCCESS, response, null);
     }
 
     @PostMapping("/login/github")
     public ResponseEntity<BaseResponse<LoginResponse>> githubLogin(
-        @RequestBody githubLoginRequest request) {
+            @RequestBody githubLoginRequest request) {
         LoginResponse response = oAuthService.login(request.getAccessToken());
         return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
-        @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         SignUpResponse response =
-            oAuthService.signup(request, Long.parseLong(userDetails.getUsername()));
+                oAuthService.signup(request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(
-            SuccessCode.SIGNUP_SUCCESS,
-            response,
-            URI.create("/api/members/" + response.getId()));
+                SuccessCode.SIGNUP_SUCCESS,
+                response,
+                URI.create("/api/members/" + response.getId()));
     }
 }
