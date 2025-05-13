@@ -32,26 +32,26 @@ public class OAuthController {
 
     @GetMapping("/oauth2/callback/github")
     public ResponseEntity<BaseResponse<GitHubLoginResponse>> githubCallback(
-        @RequestParam String code) {
+            @RequestParam String code) {
         GitHubLoginResponse response = oAuthService.getAccessToken(code);
         return BaseResponse.of(SuccessCode.GITHUB_CALLBACK_SUCCESS, response, null);
     }
 
     @PostMapping("/login/github")
     public ResponseEntity<BaseResponse<LoginResponse>> githubLogin(
-        @RequestBody GithubLoginRequest request) {
+            @RequestBody GithubLoginRequest request) {
         LoginResponse response = oAuthService.login(request.getAccessToken());
         return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
-        @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         SignUpResponse response =
-            oAuthService.signup(request, Long.parseLong(userDetails.getUsername()));
+                oAuthService.signup(request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(
-            SuccessCode.SIGNUP_SUCCESS,
-            response,
-            URI.create("/api/members/" + response.getId()));
+                SuccessCode.SIGNUP_SUCCESS,
+                response,
+                URI.create("/api/members/" + response.getId()));
     }
 }
