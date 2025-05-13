@@ -6,8 +6,7 @@ import io.twogether.nbe_5_7_2_02team.member.dto.LoginResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.SignUpRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.SignUpResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.GitHubLoginResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.githubLoginRequest;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.GithubLoginRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class OAuthController {
 
     @PostMapping("/login/github")
     public ResponseEntity<BaseResponse<LoginResponse>> githubLogin(
-        @RequestBody githubLoginRequest request) {
+        @RequestBody GithubLoginRequest request) {
         LoginResponse response = oAuthService.login(request.getAccessToken());
         return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
     }

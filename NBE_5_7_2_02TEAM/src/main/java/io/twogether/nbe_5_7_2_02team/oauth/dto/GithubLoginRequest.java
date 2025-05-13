@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class githubLoginRequest {
+public class GithubLoginRequest {
     String accessToken;
 }
