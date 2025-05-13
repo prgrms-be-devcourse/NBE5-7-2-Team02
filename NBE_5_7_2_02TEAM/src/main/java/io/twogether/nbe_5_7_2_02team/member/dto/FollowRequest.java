@@ -1,6 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.member.dto;
 
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
