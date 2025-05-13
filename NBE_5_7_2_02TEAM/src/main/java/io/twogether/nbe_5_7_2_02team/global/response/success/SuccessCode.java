@@ -14,8 +14,10 @@ public enum SuccessCode {
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
     // FOLLOW
-    FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
-    CREATE_FOLLOWER(CREATED, "FOLLOWER-201", "Create follower"),
+    CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
+    DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
+    FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
+    COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),
 
     // POST
     FOUND_POST(OK, "Post-200", "Found post"),

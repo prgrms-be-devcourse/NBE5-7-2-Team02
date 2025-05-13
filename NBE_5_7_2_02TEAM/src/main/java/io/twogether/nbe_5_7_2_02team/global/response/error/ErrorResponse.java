@@ -9,11 +9,9 @@ import lombok.Getter;
 @Getter
 @JsonPropertyOrder({"code", "message", "errors"})
 public class ErrorResponse<T> {
-    // 클라이언트에게 보내줄 에러응답을 정의한 클래스
     private final String code;
     private final String message;
 
-    // 실제 발생한 오류들의 내용
     @JsonInclude(Include.NON_EMPTY)
     private final T errors;
 
