@@ -12,7 +12,6 @@ public enum SuccessCode {
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
-
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
     DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
     FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
