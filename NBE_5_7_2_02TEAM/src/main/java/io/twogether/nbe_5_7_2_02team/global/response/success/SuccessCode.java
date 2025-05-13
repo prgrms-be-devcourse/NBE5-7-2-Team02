@@ -13,7 +13,10 @@ public enum SuccessCode {
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
     FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
-    CREATE_FOLLOWER(CREATED, "FOLLOWER-201", "Create follower");
+    CREATE_FOLLOWER(CREATED, "FOLLOWER-201", "Create follower"),
+
+    FOUND_POST(OK, "Post-200", "Found post"),
+    CREATE_POST(CREATED, "POST-201", "Create post");
 
     private final SuccessStatus status;
     private final String code;
