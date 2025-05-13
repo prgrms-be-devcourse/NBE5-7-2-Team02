@@ -33,7 +33,7 @@ public class FollowController {
     @PostMapping
     public ResponseEntity<?> follow(@RequestBody FollowRequest followRequest) {
         FollowCreateResponse response = followService.createFollow(followRequest);
-        return BaseResponse.of(SuccessCode.CREATE_FOLLOWER, response, URI.create("/api/follow"));
+        return BaseResponse.of(SuccessCode.CREATE_FOLLOWER, response, URI.create("/api/follow/{memberId}/followings"));
     }
 
     @DeleteMapping
