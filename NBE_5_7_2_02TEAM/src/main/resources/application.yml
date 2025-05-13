@@ -2,6 +2,12 @@ spring:
   application:
     name: NBE_5_7_2_02TEAM
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+
   datasource:
     url: ${DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -26,6 +32,9 @@ spring:
               - read:user
               - user:email
               - read:org
+
+file:
+  upload-dir: uploads/
 
 custom:
   jwt:

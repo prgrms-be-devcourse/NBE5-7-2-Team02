@@ -9,19 +9,27 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum SuccessCode {
+    // MEMBER
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
+    // OAUTH
     GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),
     GITHUB_LOGIN_SUCCESS(OK, "OAUTH-201", "GitHub login successful"),
     SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful"),
 
+    // FOLLOW
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
     FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
     DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
     FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
     COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),
 
+    // POST
+    FOUND_POST(OK, "POST-200", "Found post"),
+    CREATE_POST(CREATED, "POST-201", "Create post"),
+
+    // CHATROOM
     FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
     CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom");
 

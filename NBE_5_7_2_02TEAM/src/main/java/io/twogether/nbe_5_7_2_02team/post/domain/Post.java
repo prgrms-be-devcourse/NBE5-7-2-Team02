@@ -51,12 +51,18 @@ public class Post extends BaseEntity {
             String title,
             String content,
             RecruitmentStatus recruitmentStatus,
-            List<String> imageUrls) {
+            List<String> imageUrls,
+            Member member) {
         this.title = title;
         this.content = content;
         this.recruitmentStatus = recruitmentStatus;
         if (imageUrls != null) {
             this.imageUrls = imageUrls;
         }
+        this.member = member;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
