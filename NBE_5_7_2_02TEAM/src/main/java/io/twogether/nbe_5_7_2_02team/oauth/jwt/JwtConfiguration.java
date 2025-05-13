@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
@@ -25,5 +26,4 @@ public class JwtConfiguration {
         private final String originKey;
         private final String appKey;
     }
-
 }
