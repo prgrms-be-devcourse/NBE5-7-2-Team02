@@ -15,7 +15,10 @@ public enum SuccessCode {
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
     DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
     FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
-    COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows");
+    COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),
+
+    FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
+    CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom");
 
     private final SuccessStatus status;
     private final String code;
