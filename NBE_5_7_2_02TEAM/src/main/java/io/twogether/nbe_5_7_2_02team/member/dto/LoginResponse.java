@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.member.dto;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
 
+import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginResponse {
-    private String accessToken;
-    private String refreshToken;
+    private TokenPair tokenPair;
     private Role role;
 }
