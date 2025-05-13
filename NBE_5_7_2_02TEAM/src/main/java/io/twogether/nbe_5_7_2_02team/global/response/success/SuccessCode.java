@@ -13,8 +13,14 @@ public enum SuccessCode {
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
+    // OAUTH
+    GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),
+    GITHUB_LOGIN_SUCCESS(OK, "OAUTH-201", "GitHub login successful"),
+    SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful"),
+
     // FOLLOW
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
+    FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
     DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
     FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
     COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),

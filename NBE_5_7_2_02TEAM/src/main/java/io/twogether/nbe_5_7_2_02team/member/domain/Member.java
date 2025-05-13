@@ -17,25 +17,37 @@ public class Member {
     private Long id;
 
     @Column(nullable = false)
-    private String githubId;
+    private String email;
 
-    @Column(nullable = false)
-    private String name;
+    @Setter private String name;
 
     private String profileImage;
 
     @Column(nullable = false)
-    private String job;
+    private String githubId;
 
-    @Column(nullable = false)
-    private String course;
+    @Setter private String job;
+
+    @Setter private String course;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Builder
-    public Member(String githubId, String name, String profileImage, String job, String course) {
-        this.githubId = githubId;
+    public Member(
+            String email,
+            String name,
+            String profileImage,
+            String job,
+            String course,
+            String githubId,
+            Role role) {
+        this.email = email;
         this.name = name;
         this.profileImage = profileImage;
         this.job = job;
         this.course = course;
+        this.githubId = githubId;
+        this.role = role;
     }
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class MemberCreateResponse {
 
     private Long id;
-    private String githubId;
+    private String email;
     private String name;
     private String profileImage;
     private String job;
@@ -18,9 +18,9 @@ public class MemberCreateResponse {
 
     @Builder
     public MemberCreateResponse(
-            Long id, String githubId, String name, String profileImage, String job, String course) {
+            Long id, String email, String name, String profileImage, String job, String course) {
         this.id = id;
-        this.githubId = githubId;
+        this.email = email;
         this.name = name;
         this.profileImage = profileImage;
         this.job = job;
