@@ -25,7 +25,11 @@ public enum ErrorCode {
     EXPIRED_JWT_TOKEN(UNAUTHORIZED, "JWT-002", "만료된 JWT 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, "JWT-003", "지원되지 않는 JWT 토큰입니다."),
     INVALID_JWT_TOKEN(UNAUTHORIZED, "JWT-004", "유효하지 않은 JWT 토큰입니다."),
-    ;
+
+    CHAT_ROOM_LIST_EMPTY(NOT_FOUND, "CHATROOM-001", "목록에 채팅창이 존재하지 않습니다."),
+    POST_NOT_FOUND(NOT_FOUND, "CHATROOM-002", "게시글을 찾을 수 없습니다."),
+    CHAT_ROOM_ALREADY_EXISTS(BAD_REQUEST, "CHATROOM-003", "채팅방이 이미 존재합니다."),
+    CHATROOM_NOT_FOUND(NOT_FOUND, "CHATROOM-004", "채팅방을 찾을 수 없습니다.");
 
     private final ErrorStatus errorStatus;
     private final String code;

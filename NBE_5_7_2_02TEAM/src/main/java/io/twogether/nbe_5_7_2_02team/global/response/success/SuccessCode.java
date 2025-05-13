@@ -12,13 +12,18 @@ public enum SuccessCode {
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
-    FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
-    CREATE_FOLLOWER(CREATED, "FOLLOWER-201", "Create follower"),
-
     GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),
     GITHUB_LOGIN_SUCCESS(OK, "OAUTH-201", "GitHub login successful"),
-    SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful");
-    ;
+    SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful"),
+
+    CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
+    FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
+    DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
+    FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
+    COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),
+
+    FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
+    CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom");
 
     private final SuccessStatus status;
     private final String code;
