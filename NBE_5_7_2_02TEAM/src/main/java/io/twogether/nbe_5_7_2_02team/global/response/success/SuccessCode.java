@@ -12,8 +12,10 @@ public enum SuccessCode {
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
 
-    FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
-    CREATE_FOLLOWER(CREATED, "FOLLOWER-201", "Create follower"),
+    CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
+    DELETE_FOLLOWING(OK, "FOLLOWER-201", "Delete following"),
+    FOUND_FOLLOWS(OK, "FOLLOWER-202", "Found follows"),
+    COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),
 
     FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
     CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom");
