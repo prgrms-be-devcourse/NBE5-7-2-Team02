@@ -20,7 +20,7 @@ public enum ErrorCode {
     // IMAGE
     IMAGE_UPLOAD_LIMIT_EXCEEDED(BAD_REQUEST, "IMAGE-001", "이미지는 최대 10장까지만 업로드할 수 있습니다."),
     IMAGE_UPLOAD_FAILED(BAD_REQUEST, "IMAGE-002", "이미지 저장 중 오류가 발생했습니다."),
-  
+
     // CHATROOM
     CHAT_ROOM_LIST_EMPTY(NOT_FOUND, "CHATROOM-001", "목록에 채팅창이 존재하지 않습니다."),
     POST_NOT_FOUND(NOT_FOUND, "CHATROOM-002", "게시글을 찾을 수 없습니다."),
