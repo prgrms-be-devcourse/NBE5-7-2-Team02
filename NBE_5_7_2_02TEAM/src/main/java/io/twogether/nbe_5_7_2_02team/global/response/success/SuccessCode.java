@@ -20,7 +20,7 @@ public enum SuccessCode {
     COUNT_FOLLOWS(OK, "FOLLOWER-203", "Count follows"),
 
     // POST
-    FOUND_POST(OK, "Post-200", "Found post"),
+    FOUND_POST(OK, "POST-200", "Found post"),
     CREATE_POST(CREATED, "POST-201", "Create post"),
 
     // CHATROOM
