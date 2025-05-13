@@ -1,21 +1,23 @@
 package io.twogether.nbe_5_7_2_02team.oauth.dto;
 
-
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Accessors(chain = true)
@@ -25,14 +27,11 @@ public class MemberDetails implements OAuth2User, UserDetails {
     private Long id;
 
     private String name;
-    @Setter
-    private String email;
+    @Setter private String email;
 
-    @Setter
-    private Role role;
+    @Setter private Role role;
 
-    @Setter
-    private Map<String, Object> attributes;
+    @Setter private Map<String, Object> attributes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,12 +59,10 @@ public class MemberDetails implements OAuth2User, UserDetails {
         return memberDetails;
     }
 
-
     @Builder
     public MemberDetails(String name, String email, Map<String, Object> attributes) {
         this.name = name;
         this.email = email;
         this.attributes = attributes;
     }
-
 }

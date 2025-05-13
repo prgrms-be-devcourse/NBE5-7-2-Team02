@@ -8,5 +8,4 @@ import lombok.Getter;
 public class GitHubLoginResponse {
 
     String accessToken;
-
 }

@@ -1,9 +1,10 @@
 package io.twogether.nbe_5_7_2_02team.oauth.dto;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @ToString
@@ -13,5 +14,4 @@ public class GitHubUserInfoResponse {
     private String email;
     private String avatarUrl;
     private List<String> organizations;
-
 }

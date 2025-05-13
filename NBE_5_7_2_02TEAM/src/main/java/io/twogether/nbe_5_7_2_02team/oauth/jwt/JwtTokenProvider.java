@@ -3,7 +3,6 @@ package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.MalformedJwtException;
@@ -18,14 +17,17 @@ import io.twogether.nbe_5_7_2_02team.oauth.dao.TokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
-import java.util.Date;
-import java.util.Optional;
-import javax.crypto.SecretKey;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.Optional;
+
+import javax.crypto.SecretKey;
 
 @Slf4j
 @Service
@@ -43,10 +45,7 @@ public class JwtTokenProvider {
 
         tokenRepository.save(member, refreshToken);
 
-        return TokenPair.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .build();
+        return TokenPair.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     public Optional<RefreshToken> findRefreshToken(Long memberId) {
@@ -63,20 +62,17 @@ public class JwtTokenProvider {
 
     private String issue(Long id, Role role, Long expTime) {
         return Jwts.builder()
-            .subject(id.toString())
-            .claim("role", role)
-            .issuedAt(new Date())
-            .expiration(new Date(new Date().getTime() + expTime))
-            .signWith(getSecretKey(), SIG.HS256)
-            .compact();
+                .subject(id.toString())
+                .claim("role", role)
+                .issuedAt(new Date())
+                .expiration(new Date(new Date().getTime() + expTime))
+                .signWith(getSecretKey(), SIG.HS256)
+                .compact();
     }
 
     public boolean validate(String token) {
         try {
-            Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token);
+            Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token);
 
             return true;
         } catch (SecurityException | MalformedJwtException e) {
@@ -91,23 +87,16 @@ public class JwtTokenProvider {
     }
 
     public TokenBody parseJwt(String token) {
-        Jws<Claims> parsed = Jwts.parser()
-            .verifyWith(getSecretKey())
-            .build()
-            .parseSignedClaims(token);
+        Jws<Claims> parsed =
+                Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token);
 
         String sub = parsed.getPayload().getSubject();
         String role = parsed.getPayload().get("role").toString();
 
-        return new TokenBody(
-            Long.parseLong(sub)
-            , Role.valueOf(role)
-        );
+        return new TokenBody(Long.parseLong(sub), Role.valueOf(role));
     }
-
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(jwtConfiguration.getSecrets().getAppKey().getBytes());
     }
-
 }

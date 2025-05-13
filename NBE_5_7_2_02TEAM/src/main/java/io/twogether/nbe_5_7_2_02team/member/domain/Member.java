@@ -19,26 +19,29 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
-    @Setter
-    private String name;
+    @Setter private String name;
 
     private String profileImage;
 
     @Column(nullable = false)
     private String githubId;
 
-    @Setter
-    private String job;
+    @Setter private String job;
 
-    @Setter
-    private String course;
+    @Setter private String course;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public Member(String email, String name, String profileImage, String job, String course,
-        String githubId, Role role) {
+    public Member(
+            String email,
+            String name,
+            String profileImage,
+            String job,
+            String course,
+            String githubId,
+            Role role) {
         this.email = email;
         this.name = name;
         this.profileImage = profileImage;
