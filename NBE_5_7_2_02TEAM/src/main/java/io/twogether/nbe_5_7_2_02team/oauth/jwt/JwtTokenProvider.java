@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -13,6 +14,7 @@ import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
+import io.twogether.nbe_5_7_2_02team.oauth.dao.RefreshTokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.TokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
@@ -37,8 +39,12 @@ public class JwtTokenProvider {
 
     private final JwtConfiguration jwtConfiguration;
     private final TokenRepository tokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public TokenPair generateTokenPair(Member member) {
+
+        refreshTokenRepository.findByMemberId(member.getId())
+            .ifPresent(refreshTokenRepository::delete);
 
         String accessToken = issueAccessToken(member.getId(), member.getRole());
         String refreshToken = issueRefreshToken(member.getId(), member.getRole());
@@ -50,6 +56,10 @@ public class JwtTokenProvider {
 
     public Optional<RefreshToken> findRefreshToken(Long memberId) {
         return tokenRepository.findValidRefToken(memberId);
+    }
+
+    public void addBlackList(RefreshToken refreshToken) {
+        tokenRepository.addBlackList(refreshToken);
     }
 
     public String issueAccessToken(Long id, Role role) {

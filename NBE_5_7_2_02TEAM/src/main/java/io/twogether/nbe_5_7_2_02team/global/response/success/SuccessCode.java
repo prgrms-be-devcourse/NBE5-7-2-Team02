@@ -18,6 +18,10 @@ public enum SuccessCode {
     GITHUB_LOGIN_SUCCESS(OK, "OAUTH-201", "GitHub login successful"),
     SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful"),
 
+    // JWT
+    REFRESH_TOKEN_SUCCESS(OK, "JWT-200", "Token refreshed successfully"),
+    LOGOUT_SUCCESS(OK, "JWT-201", "Logout successful"),
+
     // FOLLOW
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
     FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
