@@ -36,7 +36,8 @@ public enum SuccessCode {
     CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom"),
 
     FOUND_TAG(OK, "TAG-200", "Found tag"),
-    NO_CONTENT_TAG(NO_CONTENT, "TAG-204", "No tags to response"),;
+    NO_CONTENT_TAG(NO_CONTENT, "TAG-204", "No tags to response"),
+    ;
 
     private final SuccessStatus status;
     private final String code;

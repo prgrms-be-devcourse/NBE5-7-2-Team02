@@ -38,7 +38,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findPosts(){
+    public ResponseEntity<?> findPosts() {
         return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
     }
 }
