@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -50,6 +51,10 @@ public class JwtTokenProvider {
 
     public Optional<RefreshToken> findRefreshToken(Long memberId) {
         return tokenRepository.findValidRefToken(memberId);
+    }
+
+    public void addBlackList(RefreshToken refreshToken) {
+        tokenRepository.addBlackList(refreshToken);
     }
 
     public String issueAccessToken(Long id, Role role) {
