@@ -40,6 +40,7 @@ class FollowServiceTest {
                 memberRepository.save(
                         Member.builder()
                                 .githubId("ghFollower")
+                                .email("ghFollower@example.com")
                                 .name("홍길동")
                                 .profileImage("follower.png")
                                 .job("Backend")
@@ -50,6 +51,7 @@ class FollowServiceTest {
                 memberRepository.save(
                         Member.builder()
                                 .githubId("ghFollower2")
+                                .email("ghFollower2@example.com")
                                 .name("홍길동")
                                 .profileImage("follower.png")
                                 .job("Backend")
@@ -60,6 +62,7 @@ class FollowServiceTest {
                 memberRepository.save(
                         Member.builder()
                                 .githubId("ghFollowing")
+                                .email("ghFollowing@example.com")
                                 .name("임꺽정")
                                 .profileImage("following.png")
                                 .job("Frontend")
@@ -70,6 +73,7 @@ class FollowServiceTest {
                 memberRepository.save(
                         Member.builder()
                                 .githubId("ghFollowing2")
+                                .email("ghFollowing2@example.com")
                                 .name("임꺽정")
                                 .profileImage("following.png")
                                 .job("Frontend")
@@ -149,8 +153,8 @@ class FollowServiceTest {
         List<MemberCreateResponse> followers = followService.getFollowers(following1.getId());
 
         assertThat(followers).hasSize(2);
-        assertThat(followers.get(0).getGithubId()).isEqualTo("ghFollower");
-        assertThat(followers.get(1).getGithubId()).isEqualTo("ghFollower2");
+        assertThat(followers.get(0).getEmail()).isEqualTo("ghFollower@example.com");
+        assertThat(followers.get(1).getEmail()).isEqualTo("ghFollower2@example.com");
     }
 
     @Test
@@ -162,7 +166,7 @@ class FollowServiceTest {
         List<MemberCreateResponse> followings = followService.getFollowings(follower1.getId());
 
         assertThat(followings).hasSize(2);
-        assertThat(followings.get(0).getGithubId()).isEqualTo("ghFollowing");
-        assertThat(followings.get(1).getGithubId()).isEqualTo("ghFollowing2");
+        assertThat(followings.get(0).getEmail()).isEqualTo("ghFollowing@example.com");
+        assertThat(followings.get(1).getEmail()).isEqualTo("ghFollowing2@example.com");
     }
 }
