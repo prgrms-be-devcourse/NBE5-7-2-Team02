@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/**")
                         .hasAnyAuthority("MEMBER")
-                        .requestMatchers("/api/tags/**", "api/tags", "/api/oauth2/**")
+                        .requestMatchers("/api/tags/**", "/api/tags", "/api/oauth2/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
