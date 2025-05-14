@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -27,29 +29,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(httpB -> httpB.disable())
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .formLogin(form -> form.disable())
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Login(
-                        oauth -> {
-                            oauth.successHandler(oAuth2SuccessHandler);
-                        })
-                .authorizeHttpRequests(
-                        auth ->
-                                auth.requestMatchers(CorsUtils::isPreFlightRequest)
-                                        .permitAll()
-                                        .requestMatchers("/api/**")
-                                        .permitAll()
-                                        // .hasAnyAuthority("ADMIN", "MEMBER")
-                                        .requestMatchers("/api/chatroom/**")
-                                        .hasAnyAuthority("ADMIN")
-                                        .anyRequest()
-                                        .authenticated())
-                .addFilterBefore(
-                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .formLogin(form -> form.disable())
+            .sessionManagement(
+                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .oauth2Login(
+                oauth -> {
+                    oauth.successHandler(oAuth2SuccessHandler);
+                })
+            .authorizeHttpRequests(
+                auth ->
+                    auth.requestMatchers(CorsUtils::isPreFlightRequest)
+                        .permitAll()
+                        .requestMatchers("/api/**")
+                        .hasAnyAuthority("MEMBER")
+                        .requestMatchers("/api/tags/**")
+                        .permitAll()
+                        .requestMatchers("/api/oauth2/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+            .addFilterBefore(
+                jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean
