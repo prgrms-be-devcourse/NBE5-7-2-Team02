@@ -1,9 +1,11 @@
 package io.twogether.nbe_5_7_2_02team.tag.dto;
 
 import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
+
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 
 @Getter
 public class TagGetResponse {

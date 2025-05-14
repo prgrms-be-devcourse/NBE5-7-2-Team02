@@ -11,7 +11,5 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 public abstract class BrowserTestTemplate {
 
-    @Autowired
-    public MockMvc mockMvc;
-
+    @Autowired public MockMvc mockMvc;
 }
