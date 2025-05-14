@@ -8,7 +8,9 @@ import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +26,19 @@ public class TokenService {
     public TokenPair refreshToken(String refreshTokenValue) {
 
         jwtTokenProvider.validate(refreshTokenValue);
-        
+
         TokenBody tokenBody = jwtTokenProvider.parseJwt(refreshTokenValue);
         Long memberId = tokenBody.getMemberId();
 
-        jwtTokenProvider.findRefreshToken(memberId)
-            .filter(rt -> rt.getRefreshToken().equals(refreshTokenValue))
-            .orElseThrow(() -> new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN));
+        jwtTokenProvider
+                .findRefreshToken(memberId)
+                .filter(rt -> rt.getRefreshToken().equals(refreshTokenValue))
+                .orElseThrow(() -> new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN));
 
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         return jwtTokenProvider.generateTokenPair(member);
     }
@@ -46,11 +51,12 @@ public class TokenService {
         TokenBody tokenBody = jwtTokenProvider.parseJwt(refreshTokenValue);
         Long memberId = tokenBody.getMemberId();
 
-        RefreshToken refreshToken = jwtTokenProvider.findRefreshToken(memberId)
-            .filter(rt -> rt.getRefreshToken().equals(refreshTokenValue))
-            .orElseThrow(() -> new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN));
+        RefreshToken refreshToken =
+                jwtTokenProvider
+                        .findRefreshToken(memberId)
+                        .filter(rt -> rt.getRefreshToken().equals(refreshTokenValue))
+                        .orElseThrow(() -> new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN));
 
         jwtTokenProvider.addBlackList(refreshToken);
     }
-
 }
