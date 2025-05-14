@@ -3,7 +3,6 @@ package io.twogether.nbe_5_7_2_02team.global.config;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtAuthenticationFilter;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -18,6 +17,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -29,28 +30,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(httpB -> httpB.disable())
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .formLogin(form -> form.disable())
-            .sessionManagement(
-                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .oauth2Login(
-                oauth -> {
-                    oauth.successHandler(oAuth2SuccessHandler);
-                })
-            .authorizeHttpRequests(
-                auth ->
-                    auth.requestMatchers(CorsUtils::isPreFlightRequest)
-                        .permitAll()
-                        .requestMatchers("/api/tags/**", "/api/oauth2/**", "/api/tags")
-                        .permitAll()
-                        .requestMatchers("/api/**")
-                        .hasAnyAuthority("MEMBER")
-                        .anyRequest()
-                        .authenticated())
-            .addFilterBefore(
-                jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .formLogin(form -> form.disable())
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2Login(
+                        oauth -> {
+                            oauth.successHandler(oAuth2SuccessHandler);
+                        })
+                .authorizeHttpRequests(
+                        auth ->
+                                auth.requestMatchers(CorsUtils::isPreFlightRequest)
+                                        .permitAll()
+                                        .requestMatchers(
+                                                "/api/tags/**", "/api/oauth2/**", "/api/tags")
+                                        .permitAll()
+                                        .requestMatchers("/api/**")
+                                        .hasAnyAuthority("MEMBER")
+                                        .anyRequest()
+                                        .authenticated())
+                .addFilterBefore(
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
