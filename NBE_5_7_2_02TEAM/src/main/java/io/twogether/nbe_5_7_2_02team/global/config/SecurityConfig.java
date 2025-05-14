@@ -3,6 +3,7 @@ package io.twogether.nbe_5_7_2_02team.global.config;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtAuthenticationFilter;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -11,7 +12,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(httpB -> httpB.disable())
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .formLogin(form -> form.disable())
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -38,13 +42,26 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/api/**")
                                         .permitAll()
-                                        //                .hasAnyAuthority("ADMIN", "MEMBER")
-                                        .requestMatchers("/api/admin/**")
+                                        // .hasAnyAuthority("ADMIN", "MEMBER")
+                                        .requestMatchers("/api/chatroom/**")
                                         .hasAnyAuthority("ADMIN")
                                         .anyRequest()
                                         .authenticated())
                 .addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
