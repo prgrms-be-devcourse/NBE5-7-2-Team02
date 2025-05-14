@@ -29,14 +29,14 @@ public enum SuccessCode {
     // POST
     FOUND_POST(OK, "POST-200", "Found post"),
     CREATE_POST(CREATED, "POST-201", "Create post"),
-    NOT_FOUND_POST(CREATED, "POST-204", "Not found post"),
+    NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
 
     // CHATROOM
     FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
     CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom"),
 
     FOUND_TAG(OK, "TAG-200", "Found tag"),
-    NOT_FOUND_TAG(NO_CONTENT, "TAG-204", "Not found tag");
+    NO_CONTENT_TAG(NO_CONTENT, "TAG-204", "No tags to response"),;
 
     private final SuccessStatus status;
     private final String code;

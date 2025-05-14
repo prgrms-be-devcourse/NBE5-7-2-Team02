@@ -24,7 +24,7 @@ public class TagController {
         TagGetResponse tagGetResponse = TagGetResponse.of(tagService.getAllTags());
 
         return tagGetResponse.getTags().isEmpty()
-                ? BaseResponse.of(SuccessCode.NOT_FOUND_TAG, null, null)
-                : BaseResponse.of(SuccessCode.FOUND_TAG, tagGetResponse, null);
+            ? BaseResponse.of(SuccessCode.NO_CONTENT_TAG, null, null)
+            : BaseResponse.of(SuccessCode.FOUND_TAG, tagGetResponse, null);
     }
 }
