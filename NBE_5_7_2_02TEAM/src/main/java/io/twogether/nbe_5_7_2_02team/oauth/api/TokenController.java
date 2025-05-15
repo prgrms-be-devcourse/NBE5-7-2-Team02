@@ -2,7 +2,7 @@ package io.twogether.nbe_5_7_2_02team.oauth.api;
 
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.request.LogoutRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.request.RefreshRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.service.TokenService;

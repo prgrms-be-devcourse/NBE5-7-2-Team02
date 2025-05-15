@@ -5,8 +5,8 @@ import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;

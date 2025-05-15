@@ -16,8 +16,8 @@ import io.twogether.nbe_5_7_2_02team.member.domain.Role;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.RefreshTokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.TokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
