@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.chat.domain;
 
 import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

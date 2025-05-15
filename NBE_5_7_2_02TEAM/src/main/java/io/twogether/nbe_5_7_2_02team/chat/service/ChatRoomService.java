@@ -1,7 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
-import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_LIST_EMPTY;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST_NOT_FOUND;
 
@@ -11,11 +10,13 @@ import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomResponse;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

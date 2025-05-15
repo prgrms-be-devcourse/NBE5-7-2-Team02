@@ -19,8 +19,7 @@ import io.twogether.nbe_5_7_2_02team.member.domain.Role;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-import java.util.Collections;
-import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,59 +30,59 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.util.Collections;
+import java.util.List;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "1", password = "<PASSWORD>")
 class ChatMemberServiceTest {
 
-    @Autowired
-    private ChatRoomService chatRoomService;
-    @Autowired
-    private ChatRoomRepository chatRoomRepository;
-    @Autowired
-    private ChatMemberService chatMemberService;
+    @Autowired private ChatRoomService chatRoomService;
+    @Autowired private ChatRoomRepository chatRoomRepository;
+    @Autowired private ChatMemberService chatMemberService;
 
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private MemberRepository memberRepository;
+    @Autowired private PostRepository postRepository;
+    @Autowired private MemberRepository memberRepository;
 
-    UserDetails userDetails1 = User.builder()
-        .username("1")
-        .password("PASSWORD")
-        .authorities(Collections.emptyList())
-        .build();
-    UserDetails userDetails2 = User.builder()
-        .username("2")
-        .password("PASSWORD")
-        .authorities(Collections.emptyList())
-        .build();
-    Member member = Member.builder()
-        .email("test1@example.com")
-        .name("testuser1")
-        .githubId("123")
-        .role(Role.MEMBER)
-        .build();
-    Member member2 = Member.builder()
-        .email("test2@example.com")
-        .name("testuser2")
-        .githubId("456")
-        .role(Role.MEMBER)
-        .build();
-    Post post= Post.builder()
-        .title("제목")
-        .content("내용")
-        .recruitmentStatus(RecruitmentStatus.NONE).build();
+    UserDetails userDetails1 =
+            User.builder()
+                    .username("1")
+                    .password("PASSWORD")
+                    .authorities(Collections.emptyList())
+                    .build();
+    UserDetails userDetails2 =
+            User.builder()
+                    .username("2")
+                    .password("PASSWORD")
+                    .authorities(Collections.emptyList())
+                    .build();
+    Member member =
+            Member.builder()
+                    .email("test1@example.com")
+                    .name("testuser1")
+                    .githubId("123")
+                    .role(Role.MEMBER)
+                    .build();
+    Member member2 =
+            Member.builder()
+                    .email("test2@example.com")
+                    .name("testuser2")
+                    .githubId("456")
+                    .role(Role.MEMBER)
+                    .build();
+    Post post =
+            Post.builder()
+                    .title("제목")
+                    .content("내용")
+                    .recruitmentStatus(RecruitmentStatus.NONE)
+                    .build();
 
     ChatRoom chatRoom;
     Long chatRoomId;
 
-
-    @Autowired
-    private CheckUserLogin checkUserLogin;
-    @Autowired
-    private ChatMemberRepository chatMemberRepository;
-
+    @Autowired private CheckUserLogin checkUserLogin;
+    @Autowired private ChatMemberRepository chatMemberRepository;
 
     @BeforeEach
     void setUp() {
@@ -106,17 +105,20 @@ class ChatMemberServiceTest {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         chatMemberService.createChatMember(chatRoomId, userDetails2);
 
-        List<ChatMemberResponse> chatMemberResponseList = chatMemberService.getChatMember(chatRoomId);
+        List<ChatMemberResponse> chatMemberResponseList =
+                chatMemberService.getChatMember(chatRoomId);
 
         System.out.println("========================================");
         for (ChatMemberResponse chatMemberResponse : chatMemberResponseList) {
-            System.out.println("chatMemberResponse ChatroomId: " + chatMemberResponse.getChatroomId());
+            System.out.println(
+                    "chatMemberResponse ChatroomId: " + chatMemberResponse.getChatroomId());
             System.out.println("chatMemberResponse MemberId: " + chatMemberResponse.getMemberId());
-            System.out.println("chatMemberResponse MemberName: " + chatMemberResponse.getMemberName());
-            System.out.println("chatMemberResponse CreatedAt: " + chatMemberResponse.getCreatedAt());
+            System.out.println(
+                    "chatMemberResponse MemberName: " + chatMemberResponse.getMemberName());
+            System.out.println(
+                    "chatMemberResponse CreatedAt: " + chatMemberResponse.getCreatedAt());
         }
         System.out.println("========================================");
-
     }
 
     @Test
@@ -233,8 +235,7 @@ class ChatMemberServiceTest {
     void updateChatMemberNotLoginTest() {
         try {
             chatMemberService.updateChatMember(chatRoomId, null, Status.ONLINE);
-        }
-        catch (ErrorException e) {
+        } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_MEMBER_NOT_LOGIN) {
                 System.out.println("========================================");
                 System.out.println("CHAT_MEMBER_NOT_LOGIN 발생");
@@ -248,13 +249,11 @@ class ChatMemberServiceTest {
     void updateChatMemberNotFoundChatRoomTest() {
         try {
             chatMemberService.updateChatMember(chatRoomId, null, Status.ONLINE);
-        }
-        catch (ErrorException e) {
+        } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_ROOM_NOT_FOUND) {
                 System.out.println("========================================");
                 System.out.println("CHAT_ROOM_NOT_FOUND 발생");
                 System.out.println("========================================");
-
             }
         }
     }
@@ -264,13 +263,11 @@ class ChatMemberServiceTest {
     void updateChatMemberJoinChatRoomTest() {
         try {
             chatMemberService.updateChatMember(chatRoomId, null, Status.ONLINE);
-        }
-        catch (ErrorException e) {
+        } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_MEMBER_ALREADY_EXISTS) {
                 System.out.println("========================================");
                 System.out.println("CHAT_MEMBER_ALREADY_EXISTS 발생");
                 System.out.println("========================================");
-
             }
         }
     }

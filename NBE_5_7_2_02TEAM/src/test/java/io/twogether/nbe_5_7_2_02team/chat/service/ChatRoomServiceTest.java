@@ -1,7 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
-import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_LIST_EMPTY;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST_NOT_FOUND;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
@@ -11,33 +10,33 @@ import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-import java.util.List;
-import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+import java.util.Optional;
+
 @SpringBootTest
 class ChatRoomServiceTest {
 
-    @Autowired
-    private ChatRoomService chatRoomService;
-    @Autowired
-    private ChatRoomRepository chatRoomRepository;
+    @Autowired private ChatRoomService chatRoomService;
+    @Autowired private ChatRoomRepository chatRoomRepository;
 
-    @Autowired
-    private PostRepository postRepository;
+    @Autowired private PostRepository postRepository;
     Post post;
 
     @BeforeEach
     void setUp() {
-        post = Post.builder()
-            .title("제목")
-            .content("내용")
-            .recruitmentStatus(RecruitmentStatus.NONE).build();
+        post =
+                Post.builder()
+                        .title("제목")
+                        .content("내용")
+                        .recruitmentStatus(RecruitmentStatus.NONE)
+                        .build();
 
         postRepository.save(post);
     }
@@ -107,6 +106,5 @@ class ChatRoomServiceTest {
 
     @Test
     @DisplayName("채팅방 삭제")
-    void deleteChatRoomTest() {
-    }
+    void deleteChatRoomTest() {}
 }

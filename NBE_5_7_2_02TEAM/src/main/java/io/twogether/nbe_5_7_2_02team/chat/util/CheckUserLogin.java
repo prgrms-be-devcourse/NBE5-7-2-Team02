@@ -6,7 +6,9 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +23,8 @@ public class CheckUserLogin {
             throw new ErrorException(CHAT_MEMBER_NOT_LOGIN);
         }
 
-        return memberRepository.findById(Long.parseLong(userDetails.getUsername()))
-            .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
+        return memberRepository
+                .findById(Long.parseLong(userDetails.getUsername()))
+                .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
     }
-
 }

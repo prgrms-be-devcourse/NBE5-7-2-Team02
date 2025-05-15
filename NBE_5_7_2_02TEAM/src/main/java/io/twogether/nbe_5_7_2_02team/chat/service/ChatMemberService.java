@@ -14,11 +14,14 @@ import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +42,7 @@ public class ChatMemberService {
             throw new ErrorException(CHAT_ROOM_EMPTY);
         }
 
-        return chatMemberList.stream()
-            .map(ChatMemberResponse::from)
-            .toList();
+        return chatMemberList.stream().map(ChatMemberResponse::from).toList();
     }
 
     @Transactional
@@ -54,17 +55,11 @@ public class ChatMemberService {
 
         if (chatMember != null) {
             throw new ErrorException(CHAT_MEMBER_ALREADY_EXISTS);
-
         }
 
-        return chatMemberRepository.save(
-            ChatMember
-                .builder()
-                .chatRoom(chatRoom)
-                .member(member)
-                .status(ONLINE)
-                .build()
-        ).getId();
+        return chatMemberRepository
+                .save(ChatMember.builder().chatRoom(chatRoom).member(member).status(ONLINE).build())
+                .getId();
     }
 
     @Transactional

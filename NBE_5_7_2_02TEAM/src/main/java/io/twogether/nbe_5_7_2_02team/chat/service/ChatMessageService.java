@@ -14,11 +14,14 @@ import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +38,15 @@ public class ChatMessageService {
 
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatRoomId);
 
-        List<ChatMessage> chatMessageList = chatMessageRepository.findByChatRoomOrderByCreatedAtAsc(chatRoom);
+        List<ChatMessage> chatMessageList =
+                chatMessageRepository.findByChatRoomOrderByCreatedAtAsc(chatRoom);
 
         return chatMessageList.stream().map(ChatMessageResponse::from).toList();
     }
 
     @Transactional
-    public Long createChatMessage(Long chatRoomId, ChatMessageRequest chatMessageRequest, UserDetails userDetails) {
+    public Long createChatMessage(
+            Long chatRoomId, ChatMessageRequest chatMessageRequest, UserDetails userDetails) {
 
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
@@ -59,12 +64,14 @@ public class ChatMessageService {
             throw new ErrorException(CHAT_MESSAGE_CONTENT_BLANK);
         }
 
-        return chatMessageRepository.save(ChatMessage.builder()
-            .chatRoom(chatRoom)
-            .chatMember(chatMember)
-            .content(content)
-            .build()
-        ).getId();
+        return chatMessageRepository
+                .save(
+                        ChatMessage.builder()
+                                .chatRoom(chatRoom)
+                                .chatMember(chatMember)
+                                .content(content)
+                                .build())
+                .getId();
     }
 
     @Transactional
@@ -80,7 +87,9 @@ public class ChatMessageService {
             throw new ErrorException(CHAT_MEMBER_NOT_ENTER);
         }
 
-        ChatMessage chatMessage = chatMessageRepository.findByIdAndChatRoomAndChatMember(chatMessageId, chatRoom, chatMember);
+        ChatMessage chatMessage =
+                chatMessageRepository.findByIdAndChatRoomAndChatMember(
+                        chatMessageId, chatRoom, chatMember);
 
         if (chatMessage == null) {
             throw new ErrorException(CHAT_MESSAGE_NOT_FOUND);

@@ -1,9 +1,11 @@
 package io.twogether.nbe_5_7_2_02team.chat.dto;
 
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMessage;
-import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,9 +18,9 @@ public class ChatMessageResponse {
 
     public static ChatMessageResponse from(ChatMessage chatMessage) {
         return new ChatMessageResponse(
-            chatMessage.getId(),
-            chatMessage.getChatMember().getMember().getId(),
-            chatMessage.getContent(),
-            chatMessage.getCreatedAt());
+                chatMessage.getId(),
+                chatMessage.getChatMember().getMember().getId(),
+                chatMessage.getContent(),
+                chatMessage.getCreatedAt());
     }
 }
