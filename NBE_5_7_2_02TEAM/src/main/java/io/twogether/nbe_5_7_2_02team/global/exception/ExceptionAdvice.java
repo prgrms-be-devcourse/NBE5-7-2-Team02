@@ -1,18 +1,18 @@
-package io.twogether.nbe_5_7_2_02team.global.exception;
+ package io.twogether.nbe_5_7_2_02team.global.exception;
 
-import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorResponse;
+ import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorResponse;
 
-import lombok.extern.slf4j.Slf4j;
+ import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.ControllerAdvice;
+ import org.springframework.web.bind.annotation.ExceptionHandler;
+ import org.springframework.web.bind.annotation.ResponseBody;
 
-@Slf4j
-@ControllerAdvice
-public class ExceptionAdvice {
+ @Slf4j
+ @ControllerAdvice
+ public class ExceptionAdvice {
 
     //    @ExceptionHandler(ErrorException.class)
     //    public Object handleException(
@@ -52,4 +52,4 @@ public class ExceptionAdvice {
         ErrorResponse error = new ErrorResponse("E001", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-}
+ }

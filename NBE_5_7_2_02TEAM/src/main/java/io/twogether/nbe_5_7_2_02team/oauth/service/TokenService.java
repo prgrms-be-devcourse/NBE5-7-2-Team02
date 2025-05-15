@@ -8,7 +8,9 @@ import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +26,7 @@ public class TokenService {
     public TokenPair refreshToken(String refreshTokenValue) {
 
         jwtTokenProvider.validate(refreshTokenValue);
-        
+
         TokenBody tokenBody = jwtTokenProvider.parseJwt(refreshTokenValue);
         Long memberId = tokenBody.getMemberId();
 
