@@ -2,11 +2,11 @@ package io.twogether.nbe_5_7_2_02team.oauth.api;
 
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
-import io.twogether.nbe_5_7_2_02team.member.dto.response.LoginResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.LoginResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.SignUpResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubLoginResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.request.GithubLoginRequest;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubLoginResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
 import lombok.RequiredArgsConstructor;

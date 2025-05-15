@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.FollowRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
 
 import org.junit.jupiter.api.BeforeEach;
