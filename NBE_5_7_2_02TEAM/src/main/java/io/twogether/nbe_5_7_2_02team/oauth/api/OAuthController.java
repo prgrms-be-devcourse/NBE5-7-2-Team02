@@ -12,6 +12,7 @@ import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +45,7 @@ public class OAuthController {
         return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
     }
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
             @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {

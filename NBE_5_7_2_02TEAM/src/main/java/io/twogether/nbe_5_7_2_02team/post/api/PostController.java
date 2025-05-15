@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,5 +35,10 @@ public class PostController {
         PostCreateResponse response = postService.createPost(request, memberId);
         return BaseResponse.of(
                 SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findPosts() {
+        return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
     }
 }
