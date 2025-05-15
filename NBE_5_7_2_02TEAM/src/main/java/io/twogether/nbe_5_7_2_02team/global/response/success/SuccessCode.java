@@ -13,6 +13,8 @@ public enum SuccessCode {
     // MEMBER
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
+    READ_MEMBER(OK, "MEMBER-202", "Read member"),
+    UPDATE_MEMBER(OK, "MEMBER-203", "Update member"),
 
     // OAUTH
     GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),

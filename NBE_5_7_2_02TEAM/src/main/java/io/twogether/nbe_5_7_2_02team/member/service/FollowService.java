@@ -11,14 +11,16 @@ import io.twogether.nbe_5_7_2_02team.member.dao.FollowRepository;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Follow;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import io.twogether.nbe_5_7_2_02team.member.dto.request.FollowRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.request.FollowRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.util.mapper.FollowMapper;
 import io.twogether.nbe_5_7_2_02team.member.util.mapper.MemberMapper;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,24 +92,22 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberCreateResponse> getFollowers(Long memberId) {
+    public Page<MemberCreateResponse> getFollowers(Long memberId, Pageable pageable) {
         Member member =
                 memberRepository
                         .findById(memberId)
                         .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
-        return followRepository.findFollowerMembers(member).stream()
-                .map(MemberMapper::toMemberCreateResponse)
-                .collect(Collectors.toList());
+        return followRepository.findFollowerMembers(member, pageable)
+                .map(MemberMapper::toMemberCreateResponse);
     }
 
     @Transactional(readOnly = true)
-    public List<MemberCreateResponse> getFollowings(Long memberId) {
+    public Page<MemberCreateResponse> getFollowings(Long memberId, Pageable pageable) {
         Member member =
                 memberRepository
                         .findById(memberId)
                         .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
-        return followRepository.findFollowingMembers(member).stream()
-                .map(MemberMapper::toMemberCreateResponse)
-                .collect(Collectors.toList());
+        return followRepository.findFollowingMembers(member, pageable)
+                .map(MemberMapper::toMemberCreateResponse);
     }
 }

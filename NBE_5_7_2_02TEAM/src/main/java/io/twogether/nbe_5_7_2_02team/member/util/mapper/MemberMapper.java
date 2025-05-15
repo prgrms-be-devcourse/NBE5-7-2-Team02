@@ -2,6 +2,10 @@ package io.twogether.nbe_5_7_2_02team.member.util.mapper;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse.PostSummary;
+import io.twogether.nbe_5_7_2_02team.post.domain.Post;
+import java.util.List;
 
 public class MemberMapper {
 
@@ -17,4 +21,34 @@ public class MemberMapper {
                 .course(member.getCourse())
                 .build();
     }
+
+    public static MyPageResponse toMyPageResponse(Member member,
+        List<Post> posts,
+        Long followerCount,
+        Long followingCount,
+        boolean isFollowing
+        ) {
+
+        List<PostSummary> postSummaries = posts.stream()
+            .map(post -> MyPageResponse.PostSummary.builder()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .build())
+            .toList();
+
+        return MyPageResponse.builder()
+            .memberId(member.getId())
+            .email(member.getEmail())
+            .name(member.getName())
+            .job(member.getJob())
+            .course(member.getCourse())
+            .profileImage(member.getProfileImage())
+            .posts(postSummaries)
+            .followerCount(followerCount)
+            .followingCount(followingCount)
+            .isFollowing(isFollowing)
+            .build();
+    }
+
+
 }

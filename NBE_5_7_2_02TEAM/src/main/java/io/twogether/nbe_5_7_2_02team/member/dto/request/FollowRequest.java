@@ -7,9 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class FollowRequest {
 
     private Long followerId;
     private Long followingId;
+
+    public static FollowRequest of(Long followerId, Long followingId) {
+        return new FollowRequest(followerId, followingId);
+    }
+
 }
