@@ -19,6 +19,7 @@ public class MemberMapper {
                 .profileImage(member.getProfileImage())
                 .job(member.getJob())
                 .course(member.getCourse())
+                .githubId(member.getGithubId())
                 .build();
     }
 

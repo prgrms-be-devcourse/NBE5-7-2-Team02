@@ -20,11 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -56,8 +53,8 @@ class FollowServiceTest {
                         Member.builder()
                                 .githubId("ghFollower2")
                                 .email("ghFollower2@example.com")
-                                .name("홍길동")
-                                .profileImage("follower.png")
+                                .name("홍길동2")
+                                .profileImage("follower2.png")
                                 .job("Backend")
                                 .course("3기")
                                 .build());
@@ -78,8 +75,8 @@ class FollowServiceTest {
                         Member.builder()
                                 .githubId("ghFollowing2")
                                 .email("ghFollowing2@example.com")
-                                .name("임꺽정")
-                                .profileImage("following.png")
+                                .name("임꺽정2")
+                                .profileImage("following2.png")
                                 .job("Frontend")
                                 .course("2기")
                                 .build());
