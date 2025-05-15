@@ -109,7 +109,8 @@ class FollowServiceTest {
         FollowRequest request = FollowRequest.of(follower1.getId(), following1.getId());
         followService.createFollow(request);
 
-        ErrorException e = assertThrows(ErrorException.class, () -> followService.createFollow(request));
+        ErrorException e =
+                assertThrows(ErrorException.class, () -> followService.createFollow(request));
 
         assertThat(e.getErrorCode()).isEqualTo(NOT_DUPLICATION_FOLLOW);
     }
@@ -151,13 +152,13 @@ class FollowServiceTest {
         followService.createFollow(FollowRequest.of(follower1.getId(), following1.getId()));
         followService.createFollow(FollowRequest.of(follower2.getId(), following1.getId()));
 
-        Page<MemberCreateResponse> followers = followService.getFollowers(following1.getId(),
-            PageRequest.of(0,5));
+        Page<MemberCreateResponse> followers =
+                followService.getFollowers(following1.getId(), PageRequest.of(0, 5));
 
         assertThat(followers).hasSize(2);
         assertThat(followers)
-            .extracting(MemberCreateResponse::getGithubId)
-            .containsExactlyInAnyOrder("ghFollower", "ghFollower2");
+                .extracting(MemberCreateResponse::getGithubId)
+                .containsExactlyInAnyOrder("ghFollower", "ghFollower2");
     }
 
     @Test
@@ -166,12 +167,12 @@ class FollowServiceTest {
         followService.createFollow(FollowRequest.of(follower1.getId(), following1.getId()));
         followService.createFollow(FollowRequest.of(follower1.getId(), following2.getId()));
 
-        Page<MemberCreateResponse> followings = followService.getFollowings(follower1.getId(),
-            PageRequest.of(0,5));
+        Page<MemberCreateResponse> followings =
+                followService.getFollowings(follower1.getId(), PageRequest.of(0, 5));
 
         assertThat(followings).hasSize(2);
         assertThat(followings)
-            .extracting(MemberCreateResponse::getGithubId)
-            .containsExactlyInAnyOrder("ghFollowing", "ghFollowing2");
+                .extracting(MemberCreateResponse::getGithubId)
+                .containsExactlyInAnyOrder("ghFollowing", "ghFollowing2");
     }
 }
