@@ -8,6 +8,7 @@ public class FollowMapper {
     public FollowMapper() {}
 
     public static FollowCreateResponse toFollowCreateResponse(Follow follow) {
-        return new FollowCreateResponse(follow.getFollower().getId(), follow.getFollowing().getId());
+        return new FollowCreateResponse(
+                follow.getFollower().getId(), follow.getFollowing().getId());
     }
 }
