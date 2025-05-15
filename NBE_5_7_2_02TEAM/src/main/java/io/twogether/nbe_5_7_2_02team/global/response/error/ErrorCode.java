@@ -33,12 +33,16 @@ public enum ErrorCode {
     // IMAGE
     IMAGE_UPLOAD_LIMIT_EXCEEDED(BAD_REQUEST, "IMAGE-001", "이미지는 최대 10장까지만 업로드할 수 있습니다."),
     IMAGE_UPLOAD_FAILED(BAD_REQUEST, "IMAGE-002", "이미지 저장 중 오류가 발생했습니다."),
+    IMAGE_DELETE_FAILED(BAD_REQUEST, "IMAGE-003", "기존 이미지 삭제 중 오류가 발생했습니다."),
+
+    // POST
+    NOT_FOUND_POST(NOT_FOUND, "POST-001", "해당 게시글이 존재하지 않습니다."),
+    UNAUTHORIZED_POST_ACCESS(UNAUTHORIZED, "POST-002", "게시글에 대한 권한이 없습니다."),
 
     // CHATROOM
     CHAT_ROOM_LIST_EMPTY(NOT_FOUND, "CHATROOM-001", "목록에 채팅창이 존재하지 않습니다."),
-    POST_NOT_FOUND(NOT_FOUND, "CHATROOM-002", "게시글을 찾을 수 없습니다."),
-    CHAT_ROOM_ALREADY_EXISTS(BAD_REQUEST, "CHATROOM-003", "채팅방이 이미 존재합니다."),
-    CHATROOM_NOT_FOUND(NOT_FOUND, "CHATROOM-004", "채팅방을 찾을 수 없습니다.");
+    CHAT_ROOM_ALREADY_EXISTS(BAD_REQUEST, "CHATROOM-002", "채팅방이 이미 존재합니다."),
+    CHATROOM_NOT_FOUND(NOT_FOUND, "CHATROOM-003", "채팅방을 찾을 수 없습니다.");
 
     private final ErrorStatus errorStatus;
     private final String code;
