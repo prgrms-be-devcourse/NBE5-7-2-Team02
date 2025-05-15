@@ -1,8 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.member.dto.response;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Builder

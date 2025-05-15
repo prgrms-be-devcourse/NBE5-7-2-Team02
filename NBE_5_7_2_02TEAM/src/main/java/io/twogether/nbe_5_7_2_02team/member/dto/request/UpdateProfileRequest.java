@@ -14,5 +14,4 @@ public class UpdateProfileRequest {
     public UpdateProfileRequest(String profileImage) {
         this.profileImage = profileImage;
     }
-
 }
