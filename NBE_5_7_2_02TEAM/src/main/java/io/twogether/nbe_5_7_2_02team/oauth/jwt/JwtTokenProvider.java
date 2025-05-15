@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -43,8 +42,9 @@ public class JwtTokenProvider {
 
     public TokenPair generateTokenPair(Member member) {
 
-        refreshTokenRepository.findByMemberId(member.getId())
-            .ifPresent(refreshTokenRepository::delete);
+        refreshTokenRepository
+                .findByMemberId(member.getId())
+                .ifPresent(refreshTokenRepository::delete);
 
         String accessToken = issueAccessToken(member.getId(), member.getRole());
         String refreshToken = issueRefreshToken(member.getId(), member.getRole());

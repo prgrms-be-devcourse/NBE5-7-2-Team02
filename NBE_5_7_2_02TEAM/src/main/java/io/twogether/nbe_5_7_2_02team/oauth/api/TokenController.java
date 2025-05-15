@@ -33,5 +33,4 @@ public class TokenController {
         tokenService.invalidateRefreshToken(request.getRefreshToken());
         return BaseResponse.of(SuccessCode.LOGOUT_SUCCESS, null, null);
     }
-
 }
