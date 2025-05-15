@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FollowCreateResponse {
 
     private Long followerId;
     private Long followingId;
 
-    @Builder
     public FollowCreateResponse(Long followerId, Long followingId) {
         this.followerId = followerId;
         this.followingId = followingId;

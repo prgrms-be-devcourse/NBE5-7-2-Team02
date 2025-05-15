@@ -38,4 +38,5 @@ public class BaseResponse<T> {
             case NO_CONTENT -> ResponseEntity.noContent().build();
         };
     }
+
 }
