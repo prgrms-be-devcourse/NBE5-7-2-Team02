@@ -3,18 +3,18 @@ package io.twogether.nbe_5_7_2_02team.post.util;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 
-import java.io.File;
-import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,18 +56,19 @@ public class ImageUploader {
 
     public void deletePostImageByFolder(Long postId) {
 
-        Path folderPath = Paths.get(baseUploadDir)
-            .toAbsolutePath()
-            .normalize()
-            .resolve("post")
-            .resolve(postId.toString());
+        Path folderPath =
+                Paths.get(baseUploadDir)
+                        .toAbsolutePath()
+                        .normalize()
+                        .resolve("post")
+                        .resolve(postId.toString());
 
         try {
             if (Files.exists(folderPath)) {
                 Files.walk(folderPath)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+                        .sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(File::delete);
             }
         } catch (IOException e) {
             throw new ErrorException(ErrorCode.IMAGE_DELETE_FAILED);

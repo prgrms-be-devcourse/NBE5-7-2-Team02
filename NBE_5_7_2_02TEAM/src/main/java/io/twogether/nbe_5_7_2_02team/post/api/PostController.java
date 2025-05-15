@@ -42,22 +42,19 @@ public class PostController {
 
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<PostResponse>> updatePost(
-        @PathVariable Long postId,
-        @ModelAttribute PostUpdateRequest request,
-        @RequestParam Long memberId) {
+            @PathVariable Long postId,
+            @ModelAttribute PostUpdateRequest request,
+            @RequestParam Long memberId) {
 
         PostResponse response = postService.updatePost(postId, request, memberId);
-        return BaseResponse.of(
-            SuccessCode.UPDATE_POST, response, null);
+        return BaseResponse.of(SuccessCode.UPDATE_POST, response, null);
     }
 
     @DeleteMapping(value = "/{postId}")
     public ResponseEntity<BaseResponse<Void>> deletePost(
-        @PathVariable Long postId,
-        @RequestParam Long memberId) {
+            @PathVariable Long postId, @RequestParam Long memberId) {
 
         postService.deletePost(postId, memberId);
-        return BaseResponse.of(
-            SuccessCode.DELETE_POST, null, null);
+        return BaseResponse.of(SuccessCode.DELETE_POST, null, null);
     }
 }

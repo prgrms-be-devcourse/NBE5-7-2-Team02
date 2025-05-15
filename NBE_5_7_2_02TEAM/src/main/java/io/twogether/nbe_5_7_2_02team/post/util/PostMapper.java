@@ -56,10 +56,6 @@ public class PostMapper {
     }
 
     public void updateFromRequest(Post post, PostUpdateRequest request) {
-        post.update(
-            request.getTitle(),
-            request.getContent(),
-            request.getRecruitmentStatus()
-        );
+        post.update(request.getTitle(), request.getContent(), request.getRecruitmentStatus());
     }
 }

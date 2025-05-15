@@ -37,9 +37,9 @@ public class PostService {
     public PostResponse createPost(PostCreateRequest request, Long memberId) {
 
         Member member =
-            memberRepository
-                .findById(memberId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         Post post = postMapper.toEntity(request, member);
         postRepository.save(post);
@@ -58,8 +58,10 @@ public class PostService {
     @Transactional
     public PostResponse updatePost(Long postId, PostUpdateRequest request, Long memberId) {
 
-        Post updatePost = postRepository.findById(postId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+        Post updatePost =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
         if (!updatePost.getMember().getId().equals(memberId)) {
             throw new ErrorException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
@@ -90,8 +92,10 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, Long memberId) {
 
-        Post deletePost = postRepository.findById(postId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+        Post deletePost =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
         if (!deletePost.getMember().getId().equals(memberId)) {
             throw new ErrorException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
