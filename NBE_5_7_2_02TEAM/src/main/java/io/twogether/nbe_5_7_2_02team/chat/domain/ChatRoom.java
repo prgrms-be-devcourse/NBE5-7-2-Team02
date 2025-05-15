@@ -23,7 +23,7 @@ public class ChatRoom extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatroom_id")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne
