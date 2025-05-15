@@ -2,16 +2,17 @@ package io.twogether.nbe_5_7_2_02team.oauth.api;
 
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
-import io.twogether.nbe_5_7_2_02team.member.dto.LoginResponse;
-import io.twogether.nbe_5_7_2_02team.member.dto.SignUpRequest;
-import io.twogether.nbe_5_7_2_02team.member.dto.SignUpResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.GitHubLoginResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.GithubLoginRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.LoginResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.SignUpResponse;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.request.GithubLoginRequest;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubLoginResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +38,14 @@ public class OAuthController {
         return BaseResponse.of(SuccessCode.GITHUB_CALLBACK_SUCCESS, response, null);
     }
 
-    @PostMapping("/login/github")
+    @PostMapping("/oauth2/login/github")
     public ResponseEntity<BaseResponse<LoginResponse>> githubLogin(
             @RequestBody GithubLoginRequest request) {
         LoginResponse response = oAuthService.login(request.getAccessToken());
         return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
     }
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
             @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {

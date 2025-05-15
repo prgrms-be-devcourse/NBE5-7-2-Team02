@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.global.response.success;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessStatus.CREATED;
+import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessStatus.NO_CONTENT;
 import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessStatus.OK;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,10 @@ public enum SuccessCode {
     GITHUB_LOGIN_SUCCESS(OK, "OAUTH-201", "GitHub login successful"),
     SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful"),
 
+    // JWT
+    REFRESH_TOKEN_SUCCESS(OK, "JWT-200", "Token refreshed successfully"),
+    LOGOUT_SUCCESS(OK, "JWT-201", "Logout successful"),
+
     // FOLLOW
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
     FOUND_FOLLOWER(OK, "FOLLOWER-200", "Found follower"),
@@ -30,10 +35,15 @@ public enum SuccessCode {
     CREATE_POST(CREATED, "POST-201", "Create post"),
     UPDATE_POST(OK, "POST-202", "Update post"),
     DELETE_POST(OK, "POST-203", "Delete post"),
+    NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
 
     // CHATROOM
     FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
-    CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom");
+    CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom"),
+
+    FOUND_TAG(OK, "TAG-200", "Found tag"),
+    NO_CONTENT_TAG(NO_CONTENT, "TAG-204", "No tags to response"),
+    ;
 
     private final SuccessStatus status;
     private final String code;

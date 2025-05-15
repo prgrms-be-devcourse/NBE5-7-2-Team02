@@ -1,7 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 
-import io.twogether.nbe_5_7_2_02team.oauth.dto.MemberDetails;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenBody;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
 import jakarta.servlet.FilterChain;

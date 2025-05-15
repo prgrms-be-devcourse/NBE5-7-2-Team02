@@ -1,4 +1,4 @@
-package io.twogether.nbe_5_7_2_02team.member.dto;
+package io.twogether.nbe_5_7_2_02team.member.dto.response;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class SignUpResponse {
 
     private final Long id;
@@ -15,17 +16,6 @@ public class SignUpResponse {
     private final String job;
     private final String course;
     private final Role role;
-
-    @Builder
-    public SignUpResponse(
-            Long id, String email, String name, String job, String course, Role role) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.job = job;
-        this.course = course;
-        this.role = role;
-    }
 
     public static SignUpResponse from(Member member) {
         return SignUpResponse.builder()

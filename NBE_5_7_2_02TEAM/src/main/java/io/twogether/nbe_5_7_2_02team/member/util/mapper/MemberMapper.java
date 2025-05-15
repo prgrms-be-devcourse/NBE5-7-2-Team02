@@ -1,7 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.member.util.mapper;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import io.twogether.nbe_5_7_2_02team.member.dto.MemberCreateResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
 
 public class MemberMapper {
 

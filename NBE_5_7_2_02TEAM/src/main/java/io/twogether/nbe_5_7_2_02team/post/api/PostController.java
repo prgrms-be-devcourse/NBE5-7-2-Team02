@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,5 +57,9 @@ public class PostController {
 
         postService.deletePost(postId, memberId);
         return BaseResponse.of(SuccessCode.DELETE_POST, null, null);
+
+      @GetMapping
+    public ResponseEntity<?> findPosts() {
+        return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
     }
 }

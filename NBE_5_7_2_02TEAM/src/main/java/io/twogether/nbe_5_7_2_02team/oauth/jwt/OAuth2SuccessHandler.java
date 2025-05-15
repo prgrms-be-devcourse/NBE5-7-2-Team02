@@ -3,8 +3,8 @@ package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.MemberDetails;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
 import jakarta.servlet.ServletException;

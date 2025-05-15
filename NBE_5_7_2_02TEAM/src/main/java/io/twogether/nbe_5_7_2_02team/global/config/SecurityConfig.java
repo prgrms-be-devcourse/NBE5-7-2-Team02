@@ -7,13 +7,21 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -24,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(httpB -> httpB.disable())
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .formLogin(form -> form.disable())
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -36,15 +44,33 @@ public class SecurityConfig {
                         auth ->
                                 auth.requestMatchers(CorsUtils::isPreFlightRequest)
                                         .permitAll()
-                                        .requestMatchers("/api/**")
+                                        .requestMatchers(
+                                                "/api/tags/**",
+                                                "/api/oauth2/**",
+                                                "/api/tags",
+                                                "/api/token/**")
                                         .permitAll()
-                                        //                .hasAnyAuthority("ADMIN", "MEMBER")
-                                        .requestMatchers("/api/admin/**")
-                                        .hasAnyAuthority("ADMIN")
+                                        .requestMatchers("/api/**")
+                                        .hasAnyAuthority("MEMBER")
+                                        .requestMatchers(HttpMethod.GET, "api/posts")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

@@ -29,6 +29,7 @@ public enum ErrorCode {
     EXPIRED_JWT_TOKEN(UNAUTHORIZED, "JWT-002", "만료된 JWT 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, "JWT-003", "지원되지 않는 JWT 토큰입니다."),
     INVALID_JWT_TOKEN(UNAUTHORIZED, "JWT-004", "유효하지 않은 JWT 토큰입니다."),
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "JWT-005", "유효하지 않은 Refresh 토큰입니다."),
 
     // IMAGE
     IMAGE_UPLOAD_LIMIT_EXCEEDED(BAD_REQUEST, "IMAGE-001", "이미지는 최대 10장까지만 업로드할 수 있습니다."),

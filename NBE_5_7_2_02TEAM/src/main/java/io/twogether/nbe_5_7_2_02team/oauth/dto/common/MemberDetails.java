@@ -1,4 +1,4 @@
-package io.twogether.nbe_5_7_2_02team.oauth.dto;
+package io.twogether.nbe_5_7_2_02team.oauth.dto.common;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
