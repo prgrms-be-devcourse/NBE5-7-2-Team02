@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
 import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
+
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -34,7 +35,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void updateProfile(String profileImage){
+    public void updateProfile(String profileImage) {
         this.profileImage = profileImage;
     }
 

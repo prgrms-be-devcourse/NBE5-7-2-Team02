@@ -16,5 +16,4 @@ public class FollowRequest {
     public static FollowRequest of(Long followerId, Long followingId) {
         return new FollowRequest(followerId, followingId);
     }
-
 }
