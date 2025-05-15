@@ -57,8 +57,9 @@ public class PostController {
 
         postService.deletePost(postId, memberId);
         return BaseResponse.of(SuccessCode.DELETE_POST, null, null);
+    }
 
-      @GetMapping
+    @GetMapping
     public ResponseEntity<?> findPosts() {
         return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
     }
