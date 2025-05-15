@@ -11,11 +11,13 @@ import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse;
 import io.twogether.nbe_5_7_2_02team.member.util.mapper.MemberMapper;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
-import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +29,10 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MyPageResponse getMemberPage(Long targetMemberId, Long viewerId) {
-        Member target = memberRepository.findById(targetMemberId)
-            .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
+        Member target =
+                memberRepository
+                        .findById(targetMemberId)
+                        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
         List<Post> posts = postRepository.findAllByMemberId(targetMemberId);
 
         Long followerCount = followRepository.countByFollowing(target);
@@ -38,21 +42,24 @@ public class MemberService {
         boolean isFollowing = false;
 
         if (!targetMemberId.equals(viewerId)) {
-            isFollowing = followRepository.existsByFollowerAndFollowing(
-                memberRepository.findById(viewerId)
-                    .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER)),
-                target
-            );
+            isFollowing =
+                    followRepository.existsByFollowerAndFollowing(
+                            memberRepository
+                                    .findById(viewerId)
+                                    .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER)),
+                            target);
         }
 
-        return MemberMapper.toMyPageResponse(target, posts, followerCount, followingCount, isFollowing);
+        return MemberMapper.toMyPageResponse(
+                target, posts, followerCount, followingCount, isFollowing);
     }
 
     @Transactional
     public void updateProfile(Long memberId, UpdateProfileRequest request) {
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
         member.updateProfile(request.getProfileImage());
     }
-
 }

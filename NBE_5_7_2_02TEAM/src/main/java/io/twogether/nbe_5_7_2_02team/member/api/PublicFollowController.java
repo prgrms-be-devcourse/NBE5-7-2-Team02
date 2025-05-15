@@ -2,12 +2,15 @@ package io.twogether.nbe_5_7_2_02team.member.api;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.COUNT_FOLLOWS;
 import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.FOUND_FOLLOWS;
+
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.service.FollowService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,15 +28,17 @@ public class PublicFollowController {
     private final FollowService followService;
 
     @GetMapping("/{memberId}/followers")
-    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowers(@PathVariable Long memberId,
-        @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
+    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowers(
+            @PathVariable Long memberId,
+            @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followers = followService.getFollowers(memberId, pageable);
         return BaseResponse.of(FOUND_FOLLOWS, followers, null);
     }
 
     @GetMapping("/{memberId}/followings")
-    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowings(@PathVariable Long memberId,
-        @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
+    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowings(
+            @PathVariable Long memberId,
+            @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followings = followService.getFollowings(memberId, pageable);
         return BaseResponse.of(FOUND_FOLLOWS, followings, null);
     }

@@ -18,9 +18,14 @@ public class MemberCreateResponse {
     private String course;
     private String githubId;
 
-
     public MemberCreateResponse(
-            Long id, String email, String name, String profileImage, String job, String course, String githubId) {
+            Long id,
+            String email,
+            String name,
+            String profileImage,
+            String job,
+            String course,
+            String githubId) {
         this.id = id;
         this.email = email;
         this.name = name;

@@ -11,8 +11,8 @@ import io.twogether.nbe_5_7_2_02team.member.dao.FollowRepository;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Follow;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.FollowRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.util.mapper.FollowMapper;
 import io.twogether.nbe_5_7_2_02team.member.util.mapper.MemberMapper;
@@ -23,9 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,7 +94,8 @@ public class FollowService {
                 memberRepository
                         .findById(memberId)
                         .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
-        return followRepository.findFollowerMembers(member, pageable)
+        return followRepository
+                .findFollowerMembers(member, pageable)
                 .map(MemberMapper::toMemberCreateResponse);
     }
 
@@ -107,7 +105,8 @@ public class FollowService {
                 memberRepository
                         .findById(memberId)
                         .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
-        return followRepository.findFollowingMembers(member, pageable)
+        return followRepository
+                .findFollowingMembers(member, pageable)
                 .map(MemberMapper::toMemberCreateResponse);
     }
 }
