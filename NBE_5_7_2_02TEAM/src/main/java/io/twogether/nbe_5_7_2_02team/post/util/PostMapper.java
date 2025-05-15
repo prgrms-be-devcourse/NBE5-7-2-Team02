@@ -4,6 +4,7 @@ import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
 
@@ -52,5 +53,13 @@ public class PostMapper {
                             return PostTag.builder().post(post).tag(tag).build();
                         })
                 .toList();
+    }
+
+    public void updateFromRequest(Post post, PostUpdateRequest request) {
+        post.update(
+            request.getTitle(),
+            request.getContent(),
+            request.getRecruitmentStatus()
+        );
     }
 }
