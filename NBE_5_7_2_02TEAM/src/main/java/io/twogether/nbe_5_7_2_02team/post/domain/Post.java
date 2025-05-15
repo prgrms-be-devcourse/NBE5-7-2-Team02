@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -36,6 +37,7 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostTag> postTags = new ArrayList<>();
 
+    @Setter
     @ElementCollection
     @CollectionTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
     @Column(name = "image_url")
@@ -62,7 +64,9 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void update(String title, String content, RecruitmentStatus status) {
+        if (title != null) this.title = title;
+        if (content != null) this.content = content;
+        if (recruitmentStatus != null) this.recruitmentStatus = status;
     }
 }
