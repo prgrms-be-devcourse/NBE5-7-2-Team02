@@ -2,6 +2,8 @@ package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.chat.domain.Status.ONLINE;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_ALREADY_EXISTS;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_ENTER;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_UNDEFINED_STATUS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_EMPTY;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
@@ -73,13 +75,17 @@ public class ChatMemberService {
 
         ChatMember chatMember = chatMemberRepository.findByChatRoomAndMember(chatRoom, member);
 
-        if (chatMember != null) {
-            throw new ErrorException(CHAT_MEMBER_ALREADY_EXISTS);
-
+        if (chatMember == null) {
+            throw new ErrorException(CHAT_MEMBER_NOT_ENTER);
         }
 
-        chatMember.updateStatus(status);
+        switch (status) {
+            case OFFLINE, ONLINE, LEFT -> {
+                chatMember.updateStatus(status);
+                return chatMemberRepository.save(chatMember).getId();
+            }
+        }
 
-        return chatMemberRepository.save(chatMember).getId();
+        throw new ErrorException(CHAT_MEMBER_UNDEFINED_STATUS);
     }
 }

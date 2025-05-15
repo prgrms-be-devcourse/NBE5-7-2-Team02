@@ -44,6 +44,7 @@ public enum ErrorCode {
     CHAT_MEMBER_NOT_LOGIN(BAD_REQUEST, "CHAT-MEMBER-002", "로그인 후 참여 가능합니다."),
     CHAT_ROOM_EMPTY(NOT_FOUND, "CHAT-MEMBER-003", "채팅방에 참여 중인 인원이 없습니다.."),
     CHAT_MEMBER_NOT_ENTER(NOT_FOUND, "CHAT-MEMBER-004", "채팅방에 참여 중이 아닙니다."),
+    CHAT_MEMBER_UNDEFINED_STATUS(BAD_REQUEST, "CHAT-MEMBER-005", "잘못된 상태 값 입니다."),
 
     // CHATROOM
     CHAT_ROOM_LIST_EMPTY(NOT_FOUND, "CHATROOM-001", "목록에 채팅창이 존재하지 않습니다."),

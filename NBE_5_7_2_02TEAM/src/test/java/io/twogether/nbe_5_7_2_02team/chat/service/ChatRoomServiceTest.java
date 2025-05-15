@@ -106,22 +106,6 @@ class ChatRoomServiceTest {
     }
 
     @Test
-    @DisplayName("채팅방 목록 조회 테스트: 에러 - 채팅방이 존재하지 않음")
-    void getChatRoomListEmptyTest() {
-        chatRoomRepository.deleteAll();
-
-        try {
-            chatRoomService.getChatRoomList();
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_ROOM_LIST_EMPTY) {
-                System.out.println("========================================");
-                System.out.println("CHAT_ROOM_LIST_EMPTY 발생");
-                System.out.println("========================================");
-            }
-        }
-    }
-
-    @Test
     @DisplayName("채팅방 삭제")
     void deleteChatRoomTest() {
     }

@@ -21,11 +21,11 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<BaseResponse<List<ChatRoomResponse>>> getChatRoomList() {
-        List<ChatRoomResponse> chatRoomList = chatRoomService.getChatRoomList();
+        List<ChatRoomResponse> chatRoomResponse = chatRoomService.getChatRoomList();
 
-        return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomList, null);
+        return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomResponse, null);
     }
 
     @PostMapping("/{postId}")

@@ -13,6 +13,7 @@ import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,19 +28,7 @@ public class ChatRoomService {
     public List<ChatRoomResponse> getChatRoomList() {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
 
-        if (chatRoomList.isEmpty()) {
-            throw new ErrorException(CHAT_ROOM_LIST_EMPTY);
-        }
-
-        return chatRoomList.stream()
-                .map(
-                        ChatRoom ->
-                                ChatRoomResponse.builder()
-                                        .id(ChatRoom.getId())
-                                        .postId(ChatRoom.getPost().getId())
-                                        .title(ChatRoom.getPost().getTitle())
-                                        .build())
-                .toList();
+        return chatRoomList.stream().map(ChatRoomResponse::from).toList();
     }
 
     @Transactional
