@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     Optional<ChatRoom> findByPost(Post post);
+    void deleteByPost(Post post);
 }
