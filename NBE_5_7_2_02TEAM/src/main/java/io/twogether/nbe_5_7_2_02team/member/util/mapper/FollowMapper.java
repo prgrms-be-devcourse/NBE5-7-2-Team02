@@ -1,7 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.member.util.mapper;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Follow;
-import io.twogether.nbe_5_7_2_02team.member.dto.FollowCreateResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
 
 public class FollowMapper {
 

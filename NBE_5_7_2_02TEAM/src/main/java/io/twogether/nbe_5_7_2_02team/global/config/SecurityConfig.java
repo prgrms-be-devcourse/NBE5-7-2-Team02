@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -44,10 +45,15 @@ public class SecurityConfig {
                                 auth.requestMatchers(CorsUtils::isPreFlightRequest)
                                         .permitAll()
                                         .requestMatchers(
-                                                "/api/tags/**", "/api/oauth2/**", "/api/tags")
+                                                "/api/tags/**",
+                                                "/api/oauth2/**",
+                                                "/api/tags",
+                                                "/api/token/**")
                                         .permitAll()
                                         .requestMatchers("/api/**")
                                         .hasAnyAuthority("MEMBER")
+                                        .requestMatchers(HttpMethod.GET, "api/posts")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .addFilterBefore(
