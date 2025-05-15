@@ -2,6 +2,9 @@ spring:
   application:
     name: NBE_5_7_2_02TEAM
 
+  config:
+    import: optional:file:.env[.properties]
+
   servlet:
     multipart:
       max-file-size: 10MB
