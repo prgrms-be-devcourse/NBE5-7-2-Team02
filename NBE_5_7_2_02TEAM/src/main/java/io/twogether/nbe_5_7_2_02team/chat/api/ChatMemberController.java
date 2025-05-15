@@ -1,0 +1,49 @@
+package io.twogether.nbe_5_7_2_02team.chat.api;
+
+import io.twogether.nbe_5_7_2_02team.chat.domain.Status;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberResponse;
+import io.twogether.nbe_5_7_2_02team.chat.service.ChatMemberService;
+import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
+import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
+import java.net.URI;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/chatmember")
+public class ChatMemberController {
+
+    private final ChatMemberService chatMemberService;
+
+    @GetMapping("/{chatroomId}")
+    public ResponseEntity<BaseResponse<List<ChatMemberResponse>>> getChatMemberList(@PathVariable("chatroomId") Long chatroomId) {
+        List<ChatMemberResponse> chatMember = chatMemberService.getChatMember(chatroomId);
+
+        return BaseResponse.of(SuccessCode.FOUND_CHAT_MEMBER, chatMember, null);
+    }
+
+    @PostMapping("/{chatroomId}")
+    public ResponseEntity<BaseResponse<Long>> createChatMember(@PathVariable("chatroomId") Long chatroomId, @AuthenticationPrincipal UserDetails userDetails) {
+        Long chatMember = chatMemberService.createChatMember(chatroomId, userDetails);
+
+        return BaseResponse.of(SuccessCode.CREATE_CHAT_MEMBER, chatMember, URI.create("/api/chatmember/" + chatroomId));
+    }
+
+    @PutMapping("/{chatroomId}")
+    public ResponseEntity<BaseResponse<Long>> updateChatMember(@PathVariable("chatroomId") Long chatroomId, @AuthenticationPrincipal UserDetails userDetails, @RequestParam Status status) {
+        Long chatMember = chatMemberService.updateChatMember(chatroomId, userDetails, status);
+
+        return BaseResponse.of(SuccessCode.UPDATE_CHAT_MEMBER, chatMember, null);
+    }
+}

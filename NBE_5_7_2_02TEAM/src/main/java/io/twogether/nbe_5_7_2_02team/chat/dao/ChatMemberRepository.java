@@ -1,7 +1,16 @@
 package io.twogether.nbe_5_7_2_02team.chat.dao;
 
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
-
+import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
+import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ChatMemberRepository extends JpaRepository<ChatMember, Long> {}
+public interface ChatMemberRepository extends JpaRepository<ChatMember, Long> {
+
+    ChatMember findByChatRoomAndMember(ChatRoom chatRoom, Member member);
+
+    List<ChatMember> findByChatRoom(ChatRoom chatRoom);
+
+    void deleteByMember(Member member);
+}

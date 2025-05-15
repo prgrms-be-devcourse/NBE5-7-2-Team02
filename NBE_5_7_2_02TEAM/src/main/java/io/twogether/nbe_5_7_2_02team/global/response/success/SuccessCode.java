@@ -35,6 +35,16 @@ public enum SuccessCode {
     CREATE_POST(CREATED, "POST-201", "Create post"),
     NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
 
+    // CHAT_MESSAGE
+    FOUND_CHAT_MESSAGE(CREATED, "CHAT-MESSAGE-200", "Found chat message"),
+    CREATE_CHAT_MESSAGE(OK, "CHAT-MESSAGE-201", "Create chat message"),
+    DELETE_CHAT_MESSAGE(OK, "CHAT-MESSAGE-204", "Delete chat message"),
+
+    // CHAT_MEMBER
+    FOUND_CHAT_MEMBER(OK, "CHAT-MEMBER-200", "Found chat member"),
+    CREATE_CHAT_MEMBER(CREATED, "CHAT-MEMBER-201", "Create chat member"),
+    UPDATE_CHAT_MEMBER(OK, "CHAT-MEMBER-202", "Update chat member"),
+
     // CHATROOM
     FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),
     CREATE_CHATROOM(CREATED, "CHATROOM-201", "Create chatroom"),
