@@ -20,6 +20,7 @@ import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,6 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "1", password = "<PASSWORD>")
 class ChatMemberServiceTest {
 
     @Autowired private ChatRoomService chatRoomService;
@@ -44,45 +44,19 @@ class ChatMemberServiceTest {
 
     @Autowired private PostRepository postRepository;
     @Autowired private MemberRepository memberRepository;
+    @Autowired private ChatMemberRepository chatMemberRepository;
 
-    UserDetails userDetails1 =
-            User.builder()
-                    .username("1")
-                    .password("PASSWORD")
-                    .authorities(Collections.emptyList())
-                    .build();
-    UserDetails userDetails2 =
-            User.builder()
-                    .username("2")
-                    .password("PASSWORD")
-                    .authorities(Collections.emptyList())
-                    .build();
-    Member member =
-            Member.builder()
-                    .email("test1@example.com")
-                    .name("testuser1")
-                    .githubId("123")
-                    .role(Role.MEMBER)
-                    .build();
-    Member member2 =
-            Member.builder()
-                    .email("test2@example.com")
-                    .name("testuser2")
-                    .githubId("456")
-                    .role(Role.MEMBER)
-                    .build();
-    Post post =
-            Post.builder()
-                    .title("제목")
-                    .content("내용")
-                    .recruitmentStatus(RecruitmentStatus.NONE)
-                    .build();
+    @Autowired private CheckUserLogin checkUserLogin;
+
+    UserDetails userDetails1;
+    UserDetails userDetails2;
+    Member member1;
+    Member member2;
+    Post post;
 
     ChatRoom chatRoom;
     Long chatRoomId;
 
-    @Autowired private CheckUserLogin checkUserLogin;
-    @Autowired private ChatMemberRepository chatMemberRepository;
 
     @BeforeEach
     void setUp() {
@@ -91,8 +65,15 @@ class ChatMemberServiceTest {
         postRepository.deleteAll();
         memberRepository.deleteAll();
 
-        memberRepository.save(member);
+        member1 = Member.builder().email("test1@example.com").name("testuser1").githubId("123").role(Role.MEMBER).build();
+        member2 = Member.builder().email("test2@example.com").name("testuser2").githubId("456").role(Role.MEMBER).build();
+        memberRepository.save(member1);
         memberRepository.save(member2);
+
+        userDetails1 = User.builder().username(String.valueOf(member1.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
+        userDetails2 = User.builder().username(String.valueOf(member2.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
+        post = Post.builder().title("제목").content("내용").recruitmentStatus(RecruitmentStatus.NONE).build();
+
         postRepository.save(post);
 
         chatRoomId = chatRoomService.createChatroom(post.getId());
