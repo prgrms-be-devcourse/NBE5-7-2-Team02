@@ -33,6 +33,8 @@ public enum SuccessCode {
     // POST
     FOUND_POST(OK, "POST-200", "Found post"),
     CREATE_POST(CREATED, "POST-201", "Create post"),
+    UPDATE_POST(OK, "POST-202", "Update post"),
+    DELETE_POST(OK, "POST-203", "Delete post"),
     NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
 
     // CHATROOM
