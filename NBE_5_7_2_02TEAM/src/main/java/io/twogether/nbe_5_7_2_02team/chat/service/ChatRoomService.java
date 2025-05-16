@@ -25,7 +25,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final PostRepository postRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ChatRoomResponse> getChatRoomList() {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
 

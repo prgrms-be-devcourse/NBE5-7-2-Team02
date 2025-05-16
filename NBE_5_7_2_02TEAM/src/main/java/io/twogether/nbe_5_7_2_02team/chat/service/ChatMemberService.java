@@ -32,7 +32,7 @@ public class ChatMemberService {
     private final ChatMemberRepository chatMemberRepository;
     private final CheckUserLogin checkUserLogin;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ChatMemberResponse> getChatMember(Long chatroomId) {
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatroomId);
 

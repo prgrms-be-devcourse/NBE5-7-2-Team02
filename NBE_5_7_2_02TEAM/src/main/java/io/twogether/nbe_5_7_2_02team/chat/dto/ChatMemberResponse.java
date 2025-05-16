@@ -9,6 +9,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 public class ChatMemberResponse {
 
     private final Long chatroomId;
@@ -18,7 +19,6 @@ public class ChatMemberResponse {
     private final LocalDateTime createdAt;
     private final Status status;
 
-    @Builder
     public ChatMemberResponse(
             Long chatroomId,
             Long memberId,
