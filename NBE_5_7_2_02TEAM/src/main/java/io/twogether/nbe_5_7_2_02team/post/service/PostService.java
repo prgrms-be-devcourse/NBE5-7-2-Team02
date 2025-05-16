@@ -9,14 +9,21 @@ import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostTagRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
+import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
+import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
+import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
+import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
+import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -106,5 +113,30 @@ public class PostService {
         chatRoomRepository.deleteByPost(deletePost);
         imageUploader.deletePostImageByFolder(deletePost.getId());
         postRepository.delete(deletePost);
+    }
+
+    @Transactional(readOnly = true)
+    public PostGetResponse getFilteredPosts(PostGetRequest request, UserDetails userDetails) {
+        Long memberId = userDetails != null
+            ? Long.valueOf(userDetails.getUsername())
+            : null;
+
+        return postMapper.createPostGetResponseFromResult(
+            postRepository.findFilteredPosts(
+                memberId,
+                request.getLastPostId(),
+                request.getLimit(),
+                parseRecruitmentStatus(request.getIsRecruit()),
+                request.getIsFollowing(),
+                request.getTags()
+            )
+        );
+    }
+
+    private RecruitmentStatus parseRecruitmentStatus(Boolean isRecruit) {
+        if (isRecruit != null) {
+            return isRecruit ? RECRUITING : DONE;
+        }
+        return NONE;
     }
 }
