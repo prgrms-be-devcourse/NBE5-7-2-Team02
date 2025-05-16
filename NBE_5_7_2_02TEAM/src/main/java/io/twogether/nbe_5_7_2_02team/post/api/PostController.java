@@ -35,29 +35,29 @@ public class PostController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<PostResponse>> createPost(
-        @AuthenticationPrincipal UserDetails userDetails,
-        @Valid @ModelAttribute PostCreateRequest request) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @ModelAttribute PostCreateRequest request) {
 
-        PostResponse response = postService.createPost(request,
-            Long.parseLong(userDetails.getUsername()));
+        PostResponse response =
+                postService.createPost(request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(
-            SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
+                SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
     }
 
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<PostResponse>> updatePost(
-        @PathVariable Long postId,
-        @ModelAttribute PostUpdateRequest request,
-        @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable Long postId,
+            @ModelAttribute PostUpdateRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        PostResponse response = postService.updatePost(postId, request, Long.parseLong(
-            userDetails.getUsername()));
+        PostResponse response =
+                postService.updatePost(postId, request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(SuccessCode.UPDATE_POST, response, null);
     }
 
     @DeleteMapping(value = "/{postId}")
     public ResponseEntity<BaseResponse<Void>> deletePost(
-        @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
         postService.deletePost(postId, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(SuccessCode.DELETE_POST, null, null);
