@@ -7,6 +7,7 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
+import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageRequest;
@@ -43,63 +44,45 @@ class ChatMessageServiceTest {
     @Autowired private ChatMessageService chatMessageService;
 
     @Autowired private ChatRoomRepository chatRoomRepository;
+    @Autowired private ChatMessageRepository chatMessageRepository;
     @Autowired private PostRepository postRepository;
     @Autowired private MemberRepository memberRepository;
 
-    UserDetails userDetails1 =
-            User.builder()
-                    .username("1")
-                    .password("PASSWORD")
-                    .authorities(Collections.emptyList())
-                    .build();
-    UserDetails userDetails2 =
-            User.builder()
-                    .username("2")
-                    .password("PASSWORD")
-                    .authorities(Collections.emptyList())
-                    .build();
-    Member member1 =
-            Member.builder()
-                    .email("test1@example.com")
-                    .name("testuser1")
-                    .githubId("123")
-                    .role(Role.MEMBER)
-                    .build();
-    Member member2 =
-            Member.builder()
-                    .email("test2@example.com")
-                    .name("testuser2")
-                    .githubId("456")
-                    .role(Role.MEMBER)
-                    .build();
-    Post post =
-            Post.builder()
-                    .title("제목")
-                    .content("내용")
-                    .recruitmentStatus(RecruitmentStatus.NONE)
-                    .build();
+    UserDetails userDetails1;
+    UserDetails userDetails2;
+    Member member1;
+    Member member2;
+    Post post;
 
-    ChatMessageRequest chatMessageRequest = new ChatMessageRequest(member1.getId(), "메세지 내용");
+    ChatMessageRequest chatMessageRequest;
 
     ChatRoom chatRoom;
     Long chatRoomId;
 
-    @Autowired private CheckUserLogin checkUserLogin;
     @Autowired private ChatMemberRepository chatMemberRepository;
 
     @BeforeEach
     void setUp() {
+        chatMessageRepository.deleteAll();
         chatMemberRepository.deleteAll();
         chatRoomRepository.deleteAll();
         postRepository.deleteAll();
         memberRepository.deleteAll();
 
+        member1 = Member.builder().email("test1@example.com").name("testuser1").githubId("123").role(Role.MEMBER).build();
+        member2 = Member.builder().email("test2@example.com").name("testuser2").githubId("456").role(Role.MEMBER).build();
         memberRepository.save(member1);
         memberRepository.save(member2);
+
+        userDetails1 = User.builder().username(String.valueOf(member1.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
+        userDetails2 = User.builder().username(String.valueOf(member2.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
+        post = Post.builder().title("제목").content("내용").recruitmentStatus(RecruitmentStatus.NONE).build();
         postRepository.save(post);
 
         chatRoomId = chatRoomService.createChatroom(post.getId());
         chatRoom = chatRoomService.checkChatRoomExists(chatRoomId);
+
+        chatMessageRequest = new ChatMessageRequest(member1.getId(), "메세지 내용");
     }
 
     @Test
