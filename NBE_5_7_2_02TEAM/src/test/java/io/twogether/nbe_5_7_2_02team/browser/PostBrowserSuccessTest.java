@@ -19,7 +19,6 @@ import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-@Slf4j
 public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Autowired PostRepository postRepository;
