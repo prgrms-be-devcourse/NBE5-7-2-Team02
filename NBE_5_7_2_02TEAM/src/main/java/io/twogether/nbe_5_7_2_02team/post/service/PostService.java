@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +70,7 @@ public class PostService {
 
         postMapper.updateFromRequest(updatePost, request);
 
-        if (request.getImages() != null && !request.getImages().isEmpty()) {
+        if (!CollectionUtils.isEmpty(request.getImages())) {
             try {
                 imageUploader.deletePostImageByFolder(postId);
 
