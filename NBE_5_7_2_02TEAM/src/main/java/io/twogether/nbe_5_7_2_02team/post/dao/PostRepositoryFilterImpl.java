@@ -12,6 +12,7 @@ import io.twogether.nbe_5_7_2_02team.post.domain.QPostTag;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 import io.twogether.nbe_5_7_2_02team.post.dto.common.PostGetResult;
 import io.twogether.nbe_5_7_2_02team.tag.domain.QTag;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -50,7 +51,15 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
     }
 
     private BooleanExpression lastPostIdCondition(QPost post, Long lastPostId) {
-        return lastPostId != null ? post.id.lt(lastPostId) : null;
+        if (lastPostId == null) return null;
+
+        LocalDateTime lastCreatedAt = queryFactory
+            .select(QPost.post.createdAt)
+            .from(QPost.post)
+            .where(QPost.post.id.eq(lastPostId))
+            .fetchOne();
+
+        return lastCreatedAt != null ? post.createdAt.lt(lastCreatedAt) : null;
     }
 
     private BooleanExpression followingCondition(QPost post, Long memberId, Boolean isFollowing) {
