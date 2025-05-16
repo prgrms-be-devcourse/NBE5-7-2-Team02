@@ -1,6 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.member.api;
 
-import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.COUNT_FOLLOWS;
 import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.FOUND_FOLLOWS;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -42,5 +41,4 @@ public class PublicFollowController {
         Page<MemberCreateResponse> followings = followService.getFollowings(memberId, pageable);
         return BaseResponse.of(FOUND_FOLLOWS, followings, null);
     }
-
 }

@@ -2,7 +2,7 @@ package io.twogether.nbe_5_7_2_02team.tag.api;
 
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
-import io.twogether.nbe_5_7_2_02team.tag.dto.TagGetResponse;
+import io.twogether.nbe_5_7_2_02team.tag.dto.response.TagGetResponse;
 import io.twogether.nbe_5_7_2_02team.tag.service.TagService;
 
 import lombok.RequiredArgsConstructor;
