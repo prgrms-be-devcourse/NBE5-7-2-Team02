@@ -1,10 +1,14 @@
 package io.twogether.nbe_5_7_2_02team.post.util;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+import io.twogether.nbe_5_7_2_02team.post.dao.PostTagRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
+import io.twogether.nbe_5_7_2_02team.post.dto.common.PostGetResult;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse.PostResponse;
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
 
@@ -21,6 +25,7 @@ import java.util.List;
 public class PostMapper {
 
     private final TagRepository tagRepository;
+    private final PostTagRepository postTagRepository;
 
     public Post toEntity(PostCreateRequest request, Member member) {
         return Post.builder()
@@ -57,5 +62,37 @@ public class PostMapper {
 
     public void updateFromRequest(Post post, PostUpdateRequest request) {
         post.update(request.getTitle(), request.getContent(), request.getRecruitmentStatus());
+    }
+
+    public PostGetResponse createPostGetResponseFromResult(List<PostGetResult> posts) {
+        PostGetResponse postGetResponse = new PostGetResponse();
+        posts.forEach(
+                result -> {
+                    Post post = result.getPost();
+                    postGetResponse
+                            .getPosts()
+                            .add(
+                                    PostResponse.builder()
+                                            .postId(post.getId())
+                                            .title(post.getTitle())
+                                            .content(post.getContent())
+                                            .numLikes(result.getLikeCount())
+                                            .recruitmentStatus(post.getRecruitmentStatus().name())
+                                            .createdAt(post.getCreatedAt())
+                                            .updatedAt(post.getUpdatedAt())
+                                            .memberId(post.getMember().getId())
+                                            .memberName(post.getMember().getName())
+                                            .memberImage(post.getMember().getProfileImage())
+                                            .tags(
+                                                    postTagRepository.findAllByPost(post).stream()
+                                                            .map(
+                                                                    postTag ->
+                                                                            postTag.getTag()
+                                                                                    .getName())
+                                                            .toList())
+                                            .build());
+                });
+
+        return postGetResponse;
     }
 }

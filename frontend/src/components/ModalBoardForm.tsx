@@ -21,6 +21,17 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
   const [text, setText] = useState<string>("");
   const [files, setFiles] = useState<FileList | null>(null);
 
+  // 태그 상태 초기화 함수
+  const resetTags = () => {
+    setTags([]);  // 태그 초기화
+  };
+
+  // 모달 닫을 때 초기화
+  const handleClose = () => {
+    resetTags();
+    onClose();
+  };
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e.target.files);
   };
@@ -41,13 +52,14 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
       });
       console.log("Post request sent successfully.");
       onClose();
+      resetTags();
     } catch (error) {
       console.error("Error sending post request:", error);
     }
   };
 
   return (
-      <Modal show={open} onClose={onClose}>
+      <Modal show={open} onClose={handleClose}>
         <ModalHeader>게시글 작성</ModalHeader>
         <ModalBody>
           <div className="space-y-4">
@@ -60,7 +72,10 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
                 onChange={(e) => setText(e.target.value)}
             />
             <FileInput id="file" multiple={true} onChange={handleFileChange} />
-            <TagForm onTagsChange={(updatedTags) => setTags(updatedTags)} />
+            <TagForm
+                externalTags={tags}
+                onTagsChange={(updatedTags) => setTags(updatedTags)}
+            />
           </div>
         </ModalBody>
         <ModalFooter className="flex flex-col gap-2">
@@ -68,7 +83,7 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
             <Button className="!bg-blue-900 hover:!bg-blue-800" onClick={handleSubmit}>
               작성
             </Button>
-            <Button color="gray" onClick={onClose}>취소</Button>
+            <Button color="gray" onClick={handleClose}>취소</Button>
           </div>
         </ModalFooter>
       </Modal>

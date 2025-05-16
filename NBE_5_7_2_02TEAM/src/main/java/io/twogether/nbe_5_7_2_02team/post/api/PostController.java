@@ -3,7 +3,9 @@ package io.twogether.nbe_5_7_2_02team.post.api;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.service.PostService;
 
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -64,7 +67,13 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findPosts() {
-        return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
+    public ResponseEntity<?> findFilteredPosts(
+            @ModelAttribute PostGetRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        PostGetResponse response = postService.getFilteredPosts(request, userDetails);
+        if (CollectionUtils.isEmpty(response.getPosts())) {
+            return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
+        }
+        return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
     }
 }
