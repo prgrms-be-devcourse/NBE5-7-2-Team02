@@ -70,5 +70,4 @@ public class MyFollowController {
                 followService.getFollowings(Long.parseLong(userDetails.getUsername()), pageable);
         return BaseResponse.of(FOUND_FOLLOWS, followings, null);
     }
-
 }
