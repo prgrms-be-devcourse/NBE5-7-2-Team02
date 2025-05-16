@@ -68,7 +68,8 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<?> findFilteredPosts(
-            @ModelAttribute PostGetRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+            @ModelAttribute PostGetRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
         PostGetResponse response = postService.getFilteredPosts(request, userDetails);
         if (CollectionUtils.isEmpty(response.getPosts())) {
             return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
