@@ -41,7 +41,7 @@ public class MemberService {
         // 자기 자신 조회하는 경우에는 false로 고정
         boolean isFollowing = false;
         // 자기 자신 조회하는 경우에는 true로 고정
-        boolean isOwner = true;
+        boolean isOwner = targetMemberId.equals(viewerId);
 
         if (!targetMemberId.equals(viewerId)) {
             isFollowing =
@@ -50,7 +50,6 @@ public class MemberService {
                                     .findById(viewerId)
                                     .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER)),
                             target);
-            isOwner = false;
         }
 
         return MemberMapper.toMyPageResponse(
