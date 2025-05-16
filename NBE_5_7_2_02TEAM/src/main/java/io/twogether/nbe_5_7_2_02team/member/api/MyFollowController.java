@@ -78,7 +78,7 @@ public class MyFollowController {
         return BaseResponse.of(COUNT_FOLLOWS, count, null);
     }
 
-    @GetMapping("/me/followerings/count")
+    @GetMapping("/me/followings/count")
     public ResponseEntity<BaseResponse<Long>> getFollwingsCount(
             @AuthenticationPrincipal UserDetails userDetails) {
         Long count = followService.getFollowingCount(Long.parseLong(userDetails.getUsername()));
