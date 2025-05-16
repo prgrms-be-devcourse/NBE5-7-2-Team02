@@ -79,7 +79,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     void createPostHelper(PostCreateRequest request) throws Exception {
         // when & then
         mockMvc.perform(
-                        multipart("/api/posts/" + member.getId())
+                        multipart("/api/posts")
                                 .param("title", request.title)
                                 .param("content", request.content)
                                 .param("tags", request.tags.toArray(new String[0]))
