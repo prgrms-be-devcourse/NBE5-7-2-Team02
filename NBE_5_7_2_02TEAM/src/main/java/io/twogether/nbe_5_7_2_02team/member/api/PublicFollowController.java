@@ -43,15 +43,4 @@ public class PublicFollowController {
         return BaseResponse.of(FOUND_FOLLOWS, followings, null);
     }
 
-    @GetMapping("/{memberId}/followers/count")
-    public ResponseEntity<BaseResponse<Long>> getFollwersCount(@PathVariable Long memberId) {
-        Long count = followService.getFollowerCount(memberId);
-        return BaseResponse.of(COUNT_FOLLOWS, count, null);
-    }
-
-    @GetMapping("/{memberId}/followings/count")
-    public ResponseEntity<BaseResponse<Long>> getFollwingsCount(@PathVariable Long memberId) {
-        Long count = followService.getFollowingCount(memberId);
-        return BaseResponse.of(COUNT_FOLLOWS, count, null);
-    }
 }

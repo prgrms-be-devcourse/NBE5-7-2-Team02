@@ -21,6 +21,7 @@ public class MyPageResponse {
     private Long followingCount;
 
     private boolean isFollowing;
+    private boolean isOwner;
 
     @Getter
     @Builder
