@@ -12,7 +12,6 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageResponse;
-import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -69,14 +68,41 @@ class ChatMessageServiceTest {
         postRepository.deleteAll();
         memberRepository.deleteAll();
 
-        member1 = Member.builder().email("test1@example.com").name("testuser1").githubId("123").role(Role.MEMBER).build();
-        member2 = Member.builder().email("test2@example.com").name("testuser2").githubId("456").role(Role.MEMBER).build();
+        member1 =
+                Member.builder()
+                        .email("test1@example.com")
+                        .name("testuser1")
+                        .githubId("123")
+                        .role(Role.MEMBER)
+                        .build();
+        member2 =
+                Member.builder()
+                        .email("test2@example.com")
+                        .name("testuser2")
+                        .githubId("456")
+                        .role(Role.MEMBER)
+                        .build();
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        userDetails1 = User.builder().username(String.valueOf(member1.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
-        userDetails2 = User.builder().username(String.valueOf(member2.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
-        post = Post.builder().title("제목").content("내용").recruitmentStatus(RecruitmentStatus.NONE).build();
+        userDetails1 =
+                User.builder()
+                        .username(String.valueOf(member1.getId()))
+                        .password("PASSWORD")
+                        .authorities(Collections.emptyList())
+                        .build();
+        userDetails2 =
+                User.builder()
+                        .username(String.valueOf(member2.getId()))
+                        .password("PASSWORD")
+                        .authorities(Collections.emptyList())
+                        .build();
+        post =
+                Post.builder()
+                        .title("제목")
+                        .content("내용")
+                        .recruitmentStatus(RecruitmentStatus.NONE)
+                        .build();
         postRepository.save(post);
 
         chatRoomId = chatRoomService.createChatroom(post.getId());

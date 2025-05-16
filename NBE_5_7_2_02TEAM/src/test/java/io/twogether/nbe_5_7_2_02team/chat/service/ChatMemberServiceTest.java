@@ -20,7 +20,6 @@ import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +55,6 @@ class ChatMemberServiceTest {
     ChatRoom chatRoom;
     Long chatRoomId;
 
-
     @BeforeEach
     void setUp() {
         chatMemberRepository.deleteAll();
@@ -65,14 +62,41 @@ class ChatMemberServiceTest {
         postRepository.deleteAll();
         memberRepository.deleteAll();
 
-        member1 = Member.builder().email("test1@example.com").name("testuser1").githubId("123").role(Role.MEMBER).build();
-        member2 = Member.builder().email("test2@example.com").name("testuser2").githubId("456").role(Role.MEMBER).build();
+        member1 =
+                Member.builder()
+                        .email("test1@example.com")
+                        .name("testuser1")
+                        .githubId("123")
+                        .role(Role.MEMBER)
+                        .build();
+        member2 =
+                Member.builder()
+                        .email("test2@example.com")
+                        .name("testuser2")
+                        .githubId("456")
+                        .role(Role.MEMBER)
+                        .build();
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        userDetails1 = User.builder().username(String.valueOf(member1.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
-        userDetails2 = User.builder().username(String.valueOf(member2.getId())).password("PASSWORD").authorities(Collections.emptyList()).build();
-        post = Post.builder().title("제목").content("내용").recruitmentStatus(RecruitmentStatus.NONE).build();
+        userDetails1 =
+                User.builder()
+                        .username(String.valueOf(member1.getId()))
+                        .password("PASSWORD")
+                        .authorities(Collections.emptyList())
+                        .build();
+        userDetails2 =
+                User.builder()
+                        .username(String.valueOf(member2.getId()))
+                        .password("PASSWORD")
+                        .authorities(Collections.emptyList())
+                        .build();
+        post =
+                Post.builder()
+                        .title("제목")
+                        .content("내용")
+                        .recruitmentStatus(RecruitmentStatus.NONE)
+                        .build();
 
         postRepository.save(post);
 
