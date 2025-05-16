@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberCreateResponse {
 
@@ -15,15 +16,22 @@ public class MemberCreateResponse {
     private String profileImage;
     private String job;
     private String course;
+    private String githubId;
 
-    @Builder
     public MemberCreateResponse(
-            Long id, String email, String name, String profileImage, String job, String course) {
+            Long id,
+            String email,
+            String name,
+            String profileImage,
+            String job,
+            String course,
+            String githubId) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.profileImage = profileImage;
         this.job = job;
         this.course = course;
+        this.githubId = githubId;
     }
 }

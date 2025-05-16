@@ -1,5 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.global.exception;
 
+import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,42 +15,57 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class ExceptionAdvice {
 
-    //    @ExceptionHandler(ErrorException.class)
-    //    public Object handleException(
-    //            ErrorException e,
-    //            Model model,
-    //            HandlerMethod handlerMethod) {
-    //        boolean isApiRequest =
-    //                AnnotatedElementUtils.hasAnnotation(handlerMethod.getMethod(),
-    // ResponseBody.class);
-    //        ErrorCode errorCode = e.getErrorCode();
+    // 나중에 화면이 구성이 된다면 html(view) 예외처리와 rest Api 예외에 따라서 처리하는 코드
+    //        @ExceptionHandler(ErrorException.class)
+    //        public Object handleException(
+    //                ErrorException e,
+    //                Model model,
+    //                HandlerMethod handlerMethod) {
+    //            boolean isApiRequest =
+    //                    AnnotatedElementUtils.hasAnnotation(handlerMethod.getMethod(),
+    //     ResponseBody.class);
+    //            ErrorCode errorCode = e.getErrorCode();
     //
-    //        log.error(errorCode.getMessage(), e);
+    //            log.error(errorCode.getMessage(), e);
     //
-    //        if (isApiRequest) {
-    //            HttpStatus httpStatus =
-    //                    switch (errorCode.getErrorStatus()) {
-    //                        case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
-    //                        case NOT_FOUND -> HttpStatus.NOT_FOUND;
-    //                        case CONFLICT -> HttpStatus.CONFLICT;
-    //                        case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
-    //                        case FORBIDDEN -> HttpStatus.FORBIDDEN;
-    //                    };
+    //            if (isApiRequest) {
+    //                HttpStatus httpStatus =
+    //                        switch (errorCode.getErrorStatus()) {
+    //                            case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+    //                            case NOT_FOUND -> HttpStatus.NOT_FOUND;
+    //                            case CONFLICT -> HttpStatus.CONFLICT;
+    //                            case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+    //                            case FORBIDDEN -> HttpStatus.FORBIDDEN;
+    //                        };
     //
-    //            return ResponseEntity.status(httpStatus)
-    //                    .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+    //                return ResponseEntity.status(httpStatus)
+    //                        .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
+    //            }
+    //            else {
+    //                model.addAttribute("message", errorCode.getMessage());
+    //                model.addAttribute("url", e.getUrl());
+    //                return "error/alert";
+    //            }
     //        }
-    //        else {
-    //            model.addAttribute("message", errorCode.getMessage());
-    //            model.addAttribute("url", e.getUrl());
-    //            return "error/alert";
-    //        }
-    //    }
 
+    // 현재 view쪽이 구현되지 않아 임시로 사용하는 postman,local테스트 예외코드
     @ExceptionHandler(ErrorException.class)
     @ResponseBody
     public ResponseEntity<ErrorResponse> handleException(ErrorException e) {
-        ErrorResponse error = new ErrorResponse("E001", e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error("[ExceptionAdvice] Error handled: {}", errorCode.getMessage(), e);
+
+        HttpStatus httpStatus =
+                switch (errorCode.getErrorStatus()) {
+                    case BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+                    case NOT_FOUND -> HttpStatus.NOT_FOUND;
+                    case CONFLICT -> HttpStatus.CONFLICT;
+                    case UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+                    case FORBIDDEN -> HttpStatus.FORBIDDEN;
+                };
+
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
     }
 }
