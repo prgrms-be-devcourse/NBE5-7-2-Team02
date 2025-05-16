@@ -9,7 +9,6 @@ import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse;
 import io.twogether.nbe_5_7_2_02team.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
