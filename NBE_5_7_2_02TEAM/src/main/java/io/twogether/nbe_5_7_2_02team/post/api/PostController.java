@@ -17,7 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.util.CollectionUtils;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -37,11 +38,13 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping(value = "/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<PostResponse>> createPost(
-            @PathVariable Long memberId, @Valid @ModelAttribute PostCreateRequest request) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @ModelAttribute PostCreateRequest request) {
 
-        PostResponse response = postService.createPost(request, memberId);
+        PostResponse response =
+                postService.createPost(request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(
                 SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
     }
@@ -50,17 +53,18 @@ public class PostController {
     public ResponseEntity<BaseResponse<PostResponse>> updatePost(
             @PathVariable Long postId,
             @ModelAttribute PostUpdateRequest request,
-            @RequestParam Long memberId) {
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        PostResponse response = postService.updatePost(postId, request, memberId);
+        PostResponse response =
+                postService.updatePost(postId, request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(SuccessCode.UPDATE_POST, response, null);
     }
 
     @DeleteMapping(value = "/{postId}")
     public ResponseEntity<BaseResponse<Void>> deletePost(
-            @PathVariable Long postId, @RequestParam Long memberId) {
+            @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
-        postService.deletePost(postId, memberId);
+        postService.deletePost(postId, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(SuccessCode.DELETE_POST, null, null);
     }
 
