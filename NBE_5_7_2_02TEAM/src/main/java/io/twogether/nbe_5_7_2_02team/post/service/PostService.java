@@ -1,5 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.post.service;
 
+import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
+import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
+import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
+
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
@@ -10,14 +14,11 @@ import io.twogether.nbe_5_7_2_02team.post.dao.PostTagRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
-import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
-import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
-import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
-import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
 
@@ -117,20 +118,16 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostGetResponse getFilteredPosts(PostGetRequest request, UserDetails userDetails) {
-        Long memberId = userDetails != null
-            ? Long.valueOf(userDetails.getUsername())
-            : null;
+        Long memberId = userDetails != null ? Long.valueOf(userDetails.getUsername()) : null;
 
         return postMapper.createPostGetResponseFromResult(
-            postRepository.findFilteredPosts(
-                memberId,
-                request.getLastPostId(),
-                request.getLimit(),
-                parseRecruitmentStatus(request.getIsRecruit()),
-                request.getIsFollowing(),
-                request.getTags()
-            )
-        );
+                postRepository.findFilteredPosts(
+                        memberId,
+                        request.getLastPostId(),
+                        request.getLimit(),
+                        parseRecruitmentStatus(request.getIsRecruit()),
+                        request.getIsFollowing(),
+                        request.getTags()));
     }
 
     private RecruitmentStatus parseRecruitmentStatus(Boolean isRecruit) {

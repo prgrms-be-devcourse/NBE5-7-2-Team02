@@ -66,29 +66,32 @@ public class PostMapper {
 
     public PostGetResponse createPostGetResponseFromResult(List<PostGetResult> posts) {
         PostGetResponse postGetResponse = new PostGetResponse();
-        posts.forEach(result -> {
-            Post post = result.getPost();
-            postGetResponse.getPosts().add(
-                PostResponse.builder()
-                    .postId(post.getId())
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .numLikes(result.getLikeCount())
-                    .recruitmentStatus(post.getRecruitmentStatus().name())
-                    .createdAt(post.getCreatedAt())
-                    .updatedAt(post.getUpdatedAt())
-                    .memberId(post.getMember().getId())
-                    .memberName(post.getMember().getName())
-                    .memberImage(post.getMember().getProfileImage())
-                    .tags(
-                        postTagRepository.findAllByPost(post)
-                            .stream()
-                            .map(postTag -> postTag.getTag().getName())
-                            .toList()
-                    )
-                    .build()
-            );
-        });
+        posts.forEach(
+                result -> {
+                    Post post = result.getPost();
+                    postGetResponse
+                            .getPosts()
+                            .add(
+                                    PostResponse.builder()
+                                            .postId(post.getId())
+                                            .title(post.getTitle())
+                                            .content(post.getContent())
+                                            .numLikes(result.getLikeCount())
+                                            .recruitmentStatus(post.getRecruitmentStatus().name())
+                                            .createdAt(post.getCreatedAt())
+                                            .updatedAt(post.getUpdatedAt())
+                                            .memberId(post.getMember().getId())
+                                            .memberName(post.getMember().getName())
+                                            .memberImage(post.getMember().getProfileImage())
+                                            .tags(
+                                                    postTagRepository.findAllByPost(post).stream()
+                                                            .map(
+                                                                    postTag ->
+                                                                            postTag.getTag()
+                                                                                    .getName())
+                                                            .toList())
+                                            .build());
+                });
 
         return postGetResponse;
     }

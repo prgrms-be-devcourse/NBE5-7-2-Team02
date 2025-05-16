@@ -1,10 +1,11 @@
 package io.twogether.nbe_5_7_2_02team.post.dto.response;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
 public class PostGetResponse {

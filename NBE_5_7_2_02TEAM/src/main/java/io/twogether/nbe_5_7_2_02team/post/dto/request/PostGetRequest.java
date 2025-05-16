@@ -1,8 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.post.dto.request;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
