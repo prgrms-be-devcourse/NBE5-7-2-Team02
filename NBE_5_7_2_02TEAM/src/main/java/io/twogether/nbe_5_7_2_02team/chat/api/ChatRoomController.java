@@ -19,19 +19,19 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/chatroom")
+@RequestMapping("/api/chatroom/")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<BaseResponse<List<ChatRoomResponse>>> getChatRoomList() {
         List<ChatRoomResponse> chatRoomResponse = chatRoomService.getChatRoomList();
 
         return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomResponse, null);
     }
 
-    @PostMapping("/{postId}")
+    @PostMapping("{postId}")
     public ResponseEntity<BaseResponse<Long>> createChatRoom(@PathVariable("postId") Long postId) {
         Long id = chatRoomService.createChatroom(postId);
 

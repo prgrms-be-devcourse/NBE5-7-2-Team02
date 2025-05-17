@@ -19,20 +19,6 @@ public class ChatMemberResponse {
     private final LocalDateTime createdAt;
     private final Status status;
 
-    public ChatMemberResponse(
-            Long chatroomId,
-            Long memberId,
-            String memberName,
-            String memberImage,
-            LocalDateTime createdAt,
-            Status status) {
-        this.chatroomId = chatroomId;
-        this.memberId = memberId;
-        this.memberName = memberName;
-        this.memberImage = memberImage;
-        this.createdAt = createdAt;
-        this.status = status;
-    }
 
     public static ChatMemberResponse from(ChatMember chatMember) {
         return ChatMemberResponse.builder()

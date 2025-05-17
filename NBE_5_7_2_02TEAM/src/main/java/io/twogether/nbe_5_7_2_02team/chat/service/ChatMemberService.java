@@ -74,13 +74,11 @@ public class ChatMemberService {
             throw new ErrorException(CHAT_MEMBER_NOT_ENTER);
         }
 
-        switch (status) {
-            case OFFLINE, ONLINE, LEFT -> {
-                chatMember.updateStatus(status);
-                return chatMemberRepository.save(chatMember).getId();
-            }
+        if (status == null) {
+            throw new ErrorException(CHAT_MEMBER_UNDEFINED_STATUS);
         }
 
-        throw new ErrorException(CHAT_MEMBER_UNDEFINED_STATUS);
+        chatMember.updateStatus(status);
+        return chatMemberRepository.save(chatMember).getId();
     }
 }
