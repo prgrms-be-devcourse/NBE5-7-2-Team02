@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.CollectionUtils;
+import static org.springframework.util.CollectionUtils.isEmpty;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -67,11 +67,22 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findFilteredPosts(
+    public ResponseEntity<BaseResponse<PostGetResponse>> findFilteredPosts(
             @ModelAttribute PostGetRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
         PostGetResponse response = postService.getFilteredPosts(request, userDetails);
-        if (CollectionUtils.isEmpty(response.getPosts())) {
+        if (isEmpty(response.getPosts())) {
+            return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
+        }
+        return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<BaseResponse<PostGetResponse>> findPosts(
+            @ModelAttribute PostGetRequest request,
+            @PathVariable Long memberId) {
+        PostGetResponse response = postService.getPostsByMember(request, memberId);
+        if (isEmpty(response.getPosts())) {
             return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
         }
         return BaseResponse.of(SuccessCode.FOUND_POST, response, null);

@@ -83,13 +83,7 @@ public class PostMapper {
                                             .memberId(post.getMember().getId())
                                             .memberName(post.getMember().getName())
                                             .memberImage(post.getMember().getProfileImage())
-                                            .tags(
-                                                    postTagRepository.findAllByPost(post).stream()
-                                                            .map(
-                                                                    postTag ->
-                                                                            postTag.getTag()
-                                                                                    .getName())
-                                                            .toList())
+                                            .tags(result.getTags())
                                             .build());
                 });
 
