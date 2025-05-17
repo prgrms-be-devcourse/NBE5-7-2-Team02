@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,7 +23,6 @@ import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Equals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,22 +36,15 @@ import java.util.List;
 @AutoConfigureMockMvc
 class ChatMemberServiceTest {
 
-    @Autowired
-    private ChatRoomService chatRoomService;
-    @Autowired
-    private ChatRoomRepository chatRoomRepository;
-    @Autowired
-    private ChatMemberService chatMemberService;
+    @Autowired private ChatRoomService chatRoomService;
+    @Autowired private ChatRoomRepository chatRoomRepository;
+    @Autowired private ChatMemberService chatMemberService;
 
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ChatMemberRepository chatMemberRepository;
+    @Autowired private PostRepository postRepository;
+    @Autowired private MemberRepository memberRepository;
+    @Autowired private ChatMemberRepository chatMemberRepository;
 
-    @Autowired
-    private CheckUserLogin checkUserLogin;
+    @Autowired private CheckUserLogin checkUserLogin;
 
     UserDetails userDetails1;
     UserDetails userDetails2;
@@ -139,9 +132,9 @@ class ChatMemberServiceTest {
     void getChatMemberNotFoundChatRoomTest() {
         chatRoomRepository.deleteById(chatRoomId);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.getChatMember(chatRoomId)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class, () -> chatMemberService.getChatMember(chatRoomId));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
@@ -151,9 +144,9 @@ class ChatMemberServiceTest {
     void getChatMemberEmptyMemberTest() {
         chatMemberRepository.deleteById(chatRoomId);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.getChatMember(chatRoomId)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class, () -> chatMemberService.getChatMember(chatRoomId));
 
         assertEquals(CHAT_ROOM_EMPTY, errorException.getErrorCode());
     }
@@ -183,9 +176,10 @@ class ChatMemberServiceTest {
     @DisplayName("채팅방 입장 테스트: 에러 - 비로그인 유저")
     void createChatMemberNotLoginTest() {
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.createChatMember(chatRoomId, null)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () -> chatMemberService.createChatMember(chatRoomId, null));
 
         assertEquals(CHAT_MEMBER_NOT_LOGIN, errorException.getErrorCode());
     }
@@ -195,12 +189,12 @@ class ChatMemberServiceTest {
     void createChatMemberNoChatRoomTest() {
         chatRoomRepository.deleteAll();
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.createChatMember(chatRoomId, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () -> chatMemberService.createChatMember(chatRoomId, userDetails1));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
-
     }
 
     @Test
@@ -208,9 +202,10 @@ class ChatMemberServiceTest {
     void createChatMemberAlreadyJoinTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.createChatMember(chatRoomId, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () -> chatMemberService.createChatMember(chatRoomId, userDetails1));
 
         assertEquals(CHAT_MEMBER_ALREADY_EXISTS, errorException.getErrorCode());
     }
@@ -229,13 +224,14 @@ class ChatMemberServiceTest {
     @DisplayName("멤버 상태 변경 테스트: 에러 - 비로그인")
     void updateChatMemberNotLoginTest() {
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.updateChatMember(chatRoomId, null, chatMemberStatus.ONLINE)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMemberService.updateChatMember(
+                                        chatRoomId, null, chatMemberStatus.ONLINE));
 
         assertEquals(CHAT_MEMBER_NOT_LOGIN, errorException.getErrorCode());
-
-
     }
 
     @Test
@@ -243,9 +239,12 @@ class ChatMemberServiceTest {
     void updateChatMemberNotFoundChatRoomTest() {
         chatRoomRepository.deleteAll();
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.ONLINE)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMemberService.updateChatMember(
+                                        chatRoomId, userDetails1, chatMemberStatus.ONLINE));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
@@ -255,9 +254,12 @@ class ChatMemberServiceTest {
     void updateChatMemberJoinChatRoomTest() {
         chatMemberRepository.deleteAll();
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-                chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.ONLINE)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMemberService.updateChatMember(
+                                        chatRoomId, userDetails1, chatMemberStatus.ONLINE));
 
         assertEquals(CHAT_MEMBER_NOT_ENTER, errorException.getErrorCode());
     }

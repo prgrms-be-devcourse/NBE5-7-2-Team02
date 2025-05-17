@@ -5,6 +5,7 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_CONTENT_BLANK;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_NOT_FOUND;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -125,9 +126,12 @@ class ChatMessageServiceTest {
     void createChatMessageNotFoundChatRoomTest() {
         chatRoomRepository.deleteById(chatRoomId);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.createChatMessage(
+                                        chatRoomId, chatMessagePostRequest, userDetails1));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
@@ -135,9 +139,12 @@ class ChatMessageServiceTest {
     @Test
     @DisplayName("메세지 전송 테스트: 에러 - 비로그인")
     void createChatMessageNotLoginTest() {
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, null)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.createChatMessage(
+                                        chatRoomId, chatMessagePostRequest, null));
 
         assertEquals(CHAT_MEMBER_NOT_LOGIN, errorException.getErrorCode());
     }
@@ -147,9 +154,12 @@ class ChatMessageServiceTest {
     void createChatMessageNotEnterChatRoomTest() {
         chatMemberRepository.deleteByMember(member1);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.createChatMessage(
+                                        chatRoomId, chatMessagePostRequest, userDetails1));
 
         assertEquals(CHAT_MEMBER_NOT_ENTER, errorException.getErrorCode());
     }
@@ -160,9 +170,12 @@ class ChatMessageServiceTest {
         ChatMessagePostRequest emptyContent = new ChatMessagePostRequest(member1.getId(), "");
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.createChatMessage(chatRoomId, emptyContent, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.createChatMessage(
+                                        chatRoomId, emptyContent, userDetails1));
 
         assertEquals(CHAT_MESSAGE_CONTENT_BLANK, errorException.getErrorCode());
     }
@@ -199,9 +212,9 @@ class ChatMessageServiceTest {
     void getChatMessageNotFoundChatRoomTest() {
         chatRoomRepository.deleteById(chatRoomId);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.getChatMessage(chatRoomId)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class, () -> chatMessageService.getChatMessage(chatRoomId));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
@@ -225,9 +238,12 @@ class ChatMessageServiceTest {
                 chatMessageService.createChatMessage(
                         chatRoomId, chatMessagePostRequest, userDetails1);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.deleteChatMessage(chatMessage, chatRoomId + 1L, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.deleteChatMessage(
+                                        chatMessage, chatRoomId + 1L, userDetails1));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
@@ -240,9 +256,12 @@ class ChatMessageServiceTest {
                 chatMessageService.createChatMessage(
                         chatRoomId, chatMessagePostRequest, userDetails1);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails2)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.deleteChatMessage(
+                                        chatMessage, chatRoomId, userDetails2));
 
         assertEquals(CHAT_MEMBER_NOT_ENTER, errorException.getErrorCode());
     }
@@ -255,9 +274,12 @@ class ChatMessageServiceTest {
                 chatMessageService.createChatMessage(
                         chatRoomId, chatMessagePostRequest, userDetails1);
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatMessageService.deleteChatMessage(chatMessage + 1L, chatRoomId, userDetails1)
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class,
+                        () ->
+                                chatMessageService.deleteChatMessage(
+                                        chatMessage + 1L, chatRoomId, userDetails1));
 
         assertEquals(CHAT_MESSAGE_NOT_FOUND, errorException.getErrorCode());
     }

@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST_NOT_FOUND;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -65,9 +66,8 @@ class ChatRoomServiceTest {
     @Test
     @DisplayName("채팅방 생성 테스트: 에러 - 없는 게시글 생성 테스트")
     void createChatRoomNotFoundPostTest() {
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatRoomService.createChatroom(1000L)
-        );
+        ErrorException errorException =
+                assertThrows(ErrorException.class, () -> chatRoomService.createChatroom(1000L));
 
         assertEquals(POST_NOT_FOUND, errorException.getErrorCode());
     }
@@ -77,9 +77,9 @@ class ChatRoomServiceTest {
     void createChatRoomDuplicateTest() {
         chatRoomService.createChatroom(post.getId());
 
-        ErrorException errorException = assertThrows(ErrorException.class, () ->
-            chatRoomService.createChatroom(post.getId())
-        );
+        ErrorException errorException =
+                assertThrows(
+                        ErrorException.class, () -> chatRoomService.createChatroom(post.getId()));
 
         assertEquals(CHAT_ROOM_ALREADY_EXISTS, errorException.getErrorCode());
     }
