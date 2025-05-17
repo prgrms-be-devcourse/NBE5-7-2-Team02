@@ -1,7 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.post.util;
 
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-import io.twogether.nbe_5_7_2_02team.post.dao.PostTagRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
 import io.twogether.nbe_5_7_2_02team.post.dto.common.PostGetResult;
@@ -25,7 +24,6 @@ import java.util.List;
 public class PostMapper {
 
     private final TagRepository tagRepository;
-    private final PostTagRepository postTagRepository;
 
     public Post toEntity(PostCreateRequest request, Member member) {
         return Post.builder()
