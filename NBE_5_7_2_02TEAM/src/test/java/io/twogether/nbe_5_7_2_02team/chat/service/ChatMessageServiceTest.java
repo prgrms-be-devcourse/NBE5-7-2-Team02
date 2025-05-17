@@ -5,6 +5,8 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_CONTENT_BLANK;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_NOT_FOUND;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
@@ -123,29 +125,21 @@ class ChatMessageServiceTest {
     void createChatMessageNotFoundChatRoomTest() {
         chatRoomRepository.deleteById(chatRoomId);
 
-        try {
-            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_ROOM_NOT_FOUND) {
-                System.out.println("========================================");
-                System.out.println("CHAT_ROOM_NOT_FOUND 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1)
+        );
+
+        assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
 
     @Test
     @DisplayName("메세지 전송 테스트: 에러 - 비로그인")
     void createChatMessageNotLoginTest() {
-        try {
-            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, null);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_MEMBER_NOT_LOGIN) {
-                System.out.println("========================================");
-                System.out.println("CHAT_MEMBER_NOT_LOGIN 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, null)
+        );
+
+        assertEquals(CHAT_MEMBER_NOT_LOGIN, errorException.getErrorCode());
     }
 
     @Test
@@ -153,15 +147,11 @@ class ChatMessageServiceTest {
     void createChatMessageNotEnterChatRoomTest() {
         chatMemberRepository.deleteByMember(member1);
 
-        try {
-            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_MEMBER_NOT_ENTER) {
-                System.out.println("========================================");
-                System.out.println("CHAT_MEMBER_NOT_ENTER 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1)
+        );
+
+        assertEquals(CHAT_MEMBER_NOT_ENTER, errorException.getErrorCode());
     }
 
     @Test
@@ -170,15 +160,11 @@ class ChatMessageServiceTest {
         ChatMessagePostRequest emptyContent = new ChatMessagePostRequest(member1.getId(), "");
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
-        try {
-            chatMessageService.createChatMessage(chatRoomId, emptyContent, userDetails1);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_MESSAGE_CONTENT_BLANK) {
-                System.out.println("========================================");
-                System.out.println("CHAT_MESSAGE_CONTENT_BLANK 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.createChatMessage(chatRoomId, emptyContent, userDetails1)
+        );
+
+        assertEquals(CHAT_MESSAGE_CONTENT_BLANK, errorException.getErrorCode());
     }
 
     @Test
@@ -212,15 +198,11 @@ class ChatMessageServiceTest {
     void getChatMessageNotFoundChatRoomTest() {
         chatRoomRepository.deleteById(chatRoomId);
 
-        try {
-            chatMessageService.getChatMessage(chatRoomId);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_ROOM_NOT_FOUND) {
-                System.out.println("========================================");
-                System.out.println("CHAT_ROOM_NOT_FOUND 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.getChatMessage(chatRoomId)
+        );
+
+        assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
 
     @Test
@@ -240,15 +222,11 @@ class ChatMessageServiceTest {
         Long chatMessage =
                 chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
-        try {
-            chatMessageService.deleteChatMessage(chatMessage, chatRoomId + 1L, userDetails1);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_ROOM_NOT_FOUND) {
-                System.out.println("========================================");
-                System.out.println("CHAT_ROOM_NOT_FOUND 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.deleteChatMessage(chatMessage, chatRoomId + 1L, userDetails1)
+        );
+
+        assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
 
     @Test
@@ -258,15 +236,11 @@ class ChatMessageServiceTest {
         Long chatMessage =
                 chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
-        try {
-            chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails2);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_MEMBER_NOT_ENTER) {
-                System.out.println("========================================");
-                System.out.println("CHAT_MEMBER_NOT_ENTER 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails2)
+        );
+
+        assertEquals(CHAT_MEMBER_NOT_ENTER, errorException.getErrorCode());
     }
 
     @Test
@@ -276,14 +250,10 @@ class ChatMessageServiceTest {
         Long chatMessage =
                 chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
-        try {
-            chatMessageService.deleteChatMessage(chatMessage + 1L, chatRoomId, userDetails1);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_MESSAGE_NOT_FOUND) {
-                System.out.println("========================================");
-                System.out.println("CHAT_MESSAGE_NOT_FOUND 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatMessageService.deleteChatMessage(chatMessage + 1L, chatRoomId, userDetails1)
+        );
+
+        assertEquals(CHAT_MESSAGE_NOT_FOUND, errorException.getErrorCode());
     }
 }

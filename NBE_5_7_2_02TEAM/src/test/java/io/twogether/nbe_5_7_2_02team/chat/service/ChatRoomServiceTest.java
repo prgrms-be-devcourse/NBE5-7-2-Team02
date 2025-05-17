@@ -2,6 +2,8 @@ package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST_NOT_FOUND;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
@@ -63,15 +65,11 @@ class ChatRoomServiceTest {
     @Test
     @DisplayName("채팅방 생성 테스트: 에러 - 없는 게시글 생성 테스트")
     void createChatRoomNotFoundPostTest() {
-        try {
-            chatRoomService.createChatroom(1000L);
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == POST_NOT_FOUND) {
-                System.out.println("========================================");
-                System.out.println("POST_NOT_FOUND 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatRoomService.createChatroom(1000L)
+        );
+
+        assertEquals(POST_NOT_FOUND, errorException.getErrorCode());
     }
 
     @Test
@@ -79,15 +77,11 @@ class ChatRoomServiceTest {
     void createChatRoomDuplicateTest() {
         chatRoomService.createChatroom(post.getId());
 
-        try {
-            chatRoomService.createChatroom(post.getId());
-        } catch (ErrorException e) {
-            if (e.getErrorCode() == CHAT_ROOM_ALREADY_EXISTS) {
-                System.out.println("========================================");
-                System.out.println("CHAT_ROOM_ALREADY_EXISTS 발생");
-                System.out.println("========================================");
-            }
-        }
+        ErrorException errorException = assertThrows(ErrorException.class, () ->
+            chatRoomService.createChatroom(post.getId())
+        );
+
+        assertEquals(CHAT_ROOM_ALREADY_EXISTS, errorException.getErrorCode());
     }
 
     @Test
