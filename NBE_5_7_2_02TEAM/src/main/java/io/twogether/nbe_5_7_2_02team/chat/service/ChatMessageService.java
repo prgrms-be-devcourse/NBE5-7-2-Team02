@@ -9,8 +9,8 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMessage;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageGetResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -46,7 +46,9 @@ public class ChatMessageService {
 
     @Transactional
     public Long createChatMessage(
-            Long chatRoomId, ChatMessagePostRequest chatMessagePostRequest, UserDetails userDetails) {
+            Long chatRoomId,
+            ChatMessagePostRequest chatMessagePostRequest,
+            UserDetails userDetails) {
 
         Member member = checkUserLogin.checkUserLogin(userDetails);
 

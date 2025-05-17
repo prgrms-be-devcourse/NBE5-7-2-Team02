@@ -19,7 +19,6 @@ public class ChatMemberGetResponse {
     private final LocalDateTime createdAt;
     private final chatMemberStatus chatMemberStatus;
 
-
     public static ChatMemberGetResponse from(ChatMember chatMember) {
         return ChatMemberGetResponse.builder()
                 .chatroomId(chatMember.getChatRoom().getId())

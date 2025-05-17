@@ -1,7 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberGetResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMemberService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
@@ -32,7 +32,8 @@ public class ChatMemberController {
     @GetMapping("/{chatroomId}/member")
     public ResponseEntity<BaseResponse<List<ChatMemberGetResponse>>> getChatMemberList(
             @PathVariable("chatroomId") Long chatroomId) {
-        List<ChatMemberGetResponse> chatMemberGetResponse = chatMemberService.getChatMember(chatroomId);
+        List<ChatMemberGetResponse> chatMemberGetResponse =
+                chatMemberService.getChatMember(chatroomId);
 
         return BaseResponse.of(SuccessCode.FOUND_CHAT_MEMBER, chatMemberGetResponse, null);
     }

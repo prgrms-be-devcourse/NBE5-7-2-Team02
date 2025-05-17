@@ -10,8 +10,8 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageGetResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -191,7 +191,8 @@ class ChatMessageServiceTest {
         chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
         chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
-        List<ChatMessageGetResponse> chatMessageList = chatMessageService.getChatMessage(chatRoomId);
+        List<ChatMessageGetResponse> chatMessageList =
+                chatMessageService.getChatMessage(chatRoomId);
 
         System.out.println("========================================");
         for (ChatMessageGetResponse chatMessageGetResponse : chatMessageList) {
@@ -228,7 +229,8 @@ class ChatMessageServiceTest {
     void deleteChatMessageTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+                chatMessageService.createChatMessage(
+                        chatRoomId, chatMessagePostRequest, userDetails1);
 
         chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails1);
     }
@@ -238,7 +240,8 @@ class ChatMessageServiceTest {
     void deleteChatMessageNoChatRoomTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+                chatMessageService.createChatMessage(
+                        chatRoomId, chatMessagePostRequest, userDetails1);
 
         try {
             chatMessageService.deleteChatMessage(chatMessage, chatRoomId + 1L, userDetails1);
@@ -256,7 +259,8 @@ class ChatMessageServiceTest {
     void deleteChatMessageNotEnteredTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+                chatMessageService.createChatMessage(
+                        chatRoomId, chatMessagePostRequest, userDetails1);
 
         try {
             chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails2);
@@ -274,7 +278,8 @@ class ChatMessageServiceTest {
     void deleteChatMessageNotFoundMessageTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+                chatMessageService.createChatMessage(
+                        chatRoomId, chatMessagePostRequest, userDetails1);
 
         try {
             chatMessageService.deleteChatMessage(chatMessage + 1L, chatRoomId, userDetails1);
