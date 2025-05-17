@@ -13,7 +13,6 @@ public class ChatRoomGetResponse {
     private final Long postId;
     private final String title;
 
-
     public static ChatRoomGetResponse from(ChatRoom chatroom) {
         return ChatRoomGetResponse.builder()
                 .id(chatroom.getId())

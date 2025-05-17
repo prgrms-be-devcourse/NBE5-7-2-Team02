@@ -58,12 +58,18 @@ public class ChatMemberService {
         }
 
         return chatMemberRepository
-                .save(ChatMember.builder().chatRoom(chatRoom).member(member).chatMemberStatus(ONLINE).build())
+                .save(
+                        ChatMember.builder()
+                                .chatRoom(chatRoom)
+                                .member(member)
+                                .chatMemberStatus(ONLINE)
+                                .build())
                 .getId();
     }
 
     @Transactional
-    public Long updateChatMember(Long chatroomId, UserDetails userDetails, chatMemberStatus chatMemberStatus) {
+    public Long updateChatMember(
+            Long chatroomId, UserDetails userDetails, chatMemberStatus chatMemberStatus) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatroomId);
