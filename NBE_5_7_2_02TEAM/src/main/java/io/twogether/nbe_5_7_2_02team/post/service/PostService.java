@@ -132,8 +132,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostGetResponse getPostsByMember(PostGetRequest request, Long memberId) {
-        return PostGetResponse.from(postRepository.findPostsByMemberId(
-            memberId, request.getLastPostId(), request.getLimit()));
+        return PostGetResponse.from(
+                postRepository.findPostsByMemberId(
+                        memberId, request.getLastPostId(), request.getLimit()));
     }
 
     private RecruitmentStatus parseRecruitmentStatus(Boolean isRecruit) {

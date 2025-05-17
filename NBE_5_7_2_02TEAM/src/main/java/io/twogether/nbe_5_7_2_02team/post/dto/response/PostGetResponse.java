@@ -1,7 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.post.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
+
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
+
 import lombok.Getter;
 
 import java.time.LocalDateTime;

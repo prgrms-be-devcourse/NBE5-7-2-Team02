@@ -263,10 +263,10 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     private Member createAndSaveMockMember() {
         Member targetMember =
                 Member.builder()
-                    .name("TARGET_MEMBER")
-                    .email("TARGET_MEMBER@example.com")
-                    .githubId("github.com")
-                    .build();
+                        .name("TARGET_MEMBER")
+                        .email("TARGET_MEMBER@example.com")
+                        .githubId("github.com")
+                        .build();
         return memberRepository.save(targetMember);
     }
 }
