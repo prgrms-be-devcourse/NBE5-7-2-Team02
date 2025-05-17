@@ -37,6 +37,10 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    /* QUERYDSL */
+    implementation 'io.github.openfeign.querydsl:querydsl-jpa:6.11'
+    annotationProcessor 'io.github.openfeign.querydsl:querydsl-apt:6.11:jpa'
+
     /* ETC */
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

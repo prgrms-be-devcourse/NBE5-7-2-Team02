@@ -34,6 +34,11 @@ public enum ErrorCode {
     // IMAGE
     IMAGE_UPLOAD_LIMIT_EXCEEDED(BAD_REQUEST, "IMAGE-001", "이미지는 최대 10장까지만 업로드할 수 있습니다."),
     IMAGE_UPLOAD_FAILED(BAD_REQUEST, "IMAGE-002", "이미지 저장 중 오류가 발생했습니다."),
+    IMAGE_DELETE_FAILED(BAD_REQUEST, "IMAGE-003", "기존 이미지 삭제 중 오류가 발생했습니다."),
+
+    // POST
+    NOT_FOUND_POST(NOT_FOUND, "POST-001", "해당 게시글이 존재하지 않습니다."),
+    UNAUTHORIZED_POST_ACCESS(UNAUTHORIZED, "POST-002", "게시글에 대한 권한이 없습니다."),
 
     // CHAT MESSAGE
     CHAT_MESSAGE_CONTENT_BLANK(BAD_REQUEST, "CHAT-00", "메세지 내용이 비어있습니다."),

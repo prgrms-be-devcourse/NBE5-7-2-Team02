@@ -37,7 +37,7 @@ public class ChatRoomService {
         Post post =
                 postRepository
                         .findById(postId)
-                        .orElseThrow(() -> new ErrorException(POST_NOT_FOUND));
+                        .orElseThrow(() -> new ErrorException(NOT_FOUND_POST));
 
         chatRoomRepository
                 .findByPost(post)

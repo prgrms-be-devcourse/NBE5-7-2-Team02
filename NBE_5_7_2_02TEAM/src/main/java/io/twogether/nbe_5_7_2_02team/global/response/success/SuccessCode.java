@@ -13,6 +13,8 @@ public enum SuccessCode {
     // MEMBER
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
+    READ_MEMBER(OK, "MEMBER-202", "Read member"),
+    UPDATE_MEMBER(OK, "MEMBER-203", "Update member"),
 
     // OAUTH
     GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),
@@ -33,6 +35,8 @@ public enum SuccessCode {
     // POST
     FOUND_POST(OK, "POST-200", "Found post"),
     CREATE_POST(CREATED, "POST-201", "Create post"),
+    UPDATE_POST(OK, "POST-202", "Update post"),
+    DELETE_POST(OK, "POST-203", "Delete post"),
     NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
 
     // CHAT_MESSAGE
