@@ -2,12 +2,15 @@ package io.twogether.nbe_5_7_2_02team.post.dao;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
-import static com.querydsl.core.types.Projections.constructor;
 
+import io.twogether.nbe_5_7_2_02team.chat.domain.QChatRoom;
+import static io.twogether.nbe_5_7_2_02team.chat.domain.QChatRoom.chatRoom;
 import static io.twogether.nbe_5_7_2_02team.member.domain.QFollow.follow;
 import static io.twogether.nbe_5_7_2_02team.post.domain.QLikes.likes;
 import static io.twogether.nbe_5_7_2_02team.post.domain.QPost.post;
 import static io.twogether.nbe_5_7_2_02team.post.domain.QPostTag.postTag;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse.PostGetResult;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.QPostGetResponse_PostGetResult;
 import static io.twogether.nbe_5_7_2_02team.tag.domain.QTag.tag;
 
 import com.querydsl.core.types.Expression;
@@ -18,7 +21,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-import io.twogether.nbe_5_7_2_02team.post.dto.common.PostGetResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,23 +39,21 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
     @Override
     public List<PostGetResult> findPostsByMemberId(Long memberId, Long lastPostId, Integer limit) {
         return queryFactory
-                .select(constructor(PostGetResult.class, post, likeCount(), list(tag.name)))
                 .from(post)
-                .leftJoin(postTag)
-                .on(post.id.eq(postTag.post.id))
-                .leftJoin(tag)
-                .on(postTag.tag.id.eq(tag.id))
+                .leftJoin(post.postTags, postTag)
+                .leftJoin(postTag.tag, tag)
+                .leftJoin(chatRoom).on(post.id.eq(chatRoom.post.id))
                 .where(lastPostIdCondition(lastPostId), post.member.id.eq(memberId))
                 .orderBy(post.createdAt.desc())
                 .limit(limit)
                 .transform(
                         groupBy(post.id)
-                                .list(
-                                        constructor(
-                                                PostGetResult.class,
-                                                post,
-                                                likeCount(),
-                                                list(tag.name))));
+                                .list(new QPostGetResponse_PostGetResult(
+                                    post,
+                                    likeCount(),
+                                    chatRoom.id,
+                                    list(tag.name)
+                                    )));
     }
 
     @Override
@@ -68,6 +68,7 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
                 .from(post)
                 .leftJoin(post.postTags, postTag)
                 .leftJoin(postTag.tag, tag)
+                .leftJoin(chatRoom).on(post.id.eq(chatRoom.post.id))
                 .where(
                         lastPostIdCondition(lastPostId),
                         tagsCondition(tags),
@@ -76,13 +77,13 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
                 .orderBy(post.createdAt.desc())
                 .limit(limit)
                 .transform(
-                        groupBy(post.id)
-                                .list(
-                                        constructor(
-                                                PostGetResult.class,
-                                                post,
-                                                likeCount(),
-                                                list(tag.name))));
+                    groupBy(post.id)
+                        .list(new QPostGetResponse_PostGetResult(
+                            post,
+                            likeCount(),
+                            chatRoom.id,
+                            list(tag.name)
+                        )));
     }
 
     private Expression<Long> likeCount() {
