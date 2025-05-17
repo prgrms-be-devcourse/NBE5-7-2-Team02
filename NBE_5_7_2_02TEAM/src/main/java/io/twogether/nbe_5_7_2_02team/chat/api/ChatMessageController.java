@@ -1,8 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageDeleteRequest;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageRequest;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMessageService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
@@ -31,9 +31,9 @@ public class ChatMessageController {
     private final ChatMessageService chatMessageService;
 
     @GetMapping("/{chatroomId}/message")
-    public ResponseEntity<BaseResponse<List<ChatMessageResponse>>> getChatMessageList(
+    public ResponseEntity<BaseResponse<List<ChatMessageGetResponse>>> getChatMessageList(
             @PathVariable Long chatroomId) {
-        List<ChatMessageResponse> chatMessage = chatMessageService.getChatMessage(chatroomId);
+        List<ChatMessageGetResponse> chatMessage = chatMessageService.getChatMessage(chatroomId);
 
         return BaseResponse.of(SuccessCode.FOUND_CHAT_MESSAGE, chatMessage, null);
     }
@@ -41,10 +41,10 @@ public class ChatMessageController {
     @PostMapping("/{chatroomId}/message")
     public ResponseEntity<BaseResponse<Long>> createChatMessage(
             @PathVariable Long chatroomId,
-            @RequestBody ChatMessageRequest chatMessageRequest,
+            @RequestBody ChatMessagePostRequest chatMessagePostRequest,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long chatMessageId =
-                chatMessageService.createChatMessage(chatroomId, chatMessageRequest, userDetails);
+                chatMessageService.createChatMessage(chatroomId, chatMessagePostRequest, userDetails);
 
         return BaseResponse.of(
                 SuccessCode.CREATE_CHAT_MESSAGE,

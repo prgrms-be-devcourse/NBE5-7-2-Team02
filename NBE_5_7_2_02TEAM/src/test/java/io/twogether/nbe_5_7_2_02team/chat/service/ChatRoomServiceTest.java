@@ -5,7 +5,7 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomGetResponse;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
@@ -95,10 +95,10 @@ class ChatRoomServiceTest {
     void getChatRoomListTest() {
         chatRoomService.createChatroom(post.getId());
 
-        List<ChatRoomResponse> chatRoomList = chatRoomService.getChatRoomList();
+        List<ChatRoomGetResponse> chatRoomList = chatRoomService.getChatRoomList();
 
         System.out.println("========================================");
-        for (ChatRoomResponse chatRoom : chatRoomList) {
+        for (ChatRoomGetResponse chatRoom : chatRoomList) {
             System.out.println("ID: " + chatRoom.getId());
         }
         System.out.println("========================================");

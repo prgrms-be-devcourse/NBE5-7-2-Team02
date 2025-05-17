@@ -9,8 +9,8 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.domain.Status;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberResponse;
+import io.twogether.nbe_5_7_2_02team.chat.domain.chatMemberStatus;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
@@ -110,18 +110,18 @@ class ChatMemberServiceTest {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         chatMemberService.createChatMember(chatRoomId, userDetails2);
 
-        List<ChatMemberResponse> chatMemberResponseList =
+        List<ChatMemberGetResponse> chatMemberGetResponseList =
                 chatMemberService.getChatMember(chatRoomId);
 
         System.out.println("========================================");
-        for (ChatMemberResponse chatMemberResponse : chatMemberResponseList) {
+        for (ChatMemberGetResponse chatMemberGetResponse : chatMemberGetResponseList) {
             System.out.println(
-                    "chatMemberResponse ChatroomId: " + chatMemberResponse.getChatroomId());
-            System.out.println("chatMemberResponse MemberId: " + chatMemberResponse.getMemberId());
+                    "chatMemberResponse ChatroomId: " + chatMemberGetResponse.getChatroomId());
+            System.out.println("chatMemberResponse MemberId: " + chatMemberGetResponse.getMemberId());
             System.out.println(
-                    "chatMemberResponse MemberName: " + chatMemberResponse.getMemberName());
+                    "chatMemberResponse MemberName: " + chatMemberGetResponse.getMemberName());
             System.out.println(
-                    "chatMemberResponse CreatedAt: " + chatMemberResponse.getCreatedAt());
+                    "chatMemberResponse CreatedAt: " + chatMemberGetResponse.getCreatedAt());
         }
         System.out.println("========================================");
     }
@@ -174,7 +174,7 @@ class ChatMemberServiceTest {
         System.out.println("chatMemberId: " + chatMember.getId());
         System.out.println("chatMemberChatRoomId: " + chatMember.getChatRoom().getId());
         System.out.println("chatMemberMemberId: " + chatMember.getMember().getId());
-        System.out.println("chatMemberStatus: " + chatMember.getStatus());
+        System.out.println("chatMemberStatus: " + chatMember.getChatMemberStatus());
         System.out.println("chatMemberCreatedAt: " + chatMember.getCreatedAt());
         System.out.println("========================================");
     }
@@ -230,16 +230,16 @@ class ChatMemberServiceTest {
     void updateChatMemberTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
-        chatMemberService.updateChatMember(chatRoomId, userDetails1, Status.LEFT);
-        chatMemberService.updateChatMember(chatRoomId, userDetails1, Status.ONLINE);
-        chatMemberService.updateChatMember(chatRoomId, userDetails1, Status.OFFLINE);
+        chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.LEFT);
+        chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.ONLINE);
+        chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.OFFLINE);
     }
 
     @Test
     @DisplayName("멤버 상태 변경 테스트: 에러 - 비로그인")
     void updateChatMemberNotLoginTest() {
         try {
-            chatMemberService.updateChatMember(chatRoomId, null, Status.ONLINE);
+            chatMemberService.updateChatMember(chatRoomId, null, chatMemberStatus.ONLINE);
         } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_MEMBER_NOT_LOGIN) {
                 System.out.println("========================================");
@@ -253,7 +253,7 @@ class ChatMemberServiceTest {
     @DisplayName("멤버 상태 변경 테스트: 에러 - 채팅방이 없음")
     void updateChatMemberNotFoundChatRoomTest() {
         try {
-            chatMemberService.updateChatMember(chatRoomId, null, Status.ONLINE);
+            chatMemberService.updateChatMember(chatRoomId, null, chatMemberStatus.ONLINE);
         } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_ROOM_NOT_FOUND) {
                 System.out.println("========================================");
@@ -267,7 +267,7 @@ class ChatMemberServiceTest {
     @DisplayName("멤버 상태 변경 테스트: 에러 - 이미 참여중")
     void updateChatMemberJoinChatRoomTest() {
         try {
-            chatMemberService.updateChatMember(chatRoomId, null, Status.ONLINE);
+            chatMemberService.updateChatMember(chatRoomId, null, chatMemberStatus.ONLINE);
         } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_MEMBER_ALREADY_EXISTS) {
                 System.out.println("========================================");

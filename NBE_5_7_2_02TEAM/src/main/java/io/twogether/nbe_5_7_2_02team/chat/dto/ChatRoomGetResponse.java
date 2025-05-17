@@ -7,15 +7,15 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ChatRoomResponse {
+public class ChatRoomGetResponse {
 
     private final Long id;
     private final Long postId;
     private final String title;
 
 
-    public static ChatRoomResponse from(ChatRoom chatroom) {
-        return ChatRoomResponse.builder()
+    public static ChatRoomGetResponse from(ChatRoom chatroom) {
+        return ChatRoomGetResponse.builder()
                 .id(chatroom.getId())
                 .postId(chatroom.getPost().getId())
                 .title(chatroom.getPost().getTitle())

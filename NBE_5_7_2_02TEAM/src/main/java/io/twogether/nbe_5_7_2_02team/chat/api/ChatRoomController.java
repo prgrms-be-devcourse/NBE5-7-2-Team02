@@ -1,6 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatRoomService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
@@ -25,10 +25,10 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @GetMapping
-    public ResponseEntity<BaseResponse<List<ChatRoomResponse>>> getChatRoomList() {
-        List<ChatRoomResponse> chatRoomResponse = chatRoomService.getChatRoomList();
+    public ResponseEntity<BaseResponse<List<ChatRoomGetResponse>>> getChatRoomList() {
+        List<ChatRoomGetResponse> chatRoomGetResponse = chatRoomService.getChatRoomList();
 
-        return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomResponse, null);
+        return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomGetResponse, null);
     }
 
     @PostMapping("{postId}")

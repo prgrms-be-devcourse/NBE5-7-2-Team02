@@ -9,8 +9,8 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMessage;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageRequest;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -34,19 +34,19 @@ public class ChatMessageService {
     private final CheckUserLogin checkUserLogin;
 
     @Transactional(readOnly = true)
-    public List<ChatMessageResponse> getChatMessage(Long chatRoomId) {
+    public List<ChatMessageGetResponse> getChatMessage(Long chatRoomId) {
 
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatRoomId);
 
         List<ChatMessage> chatMessageList =
                 chatMessageRepository.findByChatRoomOrderByCreatedAtAsc(chatRoom);
 
-        return chatMessageList.stream().map(ChatMessageResponse::from).toList();
+        return chatMessageList.stream().map(ChatMessageGetResponse::from).toList();
     }
 
     @Transactional
     public Long createChatMessage(
-            Long chatRoomId, ChatMessageRequest chatMessageRequest, UserDetails userDetails) {
+            Long chatRoomId, ChatMessagePostRequest chatMessagePostRequest, UserDetails userDetails) {
 
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
@@ -58,7 +58,7 @@ public class ChatMessageService {
             throw new ErrorException(CHAT_MEMBER_NOT_ENTER);
         }
 
-        String content = chatMessageRequest.getContent();
+        String content = chatMessagePostRequest.getContent();
 
         if (content.isBlank()) {
             throw new ErrorException(CHAT_MESSAGE_CONTENT_BLANK);

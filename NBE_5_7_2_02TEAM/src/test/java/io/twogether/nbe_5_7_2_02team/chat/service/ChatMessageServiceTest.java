@@ -10,8 +10,8 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageRequest;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessagePostRequest;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -53,7 +53,7 @@ class ChatMessageServiceTest {
     Member member2;
     Post post;
 
-    ChatMessageRequest chatMessageRequest;
+    ChatMessagePostRequest chatMessagePostRequest;
 
     ChatRoom chatRoom;
     Long chatRoomId;
@@ -108,14 +108,14 @@ class ChatMessageServiceTest {
         chatRoomId = chatRoomService.createChatroom(post.getId());
         chatRoom = chatRoomService.checkChatRoomExists(chatRoomId);
 
-        chatMessageRequest = new ChatMessageRequest(member1.getId(), "메세지 내용");
+        chatMessagePostRequest = new ChatMessagePostRequest(member1.getId(), "메세지 내용");
     }
 
     @Test
     @DisplayName("메세지 전송 테스트: 성공")
     void createChatMessageTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
-        chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+        chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
     }
 
     @Test
@@ -124,7 +124,7 @@ class ChatMessageServiceTest {
         chatRoomRepository.deleteById(chatRoomId);
 
         try {
-            chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
         } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_ROOM_NOT_FOUND) {
                 System.out.println("========================================");
@@ -138,7 +138,7 @@ class ChatMessageServiceTest {
     @DisplayName("메세지 전송 테스트: 에러 - 비로그인")
     void createChatMessageNotLoginTest() {
         try {
-            chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, null);
+            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, null);
         } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_MEMBER_NOT_LOGIN) {
                 System.out.println("========================================");
@@ -154,7 +154,7 @@ class ChatMessageServiceTest {
         chatMemberRepository.deleteByMember(member1);
 
         try {
-            chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+            chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
         } catch (ErrorException e) {
             if (e.getErrorCode() == CHAT_MEMBER_NOT_ENTER) {
                 System.out.println("========================================");
@@ -167,7 +167,7 @@ class ChatMessageServiceTest {
     @Test
     @DisplayName("메세지 전송 테스트: 에러 - 내용이 없음")
     void createChatMessageMessageIsBlankTest() {
-        ChatMessageRequest emptyContent = new ChatMessageRequest(member1.getId(), "");
+        ChatMessagePostRequest emptyContent = new ChatMessagePostRequest(member1.getId(), "");
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
         try {
@@ -186,23 +186,23 @@ class ChatMessageServiceTest {
     void getChatMessageTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
-        chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
-        chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
-        chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
-        chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+        chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+        chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+        chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
+        chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
-        List<ChatMessageResponse> chatMessageList = chatMessageService.getChatMessage(chatRoomId);
+        List<ChatMessageGetResponse> chatMessageList = chatMessageService.getChatMessage(chatRoomId);
 
         System.out.println("========================================");
-        for (ChatMessageResponse chatMessageResponse : chatMessageList) {
-            System.out.println("chatMessageResponse.getId: " + chatMessageResponse.getId());
+        for (ChatMessageGetResponse chatMessageGetResponse : chatMessageList) {
+            System.out.println("chatMessageResponse.getId: " + chatMessageGetResponse.getId());
             System.out.println(
                     "chatMessageResponse.getChatMemberId: "
-                            + chatMessageResponse.getChatMemberId());
+                            + chatMessageGetResponse.getChatMemberId());
             System.out.println(
-                    "chatMessageResponse.getContent: " + chatMessageResponse.getContent());
+                    "chatMessageResponse.getContent: " + chatMessageGetResponse.getContent());
             System.out.println(
-                    "chatMessageResponse.getCreatedAt: " + chatMessageResponse.getCreatedAt());
+                    "chatMessageResponse.getCreatedAt: " + chatMessageGetResponse.getCreatedAt());
         }
         System.out.println("========================================");
     }
@@ -228,7 +228,7 @@ class ChatMessageServiceTest {
     void deleteChatMessageTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
         chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails1);
     }
@@ -238,7 +238,7 @@ class ChatMessageServiceTest {
     void deleteChatMessageNoChatRoomTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
         try {
             chatMessageService.deleteChatMessage(chatMessage, chatRoomId + 1L, userDetails1);
@@ -256,7 +256,7 @@ class ChatMessageServiceTest {
     void deleteChatMessageNotEnteredTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
         try {
             chatMessageService.deleteChatMessage(chatMessage, chatRoomId, userDetails2);
@@ -274,7 +274,7 @@ class ChatMessageServiceTest {
     void deleteChatMessageNotFoundMessageTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
         Long chatMessage =
-                chatMessageService.createChatMessage(chatRoomId, chatMessageRequest, userDetails1);
+                chatMessageService.createChatMessage(chatRoomId, chatMessagePostRequest, userDetails1);
 
         try {
             chatMessageService.deleteChatMessage(chatMessage + 1L, chatRoomId, userDetails1);

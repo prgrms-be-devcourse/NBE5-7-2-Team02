@@ -1,6 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
-import static io.twogether.nbe_5_7_2_02team.chat.domain.Status.ONLINE;
+import static io.twogether.nbe_5_7_2_02team.chat.domain.chatMemberStatus.ONLINE;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_ALREADY_EXISTS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_ENTER;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_UNDEFINED_STATUS;
@@ -9,8 +9,8 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.domain.Status;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberResponse;
+import io.twogether.nbe_5_7_2_02team.chat.domain.chatMemberStatus;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -33,7 +33,7 @@ public class ChatMemberService {
     private final CheckUserLogin checkUserLogin;
 
     @Transactional(readOnly = true)
-    public List<ChatMemberResponse> getChatMember(Long chatroomId) {
+    public List<ChatMemberGetResponse> getChatMember(Long chatroomId) {
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatroomId);
 
         List<ChatMember> chatMemberList = chatMemberRepository.findByChatRoom(chatRoom);
@@ -42,7 +42,7 @@ public class ChatMemberService {
             throw new ErrorException(CHAT_ROOM_EMPTY);
         }
 
-        return chatMemberList.stream().map(ChatMemberResponse::from).toList();
+        return chatMemberList.stream().map(ChatMemberGetResponse::from).toList();
     }
 
     @Transactional
@@ -58,12 +58,12 @@ public class ChatMemberService {
         }
 
         return chatMemberRepository
-                .save(ChatMember.builder().chatRoom(chatRoom).member(member).status(ONLINE).build())
+                .save(ChatMember.builder().chatRoom(chatRoom).member(member).chatMemberStatus(ONLINE).build())
                 .getId();
     }
 
     @Transactional
-    public Long updateChatMember(Long chatroomId, UserDetails userDetails, Status status) {
+    public Long updateChatMember(Long chatroomId, UserDetails userDetails, chatMemberStatus chatMemberStatus) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatroomId);
@@ -74,11 +74,11 @@ public class ChatMemberService {
             throw new ErrorException(CHAT_MEMBER_NOT_ENTER);
         }
 
-        if (status == null) {
+        if (chatMemberStatus == null) {
             throw new ErrorException(CHAT_MEMBER_UNDEFINED_STATUS);
         }
 
-        chatMember.updateStatus(status);
+        chatMember.updateStatus(chatMemberStatus);
         return chatMemberRepository.save(chatMember).getId();
     }
 }

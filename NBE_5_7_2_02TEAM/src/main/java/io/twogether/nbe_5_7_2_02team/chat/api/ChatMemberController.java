@@ -1,7 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberRequest;
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMemberService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
@@ -30,11 +30,11 @@ public class ChatMemberController {
     private final ChatMemberService chatMemberService;
 
     @GetMapping("/{chatroomId}/member")
-    public ResponseEntity<BaseResponse<List<ChatMemberResponse>>> getChatMemberList(
+    public ResponseEntity<BaseResponse<List<ChatMemberGetResponse>>> getChatMemberList(
             @PathVariable("chatroomId") Long chatroomId) {
-        List<ChatMemberResponse> chatMemberResponse = chatMemberService.getChatMember(chatroomId);
+        List<ChatMemberGetResponse> chatMemberGetResponse = chatMemberService.getChatMember(chatroomId);
 
-        return BaseResponse.of(SuccessCode.FOUND_CHAT_MEMBER, chatMemberResponse, null);
+        return BaseResponse.of(SuccessCode.FOUND_CHAT_MEMBER, chatMemberGetResponse, null);
     }
 
     @PostMapping("/{chatroomId}/member")
@@ -53,10 +53,10 @@ public class ChatMemberController {
     public ResponseEntity<BaseResponse<Long>> updateChatMember(
             @PathVariable("chatroomId") Long chatroomId,
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody ChatMemberRequest chatMemberRequest) {
+            @RequestBody ChatMemberUpdateRequest chatMemberUpdateRequest) {
         Long chatMember =
                 chatMemberService.updateChatMember(
-                        chatroomId, userDetails, chatMemberRequest.getStatus());
+                        chatroomId, userDetails, chatMemberUpdateRequest.getChatMemberStatus());
 
         return BaseResponse.of(SuccessCode.UPDATE_CHAT_MEMBER, chatMember, null);
     }
