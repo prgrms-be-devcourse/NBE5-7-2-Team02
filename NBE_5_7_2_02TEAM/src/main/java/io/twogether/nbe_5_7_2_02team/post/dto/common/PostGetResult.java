@@ -2,9 +2,10 @@ package io.twogether.nbe_5_7_2_02team.post.dto.common;
 
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor

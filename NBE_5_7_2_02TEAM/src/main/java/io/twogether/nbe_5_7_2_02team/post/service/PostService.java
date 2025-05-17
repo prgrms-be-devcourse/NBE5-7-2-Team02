@@ -133,12 +133,8 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostGetResponse getPostsByMember(PostGetRequest request, Long memberId) {
         return postMapper.createPostGetResponseFromResult(
-            postRepository.findPostsByMemberId(
-                memberId,
-                request.getLastPostId(),
-                request.getLimit()
-            )
-        );
+                postRepository.findPostsByMemberId(
+                        memberId, request.getLastPostId(), request.getLimit()));
     }
 
     private RecruitmentStatus parseRecruitmentStatus(Boolean isRecruit) {

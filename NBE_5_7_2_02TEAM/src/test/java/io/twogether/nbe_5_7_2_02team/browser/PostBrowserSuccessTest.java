@@ -1,13 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.browser;
 
-import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
 
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.twogether.nbe_5_7_2_02team.browser.template.BrowserTestTemplate;
+import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import io.twogether.nbe_5_7_2_02team.member.dao.FollowRepository;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Follow;
@@ -33,6 +30,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -194,12 +194,10 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         createAndSaveMockPosts(targetMember, 5);
 
         // when & then
-        mockMvc.perform(
-            get("/api/posts/" + targetMember.getId())
-                .param("limit", "10"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.posts.length()").value(5))
-            .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()));
+        mockMvc.perform(get("/api/posts/" + targetMember.getId()).param("limit", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.posts.length()").value(5))
+                .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()));
     }
 
     @Test
@@ -224,13 +222,11 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
          * 이에 따라 posts.getLast()는 가장 최신 항목을 반환함.
          * 따라서 "limit=1"을 통해 조회할 경우, 가장 최신 항목인 post.getLast()를 반환해야 함.
          */
-        mockMvc.perform(
-            get("/api/posts/" + targetMember.getId())
-                .param("limit", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.posts.length()").value(1))
-            .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
-            .andExpect(jsonPath("$.data.posts[0].post_id").value(posts.getLast().getId()));
+        mockMvc.perform(get("/api/posts/" + targetMember.getId()).param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.posts.length()").value(1))
+                .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
+                .andExpect(jsonPath("$.data.posts[0].post_id").value(posts.getLast().getId()));
 
         /*
          * [Offset 조회 검증]
@@ -239,35 +235,34 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
          * 따라서 "limit=1"을 통해 조회할 경우, posts.get(4)를 반환해야 함.
          */
         mockMvc.perform(
-                get("/api/posts/" + targetMember.getId())
-                    .param("limit", "1")
-                    .param("lastPostId", posts.get(5).getId().toString()))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.posts.length()").value(1))
-            .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
-            .andExpect(jsonPath("$.data.posts[0].post_id").value(posts.get(4).getId()));
+                        get("/api/posts/" + targetMember.getId())
+                                .param("limit", "1")
+                                .param("lastPostId", posts.get(5).getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.posts.length()").value(1))
+                .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
+                .andExpect(jsonPath("$.data.posts[0].post_id").value(posts.get(4).getId()));
     }
 
     private List<Post> createAndSaveMockPosts(Member member, int numPosts) {
         List<Post> posts = new ArrayList<>();
         for (int i = 0; i < numPosts; i++) {
-            Post post = Post.builder()
-                .title("TARGET_TITLE-" + i)
-                .content("TARGET_CONTENT-" + i)
-                .member(member)
-                .recruitmentStatus(NONE)
-                .build();
+            Post post =
+                    Post.builder()
+                            .title("TARGET_TITLE-" + i)
+                            .content("TARGET_CONTENT-" + i)
+                            .member(member)
+                            .recruitmentStatus(NONE)
+                            .build();
             postRepository.save(post);
             posts.add(post);
         }
         return posts;
     }
+
     private Member createAndSaveMockMember() {
         Member targetMember =
-            Member.builder()
-                .name("TARGET_MEMBER")
-                .email("TARGET_MEMBER@example.com")
-                .build();
+                Member.builder().name("TARGET_MEMBER").email("TARGET_MEMBER@example.com").build();
         return memberRepository.save(targetMember);
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface PostRepositoryFilter {
     List<PostGetResult> findPostsByMemberId(Long memberId, Long lastPostId, Integer limit);
+
     List<PostGetResult> findFilteredPosts(
             Long memberId,
             Long lastPostId,
