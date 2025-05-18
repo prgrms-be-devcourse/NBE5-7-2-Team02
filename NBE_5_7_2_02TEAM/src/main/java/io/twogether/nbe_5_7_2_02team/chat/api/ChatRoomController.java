@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/chatroom/")
+@RequestMapping("/api/chatroom")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
@@ -31,7 +31,7 @@ public class ChatRoomController {
         return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomGetResponse, null);
     }
 
-    @PostMapping("{postId}")
+    @PostMapping("/{postId}")
     public ResponseEntity<BaseResponse<Long>> createChatRoom(@PathVariable("postId") Long postId) {
         Long id = chatRoomService.createChatroom(postId);
 
