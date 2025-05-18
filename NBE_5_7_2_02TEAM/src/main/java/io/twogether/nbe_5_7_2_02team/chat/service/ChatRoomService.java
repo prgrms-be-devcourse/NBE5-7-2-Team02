@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_FOUND_POST;
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
