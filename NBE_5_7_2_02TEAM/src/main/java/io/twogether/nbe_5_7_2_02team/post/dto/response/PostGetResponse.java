@@ -8,7 +8,9 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public class PostGetResponse {
 
@@ -34,6 +36,7 @@ public class PostGetResponse {
         private String memberName;
         private String memberImage;
         private List<String> tags;
+        private List<String> images;
 
         @QueryProjection
         public PostGetResult(Post post, Long numLikes, Long chatRoomId, List<String> tags) {
@@ -49,6 +52,7 @@ public class PostGetResponse {
             this.recruitmentStatus = post.getRecruitmentStatus().name();
             this.numLikes = numLikes;
             this.tags = tags;
+            this.images = post.getImageUrls();
         }
     }
 }
