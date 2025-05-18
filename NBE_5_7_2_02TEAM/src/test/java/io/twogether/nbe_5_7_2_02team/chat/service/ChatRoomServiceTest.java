@@ -1,7 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_ALREADY_EXISTS;
-import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.POST_NOT_FOUND;
+import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_FOUND_POST;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,26 +30,30 @@ class ChatRoomServiceTest {
     @Autowired private ChatRoomRepository chatRoomRepository;
 
     @Autowired private PostRepository postRepository;
-    Post post;
+
+    private Post post;
+    private Long chatRoomId;
 
     @BeforeEach
     void setUp() {
-        post =
-                Post.builder()
-                        .title("제목")
-                        .content("내용")
-                        .recruitmentStatus(RecruitmentStatus.NONE)
-                        .build();
+        chatRoomRepository.deleteAll();
+        postRepository.deleteAll();
+
+        post = Post.builder()
+            .title("제목")
+            .content("내용")
+            .recruitmentStatus(RecruitmentStatus.NONE)
+            .build();
 
         postRepository.save(post);
+
+        chatRoomId = chatRoomService.createChatroom(post.getId());
     }
 
     @Test
     @DisplayName("채팅방 생성 테스트: 성공")
     void createChatRoomTest() {
-        Long id = chatRoomService.createChatroom(post.getId());
-
-        Optional<ChatRoom> byId = chatRoomRepository.findById(id);
+        Optional<ChatRoom> byId = chatRoomRepository.findById(chatRoomId);
 
         ChatRoom chatRoom = byId.get();
 
@@ -69,14 +73,12 @@ class ChatRoomServiceTest {
         ErrorException errorException =
                 assertThrows(ErrorException.class, () -> chatRoomService.createChatroom(1000L));
 
-        assertEquals(POST_NOT_FOUND, errorException.getErrorCode());
+        assertEquals(NOT_FOUND_POST, errorException.getErrorCode());
     }
 
     @Test
     @DisplayName("채팅방 생성 테스트: 에러 - 중복생성 테스트")
     void createChatRoomDuplicateTest() {
-        chatRoomService.createChatroom(post.getId());
-
         ErrorException errorException =
                 assertThrows(
                         ErrorException.class, () -> chatRoomService.createChatroom(post.getId()));
@@ -87,8 +89,6 @@ class ChatRoomServiceTest {
     @Test
     @DisplayName("채팅방 목록 조회 테스트: 성공")
     void getChatRoomListTest() {
-        chatRoomService.createChatroom(post.getId());
-
         List<ChatRoomGetResponse> chatRoomList = chatRoomService.getChatRoomList();
 
         System.out.println("========================================");
@@ -97,8 +97,4 @@ class ChatRoomServiceTest {
         }
         System.out.println("========================================");
     }
-
-    @Test
-    @DisplayName("채팅방 삭제")
-    void deleteChatRoomTest() {}
 }
