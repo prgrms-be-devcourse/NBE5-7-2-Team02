@@ -38,16 +38,16 @@ public class ChatMember extends BaseEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private chatMemberStatus chatMemberStatus;
+    private ChatMemberStatus chatMemberStatus;
 
     @Builder
-    public ChatMember(ChatRoom chatRoom, Member member, chatMemberStatus chatMemberStatus) {
+    public ChatMember(ChatRoom chatRoom, Member member, ChatMemberStatus chatMemberStatus) {
         this.chatRoom = chatRoom;
         this.member = member;
         this.chatMemberStatus = chatMemberStatus;
     }
 
-    public void updateStatus(chatMemberStatus chatMemberStatus) {
+    public void updateStatus(ChatMemberStatus chatMemberStatus) {
         this.chatMemberStatus = chatMemberStatus;
     }
 }

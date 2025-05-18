@@ -1,6 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
-import static io.twogether.nbe_5_7_2_02team.chat.domain.chatMemberStatus.ONLINE;
+import static io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus.ONLINE;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_ALREADY_EXISTS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_ENTER;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_UNDEFINED_STATUS;
@@ -8,8 +8,8 @@ import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT
 
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
+import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.domain.chatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
@@ -69,7 +69,7 @@ public class ChatMemberService {
 
     @Transactional
     public Long updateChatMember(
-            Long chatroomId, UserDetails userDetails, chatMemberStatus chatMemberStatus) {
+            Long chatroomId, UserDetails userDetails, ChatMemberStatus chatMemberStatus) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatroomId);

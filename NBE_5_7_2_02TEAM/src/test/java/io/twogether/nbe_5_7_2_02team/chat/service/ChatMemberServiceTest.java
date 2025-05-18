@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
+import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-import io.twogether.nbe_5_7_2_02team.chat.domain.chatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.dto.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
@@ -215,9 +215,9 @@ class ChatMemberServiceTest {
     void updateChatMemberTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);
 
-        chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.LEFT);
-        chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.ONLINE);
-        chatMemberService.updateChatMember(chatRoomId, userDetails1, chatMemberStatus.OFFLINE);
+        chatMemberService.updateChatMember(chatRoomId, userDetails1, ChatMemberStatus.LEFT);
+        chatMemberService.updateChatMember(chatRoomId, userDetails1, ChatMemberStatus.ONLINE);
+        chatMemberService.updateChatMember(chatRoomId, userDetails1, ChatMemberStatus.OFFLINE);
     }
 
     @Test
@@ -229,7 +229,7 @@ class ChatMemberServiceTest {
                         ErrorException.class,
                         () ->
                                 chatMemberService.updateChatMember(
-                                        chatRoomId, null, chatMemberStatus.ONLINE));
+                                        chatRoomId, null, ChatMemberStatus.ONLINE));
 
         assertEquals(CHAT_MEMBER_NOT_LOGIN, errorException.getErrorCode());
     }
@@ -244,7 +244,7 @@ class ChatMemberServiceTest {
                         ErrorException.class,
                         () ->
                                 chatMemberService.updateChatMember(
-                                        chatRoomId, userDetails1, chatMemberStatus.ONLINE));
+                                        chatRoomId, userDetails1, ChatMemberStatus.ONLINE));
 
         assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
     }
@@ -259,7 +259,7 @@ class ChatMemberServiceTest {
                         ErrorException.class,
                         () ->
                                 chatMemberService.updateChatMember(
-                                        chatRoomId, userDetails1, chatMemberStatus.ONLINE));
+                                        chatRoomId, userDetails1, ChatMemberStatus.ONLINE));
 
         assertEquals(CHAT_MEMBER_NOT_ENTER, errorException.getErrorCode());
     }
