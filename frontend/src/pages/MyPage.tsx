@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Member } from "../types/Member";
 import { Follow } from "../types/Follow";
 import FollowSummary from "../components/mypage/FollowSummary";
-import FollowerModal from "../components/mypage/FollowerModal";
-import FollowingModal from "../components/mypage/FollowingModal";
+import FollowListModal from "../components/mypage/FollowListModal";
 import ProfileEditorModal from "../components/mypage/ProfileEditorModal";
 import MyPostList from "../components/mypage/MyPostList";
 import api from "../api/axiosInstance";
@@ -12,6 +11,8 @@ import api from "../api/axiosInstance";
 
 export default function MyPage() {
   const { userId } = useParams();
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<Member | null>(null);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowings, setShowFollowings] = useState(false);

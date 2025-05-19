@@ -17,8 +17,7 @@ public class MemberDetailsFactory {
         switch (provider.toUpperCase().trim()) {
             case "GITHUB" -> {
                 return MemberDetails.builder()
-                        .name(attributes.get("name").toString())
-                        .email(attributes.get("email").toString())
+                        .name(attributes.get("login").toString())
                         .attributes(attributes)
                         .build();
             }

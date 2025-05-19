@@ -13,6 +13,7 @@ import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubLoginResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubUserInfoResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
+import io.twogether.nbe_5_7_2_02team.oauth.jwt.MemberDetailsFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -34,12 +39,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OAuthService {
+public class OAuthService extends DefaultOAuth2UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
@@ -50,6 +56,24 @@ public class OAuthService {
 
     @Value("${spring.security.oauth2.client.registration.github.client-secret}")
     private String clientSecret;
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+        log.info("oAuth2User = {}", oAuth2User);
+        LoginResponse loginResponse = login(userRequest.getAccessToken().getTokenValue());
+
+        String providerId = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+
+        MemberDetails memberDetails = MemberDetailsFactory.memberDetails(providerId, oAuth2User);
+
+        Optional<Member> memberOptional = memberRepository.findById(loginResponse.getMemberId());
+
+        return memberDetails
+                .setId(memberOptional.get().getId())
+                .setRole(memberOptional.get().getRole());
+    }
 
     // GitHub에서 받은 code로 GitHub의 AccessToken 발급
     public GitHubLoginResponse getAccessToken(String code) {
@@ -179,7 +203,11 @@ public class OAuthService {
                         .findByEmail(userInfo.getEmail())
                         .orElseGet(() -> saveUserInfo(userInfo));
         TokenPair tokenPair = jwtTokenProvider.generateTokenPair(member);
-        return LoginResponse.builder().tokenPair(tokenPair).role(member.getRole()).build();
+        return LoginResponse.builder()
+                .tokenPair(tokenPair)
+                .role(member.getRole())
+                .memberId(member.getId())
+                .build();
     }
 
     // 추가 회원 가입 정보 등록

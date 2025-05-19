@@ -42,7 +42,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         MemberDetails principal = (MemberDetails) authentication.getPrincipal();
-
         Member findMember =
                 memberRepository
                         .findById(principal.getId())
@@ -70,8 +69,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private String genUrlStr(HashMap<String, String> params) {
         return UriComponentsBuilder.fromUriString(baseUrl)
-                .queryParam("access", params.get("access"))
-                .queryParam("refresh", params.get("refresh"))
+                .queryParam("accessToken", params.get("access"))
+                .queryParam("refreshToken", params.get("refresh"))
                 .build()
                 .toUri()
                 .toString();

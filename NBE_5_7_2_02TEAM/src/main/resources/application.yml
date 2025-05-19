@@ -21,7 +21,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
 
   security:
@@ -30,9 +30,9 @@ spring:
         registration:
           github:
             client-name: GitHub
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/api/oauth2/callback/{registrationId}"
+            client-id: Ov23li06as0VfMDE0kwl
+            client-secret: 9055bc9dc2f567678376f8f3e11e4c7b2c3d3695
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - read:user
               - user:email
@@ -47,7 +47,7 @@ custom:
       access: ${JWT_ACCESS_EXP}
       refresh: ${JWT_REFRESH_EXP}
     redirection:
-      base: http://localhost8080
+      base: http://localhost:5173/callback
     secrets:
       origin-key: ${JWT_ORIGIN_KEY}
       app-key: ${JWT_APP_KEY}

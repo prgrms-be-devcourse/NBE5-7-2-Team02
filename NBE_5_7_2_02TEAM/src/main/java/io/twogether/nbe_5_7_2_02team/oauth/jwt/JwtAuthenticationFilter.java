@@ -1,5 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 
+import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
@@ -35,17 +36,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request);
 
-        if (token != null && jwtTokenProvider.validate(token)) {
+        try {
+            if (token != null && jwtTokenProvider.validate(token)) {
 
-            TokenBody tokenBody = jwtTokenProvider.parseJwt(token);
-            MemberDetails memberDetails =
-                    oAuthService.getMemberDetailsById(tokenBody.getMemberId());
+                TokenBody tokenBody = jwtTokenProvider.parseJwt(token);
+                MemberDetails memberDetails =
+                        oAuthService.getMemberDetailsById(tokenBody.getMemberId());
 
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            memberDetails, token, memberDetails.getAuthorities());
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                memberDetails, token, memberDetails.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (ErrorException ex) {
+            // 예외 코드를 RestAuthenticationEntryPoint로 넘길 수 있도록 설정
+            request.setAttribute("exception", ex.getErrorCode());
         }
 
         filterChain.doFilter(request, response);

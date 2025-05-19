@@ -25,11 +25,14 @@ public enum ErrorCode {
     OAUTH_PRGRMS_ORG_REQUIRED(BAD_REQUEST, "OAUTH-005", "프로그래머스 교육 과정에 등록된 사용자만 가입할 수 있습니다."),
 
     // JWT
-    INVALID_JWT_SIGNATURE(UNAUTHORIZED, "JWT-001", "잘못된 JWT 서명입니다."),
-    EXPIRED_JWT_TOKEN(UNAUTHORIZED, "JWT-002", "만료된 JWT 토큰입니다."),
-    UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, "JWT-003", "지원되지 않는 JWT 토큰입니다."),
-    INVALID_JWT_TOKEN(UNAUTHORIZED, "JWT-004", "유효하지 않은 JWT 토큰입니다."),
+    INVALID_ACCESS_SIGNATURE(UNAUTHORIZED, "JWT-001", "잘못된 Access Token 서명입니다."),
+    EXPIRED_ACCESS_TOKEN(UNAUTHORIZED, "JWT-002", "만료된 Access Token 토큰입니다."),
+    UNSUPPORTED_ACCESS_TOKEN(UNAUTHORIZED, "JWT-003", "지원되지 않는 Access Token 토큰입니다."),
+    INVALID_ACCESS_TOKEN(UNAUTHORIZED, "JWT-004", "유효하지 않은 Access Token 토큰입니다."),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "JWT-005", "유효하지 않은 Refresh 토큰입니다."),
+    INVALID_REFRESH_SIGNATURE(UNAUTHORIZED, "JWT-006", "잘못된 Refresh Token 서명입니다."),
+    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "JWT-007", "만료된 Refresh Token 토큰입니다."),
+    UNSUPPORTED_REFRESH_TOKEN(UNAUTHORIZED, "JWT-008", "지원되지 않는 Refresh Token 토큰입니다."),
 
     // IMAGE
     IMAGE_UPLOAD_LIMIT_EXCEEDED(BAD_REQUEST, "IMAGE-001", "이미지는 최대 10장까지만 업로드할 수 있습니다."),

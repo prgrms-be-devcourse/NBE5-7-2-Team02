@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.global.config;
 
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtAuthenticationFilter;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
+import io.twogether.nbe_5_7_2_02team.oauth.jwt.RestAuthenticationEntryPoint;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +38,9 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(
+                        exception ->
+                                exception.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .oauth2Login(
                         oauth -> {
                             oauth.successHandler(oAuth2SuccessHandler);
@@ -50,13 +55,12 @@ public class SecurityConfig {
                                                 "/api/tags",
                                                 "/api/token/**")
                                         .permitAll()
-                                        .requestMatchers(
-                                                HttpMethod.GET, "/api/posts", "/api/posts/{id}")
+                                        .requestMatchers(HttpMethod.GET, "api/posts")
                                         .permitAll()
                                         .requestMatchers("/api/**")
                                         .hasAnyAuthority("MEMBER")
                                         .anyRequest()
-                                        .authenticated())
+                                        .permitAll())
                 .addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -66,7 +70,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 
