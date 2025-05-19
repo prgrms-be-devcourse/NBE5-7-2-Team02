@@ -45,11 +45,12 @@ public class JwtTokenProvider {
     public TokenPair generateTokenPair(Member member) {
 
         refreshTokenRepository
-            .findByMemberId(member.getId())
-            .ifPresent(refreshToken -> {
-                refreshTokenBlackListRepository.deleteByRefreshToken(refreshToken);
-                refreshTokenRepository.delete(refreshToken);
-            });
+                .findByMemberId(member.getId())
+                .ifPresent(
+                        refreshToken -> {
+                            refreshTokenBlackListRepository.deleteByRefreshToken(refreshToken);
+                            refreshTokenRepository.delete(refreshToken);
+                        });
 
         String accessToken = issueAccessToken(member.getId(), member.getRole());
         String refreshToken = issueRefreshToken(member.getId(), member.getRole());
@@ -100,6 +101,7 @@ public class JwtTokenProvider {
             throw new ErrorException(ErrorCode.INVALID_ACCESS_TOKEN);
         }
     }
+
     public void refreshValidate(String token) {
         try {
             Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token);

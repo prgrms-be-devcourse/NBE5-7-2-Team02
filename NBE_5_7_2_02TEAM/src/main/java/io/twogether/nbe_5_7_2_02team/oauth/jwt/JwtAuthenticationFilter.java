@@ -41,11 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 TokenBody tokenBody = jwtTokenProvider.parseJwt(token);
                 MemberDetails memberDetails =
-                    oAuthService.getMemberDetailsById(tokenBody.getMemberId());
+                        oAuthService.getMemberDetailsById(tokenBody.getMemberId());
 
                 Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(
-                        memberDetails, token, memberDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(
+                                memberDetails, token, memberDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

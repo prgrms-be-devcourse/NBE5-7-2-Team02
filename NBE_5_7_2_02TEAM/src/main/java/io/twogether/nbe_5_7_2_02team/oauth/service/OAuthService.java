@@ -13,9 +13,8 @@ import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubLoginResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubUserInfoResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
-
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.MemberDetailsFactory;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -70,9 +70,9 @@ public class OAuthService extends DefaultOAuth2UserService {
 
         Optional<Member> memberOptional = memberRepository.findById(loginResponse.getMemberId());
 
-
-        return memberDetails.setId(memberOptional.get().getId())
-            .setRole(memberOptional.get().getRole());
+        return memberDetails
+                .setId(memberOptional.get().getId())
+                .setRole(memberOptional.get().getRole());
     }
 
     // GitHub에서 받은 code로 GitHub의 AccessToken 발급
@@ -80,10 +80,10 @@ public class OAuthService extends DefaultOAuth2UserService {
         String accessTokenUrl = "https://github.com/login/oauth/access_token";
 
         UriComponentsBuilder builder =
-            UriComponentsBuilder.fromHttpUrl(accessTokenUrl)
-                .queryParam("client_id", clientId)
-                .queryParam("client_secret", clientSecret)
-                .queryParam("code", code);
+                UriComponentsBuilder.fromHttpUrl(accessTokenUrl)
+                        .queryParam("client_id", clientId)
+                        .queryParam("client_secret", clientSecret)
+                        .queryParam("code", code);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -92,15 +92,15 @@ public class OAuthService extends DefaultOAuth2UserService {
         try {
             HttpEntity<String> entity = new HttpEntity<>(headers);
             ResponseEntity<JSONObject> response =
-                restTemplate.exchange(
-                    builder.toUriString(), HttpMethod.POST, entity, JSONObject.class);
+                    restTemplate.exchange(
+                            builder.toUriString(), HttpMethod.POST, entity, JSONObject.class);
 
             JSONObject body = response.getBody();
             if (body != null && body.containsKey("access_token")) {
                 log.info("GitHub access token obtained successfully");
                 return GitHubLoginResponse.builder()
-                    .accessToken(body.getAsString("access_token"))
-                    .build();
+                        .accessToken(body.getAsString("access_token"))
+                        .build();
             }
 
             log.error("GitHub token response missing access_token: {}", body);
@@ -128,21 +128,21 @@ public class OAuthService extends DefaultOAuth2UserService {
         List<String> organizations = fetchOrganizations(entity);
 
         return GitHubUserInfoResponse.builder()
-            .githubId(login)
-            .avatarUrl(avatarUrl)
-            .email(email)
-            .organizations(organizations)
-            .build();
+                .githubId(login)
+                .avatarUrl(avatarUrl)
+                .email(email)
+                .organizations(organizations)
+                .build();
     }
 
     // GitHub 사용자의 기본 이메일
     private String fetchPrimaryEmail(HttpEntity<String> entity) {
         ResponseEntity<Object[]> response =
-            restTemplate.exchange(
-                "https://api.github.com/user/emails",
-                HttpMethod.GET,
-                entity,
-                Object[].class);
+                restTemplate.exchange(
+                        "https://api.github.com/user/emails",
+                        HttpMethod.GET,
+                        entity,
+                        Object[].class);
 
         Object[] emails = response.getBody();
         if (emails != null) {
@@ -163,8 +163,8 @@ public class OAuthService extends DefaultOAuth2UserService {
     // GitHub 사용자의 organization 목록
     private List<String> fetchOrganizations(HttpEntity<String> entity) {
         ResponseEntity<Object[]> response =
-            restTemplate.exchange(
-                "https://api.github.com/user/orgs", HttpMethod.GET, entity, Object[].class);
+                restTemplate.exchange(
+                        "https://api.github.com/user/orgs", HttpMethod.GET, entity, Object[].class);
 
         List<String> organizations = new ArrayList<>();
         Object[] orgs = response.getBody();
@@ -185,12 +185,12 @@ public class OAuthService extends DefaultOAuth2UserService {
         validatePrgrmsOrganization(userInfo.getOrganizations());
 
         Member member =
-            Member.builder()
-                .githubId(userInfo.getGithubId())
-                .email(userInfo.getEmail())
-                .profileImage(userInfo.getAvatarUrl())
-                .role(Role.MEMBER)
-                .build();
+                Member.builder()
+                        .githubId(userInfo.getGithubId())
+                        .email(userInfo.getEmail())
+                        .profileImage(userInfo.getAvatarUrl())
+                        .role(Role.MEMBER)
+                        .build();
 
         return memberRepository.save(member);
     }
@@ -199,20 +199,23 @@ public class OAuthService extends DefaultOAuth2UserService {
     public LoginResponse login(String accessToken) {
         GitHubUserInfoResponse userInfo = getUserInfo(accessToken);
         Member member =
-            memberRepository
-                .findByEmail(userInfo.getEmail())
-                .orElseGet(() -> saveUserInfo(userInfo));
+                memberRepository
+                        .findByEmail(userInfo.getEmail())
+                        .orElseGet(() -> saveUserInfo(userInfo));
         TokenPair tokenPair = jwtTokenProvider.generateTokenPair(member);
-        return LoginResponse.builder().tokenPair(tokenPair).role(member.getRole())
-            .memberId(member.getId()).build();
+        return LoginResponse.builder()
+                .tokenPair(tokenPair)
+                .role(member.getRole())
+                .memberId(member.getId())
+                .build();
     }
 
     // 추가 회원 가입 정보 등록
     public SignUpResponse signup(SignUpRequest request, Long id) {
         Member member =
-            memberRepository
-                .findById(id)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+                memberRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         member.setName(request.getName());
         member.setJob(request.getJob());
@@ -224,7 +227,7 @@ public class OAuthService extends DefaultOAuth2UserService {
     // organization에 "prgrms" 포함 여부 확인
     private void validatePrgrmsOrganization(List<String> organizations) {
         boolean hasPrgrms =
-            organizations.stream().anyMatch(org -> org.toLowerCase().contains("prgrms"));
+                organizations.stream().anyMatch(org -> org.toLowerCase().contains("prgrms"));
 
         if (!hasPrgrms) {
             throw new ErrorException(ErrorCode.OAUTH_PRGRMS_ORG_REQUIRED);
@@ -233,9 +236,9 @@ public class OAuthService extends DefaultOAuth2UserService {
 
     public MemberDetails getMemberDetailsById(Long id) {
         Member member =
-            memberRepository
-                .findById(id)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+                memberRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
         return MemberDetails.from(member);
     }
 
@@ -251,7 +254,7 @@ public class OAuthService extends DefaultOAuth2UserService {
     // 요청 URL에서 JSON 객체 받기
     private JSONObject getForObject(String url, HttpEntity<String> entity) {
         ResponseEntity<JSONObject> response =
-            restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class);
+                restTemplate.exchange(url, HttpMethod.GET, entity, JSONObject.class);
         return response.getBody();
     }
 }

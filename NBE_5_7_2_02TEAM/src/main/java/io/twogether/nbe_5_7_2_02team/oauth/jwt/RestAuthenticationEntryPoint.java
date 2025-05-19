@@ -3,8 +3,10 @@ package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorStatus;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -15,9 +17,11 @@ import java.io.IOException;
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request,
-        HttpServletResponse response,
-        AuthenticationException authException) throws IOException {
+    public void commence(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException authException)
+            throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
 
@@ -26,7 +30,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // 예외 코드가 설정돼 있으면 해당 코드로 응답
         if (exceptionAttr instanceof ErrorCode errorCode) {
             response.setStatus(mapToHttpStatus(errorCode.getErrorStatus()));
-            ErrorResponse<Void> errorResponse = new ErrorResponse<>(errorCode.getCode(), errorCode.getMessage());
+            ErrorResponse<Void> errorResponse =
+                    new ErrorResponse<>(errorCode.getCode(), errorCode.getMessage());
             response.getWriter().write(toJson(errorResponse));
         } else {
             // 기본 401 에러 처리
