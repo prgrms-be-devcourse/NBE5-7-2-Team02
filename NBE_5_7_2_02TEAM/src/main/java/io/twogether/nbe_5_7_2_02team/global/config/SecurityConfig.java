@@ -50,7 +50,8 @@ public class SecurityConfig {
                                                 "/api/tags",
                                                 "/api/token/**")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/api/posts")
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/api/posts", "/api/posts/{id}")
                                         .permitAll()
                                         .requestMatchers("/api/**")
                                         .hasAnyAuthority("MEMBER")

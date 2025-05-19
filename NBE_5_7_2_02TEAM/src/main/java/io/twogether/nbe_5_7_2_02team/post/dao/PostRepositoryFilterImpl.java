@@ -1,18 +1,25 @@
 package io.twogether.nbe_5_7_2_02team.post.dao;
 
-import com.querydsl.core.types.Projections;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+
+import static io.twogether.nbe_5_7_2_02team.chat.domain.QChatRoom.chatRoom;
+import static io.twogether.nbe_5_7_2_02team.member.domain.QFollow.follow;
+import static io.twogether.nbe_5_7_2_02team.post.domain.QLikes.likes;
+import static io.twogether.nbe_5_7_2_02team.post.domain.QPost.post;
+import static io.twogether.nbe_5_7_2_02team.post.domain.QPostTag.postTag;
+import static io.twogether.nbe_5_7_2_02team.tag.domain.QTag.tag;
+
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import io.twogether.nbe_5_7_2_02team.member.domain.QFollow;
-import io.twogether.nbe_5_7_2_02team.post.domain.QLikes;
-import io.twogether.nbe_5_7_2_02team.post.domain.QPost;
-import io.twogether.nbe_5_7_2_02team.post.domain.QPostTag;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-import io.twogether.nbe_5_7_2_02team.post.dto.common.PostGetResult;
-import io.twogether.nbe_5_7_2_02team.tag.domain.QTag;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse.PostGetResult;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.QPostGetResponse_PostGetResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +36,28 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<PostGetResult> findPostsByMemberId(Long memberId, Long lastPostId, Integer limit) {
+        return queryFactory
+                .from(post)
+                .leftJoin(post.postTags, postTag)
+                .leftJoin(postTag.tag, tag)
+                .leftJoin(chatRoom)
+                .on(post.id.eq(chatRoom.post.id))
+                .where(lastPostIdCondition(lastPostId), post.member.id.eq(memberId))
+                .orderBy(post.createdAt.desc())
+                .limit(limit)
+                .transform(
+                        groupBy(post.id)
+                                .list(
+                                        new QPostGetResponse_PostGetResult(
+                                                post,
+                                                likeCount(),
+                                                chatRoom.id,
+                                                list(tag.name),
+                                                isLike(memberId))));
+    }
+
+    @Override
     public List<PostGetResult> findFilteredPosts(
             Long memberId,
             Long lastPostId,
@@ -36,64 +65,90 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
             RecruitmentStatus recruitmentStatus,
             Boolean isFollowing,
             List<String> tags) {
-        QPost post = QPost.post;
-        QLikes likes = QLikes.likes;
-
         return queryFactory
-                .select(
-                        Projections.constructor(
-                                PostGetResult.class,
-                                post,
-                                likes.count().coalesce(0L).as("likeCount")))
                 .from(post)
-                .leftJoin(likes)
-                .on(likes.post.eq(post))
+                .leftJoin(post.postTags, postTag)
+                .leftJoin(postTag.tag, tag)
+                .leftJoin(chatRoom)
+                .on(post.id.eq(chatRoom.post.id))
                 .where(
-                        lastPostIdCondition(post, lastPostId),
-                        tagsCondition(post, tags),
-                        followingCondition(post, memberId, isFollowing),
-                        post.recruitmentStatus.eq(recruitmentStatus))
-                .groupBy(post.id)
+                        lastPostIdCondition(lastPostId),
+                        tagsCondition(tags),
+                        followingCondition(memberId, isFollowing),
+                        recruitmentStatusCondition(recruitmentStatus))
                 .orderBy(post.createdAt.desc())
                 .limit(limit)
-                .fetch();
+                .transform(
+                        groupBy(post.id)
+                                .list(
+                                        new QPostGetResponse_PostGetResult(
+                                                post,
+                                                likeCount(),
+                                                chatRoom.id,
+                                                list(tag.name),
+                                                isLike(memberId))));
     }
 
-    private BooleanExpression lastPostIdCondition(QPost post, Long lastPostId) {
+    private Expression<Long> likeCount() {
+        return ExpressionUtils.as(
+                JPAExpressions.select(likes.count()).from(likes).where(likes.post.eq(post)),
+                "likeCount");
+    }
+
+    private Expression<Boolean> isLike(Long memberId) {
+        if (memberId == null) {
+            return Expressions.FALSE;
+        }
+        return ExpressionUtils.as(
+                JPAExpressions.selectOne()
+                        .from(likes)
+                        .where(likes.post.id.eq(post.id), likes.member.id.eq(memberId))
+                        .exists(),
+                "isLike");
+    }
+
+    private BooleanExpression recruitmentStatusCondition(RecruitmentStatus recruitmentStatus) {
+        if (recruitmentStatus == RecruitmentStatus.NONE) {
+            return null;
+        }
+        return post.recruitmentStatus.eq(recruitmentStatus);
+    }
+
+    private BooleanExpression lastPostIdCondition(Long lastPostId) {
         if (lastPostId == null) return null;
 
         LocalDateTime lastCreatedAt =
                 queryFactory
-                        .select(QPost.post.createdAt)
-                        .from(QPost.post)
-                        .where(QPost.post.id.eq(lastPostId))
+                        .select(post.createdAt)
+                        .from(post)
+                        .where(post.id.eq(lastPostId))
                         .fetchOne();
 
         return lastCreatedAt != null ? post.createdAt.lt(lastCreatedAt) : null;
     }
 
-    private BooleanExpression followingCondition(QPost post, Long memberId, Boolean isFollowing) {
+    private BooleanExpression followingCondition(Long memberId, Boolean isFollowing) {
         if (Boolean.TRUE.equals(isFollowing) && memberId != null) {
             return post.member.id.in(
                     queryFactory
-                            .select(QFollow.follow.following.id)
-                            .from(QFollow.follow)
-                            .where(QFollow.follow.follower.id.eq(memberId)));
+                            .select(follow.following.id)
+                            .from(follow)
+                            .where(follow.follower.id.eq(memberId)));
         }
 
         return null;
     }
 
-    private BooleanExpression tagsCondition(QPost post, List<String> tags) {
+    private BooleanExpression tagsCondition(List<String> tags) {
         if (CollectionUtils.isEmpty(tags)) return null;
         BooleanExpression condition = Expressions.asBoolean(true).isTrue();
-        for (String tag : tags) {
+        for (String tagName : tags) {
             condition =
                     condition.and(
                             JPAExpressions.selectOne()
-                                    .from(post.postTags, QPostTag.postTag)
-                                    .join(QPostTag.postTag.tag, QTag.tag)
-                                    .where(QPostTag.postTag.post.eq(post), QTag.tag.name.eq(tag))
+                                    .from(post.postTags, postTag)
+                                    .join(postTag.tag, tag)
+                                    .where(postTag.post.id.eq(post.id), tag.name.eq(tagName))
                                     .exists());
         }
         return condition;

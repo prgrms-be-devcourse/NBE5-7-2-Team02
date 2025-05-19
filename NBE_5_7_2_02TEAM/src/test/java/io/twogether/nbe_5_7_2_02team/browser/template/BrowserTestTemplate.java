@@ -37,6 +37,8 @@ public abstract class BrowserTestTemplate {
                 member =
                         Member.builder()
                                 .name("TEST_MEMBER")
+                                .email("TEST_MEMBER@example.com")
+                                .githubId("github.com")
                                 .profileImage("TEST_IMAGE")
                                 .role(Role.MEMBER)
                                 .build());

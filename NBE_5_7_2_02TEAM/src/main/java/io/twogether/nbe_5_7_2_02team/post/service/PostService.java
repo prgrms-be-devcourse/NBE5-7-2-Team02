@@ -120,7 +120,7 @@ public class PostService {
     public PostGetResponse getFilteredPosts(PostGetRequest request, UserDetails userDetails) {
         Long memberId = userDetails != null ? Long.valueOf(userDetails.getUsername()) : null;
 
-        return postMapper.createPostGetResponseFromResult(
+        return PostGetResponse.from(
                 postRepository.findFilteredPosts(
                         memberId,
                         request.getLastPostId(),
@@ -128,6 +128,13 @@ public class PostService {
                         parseRecruitmentStatus(request.getIsRecruit()),
                         request.getIsFollowing(),
                         request.getTags()));
+    }
+
+    @Transactional(readOnly = true)
+    public PostGetResponse getPostsByMember(PostGetRequest request, Long memberId) {
+        return PostGetResponse.from(
+                postRepository.findPostsByMemberId(
+                        memberId, request.getLastPostId(), request.getLimit()));
     }
 
     private RecruitmentStatus parseRecruitmentStatus(Boolean isRecruit) {
