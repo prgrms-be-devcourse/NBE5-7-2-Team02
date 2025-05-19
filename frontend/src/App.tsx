@@ -12,6 +12,7 @@ import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { useAuth } from "./context/AuthContext.tsx";
+import OAuthCallback from "./components/OAuthCallback.tsx";
 
 function MainContent() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -87,6 +88,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/" element={<MainContent />} />
+          <Route path="/callback" element={<OAuthCallback />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

@@ -3,6 +3,7 @@ package io.twogether.nbe_5_7_2_02team.global.config;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtAuthenticationFilter;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
 
+import io.twogether.nbe_5_7_2_02team.oauth.jwt.RestAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -27,45 +28,49 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(httpB -> httpB.disable())
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .formLogin(form -> form.disable())
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Login(
-                        oauth -> {
-                            oauth.successHandler(oAuth2SuccessHandler);
-                        })
-                .authorizeHttpRequests(
-                        auth ->
-                                auth.requestMatchers(CorsUtils::isPreFlightRequest)
-                                        .permitAll()
-                                        .requestMatchers(
-                                                "/api/tags/**",
-                                                "/api/oauth2/**",
-                                                "/api/tags",
-                                                "/api/token/**")
-                                        .permitAll()
-                                        .requestMatchers("/api/**")
-                                        .hasAnyAuthority("MEMBER")
-                                        .requestMatchers(HttpMethod.GET, "api/posts")
-                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated())
-                .addFilterBefore(
-                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .formLogin(form -> form.disable())
+            .sessionManagement(
+                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+            )
+            .oauth2Login(
+                oauth -> {
+                    oauth.successHandler(oAuth2SuccessHandler);
+                })
+            .authorizeHttpRequests(
+                auth ->
+                    auth.requestMatchers(CorsUtils::isPreFlightRequest)
+                        .permitAll()
+                        .requestMatchers(
+                            "/api/tags/**",
+                            "/api/oauth2/**",
+                            "/api/tags",
+                            "/api/token/**")
+                        .permitAll()
+                        .requestMatchers("/api/**")
+                        .hasAnyAuthority("MEMBER")
+                        .requestMatchers(HttpMethod.GET, "api/posts")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+            .addFilterBefore(
+                jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 

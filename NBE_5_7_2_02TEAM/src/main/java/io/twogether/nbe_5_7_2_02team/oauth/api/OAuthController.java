@@ -31,21 +31,22 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/oauth2/callback/github")
-    public ResponseEntity<BaseResponse<GitHubLoginResponse>> githubCallback(
-            @RequestParam String code) {
-        GitHubLoginResponse response = oAuthService.getAccessToken(code);
-        return BaseResponse.of(SuccessCode.GITHUB_CALLBACK_SUCCESS, response, null);
-    }
+//    @GetMapping("/oauth2/callback/github")
+//    public ResponseEntity<BaseResponse<GitHubLoginResponse>> githubCallback(
+//            @RequestParam String code) {
+//        GitHubLoginResponse response = oAuthService.getAccessToken(code);
+//        return BaseResponse.of(SuccessCode.GITHUB_CALLBACK_SUCCESS, response, null);
+//    }
+//
+//    @PostMapping("/oauth2/login/github")
+//    public ResponseEntity<BaseResponse<LoginResponse>> githubLogin(
+//            @RequestBody GithubLoginRequest request) {
+//        LoginResponse response = oAuthService.login(request.getAccessToken());
+//        return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
+//    }
 
-    @PostMapping("/oauth2/login/github")
-    public ResponseEntity<BaseResponse<LoginResponse>> githubLogin(
-            @RequestBody GithubLoginRequest request) {
-        LoginResponse response = oAuthService.login(request.getAccessToken());
-        return BaseResponse.of(SuccessCode.GITHUB_LOGIN_SUCCESS, response, null);
-    }
 
-    @PreAuthorize("permitAll()")
+
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
             @RequestBody SignUpRequest request, @AuthenticationPrincipal UserDetails userDetails) {

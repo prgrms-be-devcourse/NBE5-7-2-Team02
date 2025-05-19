@@ -13,6 +13,7 @@ import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
+import io.twogether.nbe_5_7_2_02team.oauth.dao.RefreshTokenBlackListRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.RefreshTokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.TokenRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
@@ -39,12 +40,16 @@ public class JwtTokenProvider {
     private final JwtConfiguration jwtConfiguration;
     private final TokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenBlackListRepository refreshTokenBlackListRepository;
 
     public TokenPair generateTokenPair(Member member) {
 
         refreshTokenRepository
-                .findByMemberId(member.getId())
-                .ifPresent(refreshTokenRepository::delete);
+            .findByMemberId(member.getId())
+            .ifPresent(refreshToken -> {
+                refreshTokenBlackListRepository.deleteByRefreshToken(refreshToken);
+                refreshTokenRepository.delete(refreshToken);
+            });
 
         String accessToken = issueAccessToken(member.getId(), member.getRole());
         String refreshToken = issueRefreshToken(member.getId(), member.getRole());
@@ -86,13 +91,27 @@ public class JwtTokenProvider {
 
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            throw new ErrorException(ErrorCode.INVALID_JWT_SIGNATURE);
+            throw new ErrorException(ErrorCode.INVALID_ACCESS_SIGNATURE);
         } catch (ExpiredJwtException e) {
-            throw new ErrorException(ErrorCode.EXPIRED_JWT_TOKEN);
+            throw new ErrorException(ErrorCode.EXPIRED_ACCESS_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new ErrorException(ErrorCode.UNSUPPORTED_JWT_TOKEN);
+            throw new ErrorException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN);
         } catch (IllegalArgumentException e) {
-            throw new ErrorException(ErrorCode.INVALID_JWT_TOKEN);
+            throw new ErrorException(ErrorCode.INVALID_ACCESS_TOKEN);
+        }
+    }
+    public void refreshValidate(String token) {
+        try {
+            Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token);
+
+        } catch (SecurityException | MalformedJwtException e) {
+            throw new ErrorException(ErrorCode.INVALID_REFRESH_SIGNATURE);
+        } catch (ExpiredJwtException e) {
+            throw new ErrorException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new ErrorException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN);
+        } catch (IllegalArgumentException e) {
+            throw new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 

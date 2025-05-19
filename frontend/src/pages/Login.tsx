@@ -8,7 +8,7 @@ const Login = () => {
   const handleGithubLogin = async () => {
     setIsLoading(true);
     try {
-      const githubAuthUrl = `http://localhost:8080/login/oauth2/authorization/github`;
+      const githubAuthUrl = `http://localhost:8080/oauth2/authorization/github`;
       
       window.location.href = githubAuthUrl;
       

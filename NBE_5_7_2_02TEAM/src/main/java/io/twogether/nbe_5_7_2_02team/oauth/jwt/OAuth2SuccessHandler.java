@@ -39,19 +39,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(
-            HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+        HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+        throws IOException, ServletException {
         MemberDetails principal = (MemberDetails) authentication.getPrincipal();
-
         Member findMember =
-                memberRepository
-                        .findById(principal.getId())
-                        .orElseThrow(() -> new RuntimeException("Member not found"));
+            memberRepository
+                .findById(principal.getId())
+                .orElseThrow(() -> new RuntimeException("Member not found"));
 
         HashMap<String, String> params = new HashMap<>();
 
+
         Optional<RefreshToken> refreshTokenOptional =
-                jwtTokenProvider.findRefreshToken(principal.getId());
+            jwtTokenProvider.findRefreshToken(principal.getId());
 
         if (refreshTokenOptional.isEmpty()) {
             TokenPair tokenPair = jwtTokenProvider.generateTokenPair(findMember);
@@ -59,7 +59,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             params.put("refresh", tokenPair.getRefreshToken());
         } else {
             String accessToken =
-                    jwtTokenProvider.issueAccessToken(principal.getId(), principal.getRole());
+                jwtTokenProvider.issueAccessToken(principal.getId(), principal.getRole());
             params.put("access", accessToken);
             params.put("refresh", refreshTokenOptional.get().getRefreshToken());
         }
@@ -70,10 +70,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private String genUrlStr(HashMap<String, String> params) {
         return UriComponentsBuilder.fromUriString(baseUrl)
-                .queryParam("access", params.get("access"))
-                .queryParam("refresh", params.get("refresh"))
-                .build()
-                .toUri()
-                .toString();
+            .queryParam("accessToken", params.get("access"))
+            .queryParam("refreshToken", params.get("refresh"))
+            .build()
+            .toUri()
+            .toString();
     }
+
 }
+

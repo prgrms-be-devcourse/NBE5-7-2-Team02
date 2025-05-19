@@ -25,7 +25,7 @@ public class TokenService {
     @Transactional
     public TokenPair refreshToken(String refreshTokenValue) {
 
-        jwtTokenProvider.validate(refreshTokenValue);
+        jwtTokenProvider.refreshValidate(refreshTokenValue);
 
         TokenBody tokenBody = jwtTokenProvider.parseJwt(refreshTokenValue);
         Long memberId = tokenBody.getMemberId();
@@ -46,7 +46,7 @@ public class TokenService {
     // RefreshToken을 무효화해서 로그아웃
     @Transactional
     public void invalidateRefreshToken(String refreshTokenValue) {
-        jwtTokenProvider.validate(refreshTokenValue);
+        jwtTokenProvider.refreshValidate(refreshTokenValue);
 
         TokenBody tokenBody = jwtTokenProvider.parseJwt(refreshTokenValue);
         Long memberId = tokenBody.getMemberId();

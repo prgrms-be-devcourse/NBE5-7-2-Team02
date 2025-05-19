@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Card, Label, Select, TextInput } from "flowbite-react";
 import api from "../api/axiosInstance";
 
@@ -12,27 +12,10 @@ const Signup = () => {
   const [error, setError] = useState<string | null>(null);
   
   const navigate = useNavigate();
-  const location = useLocation();
 
   const jobOptions = ["프론트엔드 개발자", "백엔드 개발자", "풀스택 개발자", "기획자", "디자이너", "PM", "기타"];
   const courseOptions = ["데브코스", "데이터 사이언스 코스", "디자인 코스", "기타"];
 
-  useEffect(() => {
-    // 토큰 및 회원 정보가 URL 파라미터에 포함되어 있는지 확인
-    const queryParams = new URLSearchParams(location.search);
-    const token = queryParams.get("accessToken");
-    
-    // 토큰이 없을 경우 로그인 페이지로 리다이렉트
-    if (!token) {
-      navigate("/login");
-    } else {
-      // 토큰을 localStorage에 저장
-      localStorage.setItem("accessToken", token);
-      
-      // Authorization 헤더 설정
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
-  }, [location, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +46,7 @@ const Signup = () => {
       });
       
       // 회원가입 성공 시, 홈페이지로 리다이렉트
-      if (response.data?.success) {
+      if (response.data?.code === "OAUTH-202") {
         navigate("/");
       }
     } catch (err) {
