@@ -29,7 +29,8 @@ public class MemberMapper {
             List<Post> posts,
             Long followerCount,
             Long followingCount,
-            boolean isFollowing) {
+            boolean isFollowing,
+            boolean isOwner) {
 
         List<PostSummary> postSummaries =
                 posts.stream()
@@ -52,6 +53,7 @@ public class MemberMapper {
                 .followerCount(followerCount)
                 .followingCount(followingCount)
                 .isFollowing(isFollowing)
+                .isOwner(isOwner)
                 .build();
     }
 }

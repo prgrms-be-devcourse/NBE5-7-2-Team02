@@ -1,6 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.member.api;
 
-import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.COUNT_FOLLOWS;
 import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.FOUND_FOLLOWS;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -41,17 +40,5 @@ public class PublicFollowController {
             @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followings = followService.getFollowings(memberId, pageable);
         return BaseResponse.of(FOUND_FOLLOWS, followings, null);
-    }
-
-    @GetMapping("/{memberId}/followers/count")
-    public ResponseEntity<BaseResponse<Long>> getFollwersCount(@PathVariable Long memberId) {
-        Long count = followService.getFollowerCount(memberId);
-        return BaseResponse.of(COUNT_FOLLOWS, count, null);
-    }
-
-    @GetMapping("/{memberId}/followings/count")
-    public ResponseEntity<BaseResponse<Long>> getFollwingsCount(@PathVariable Long memberId) {
-        Long count = followService.getFollowingCount(memberId);
-        return BaseResponse.of(COUNT_FOLLOWS, count, null);
     }
 }

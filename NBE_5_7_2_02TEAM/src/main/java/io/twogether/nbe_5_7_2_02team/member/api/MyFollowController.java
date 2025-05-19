@@ -70,18 +70,4 @@ public class MyFollowController {
                 followService.getFollowings(Long.parseLong(userDetails.getUsername()), pageable);
         return BaseResponse.of(FOUND_FOLLOWS, followings, null);
     }
-
-    @GetMapping("/me/followers/count")
-    public ResponseEntity<BaseResponse<Long>> getFollwersCount(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long count = followService.getFollowerCount(Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(COUNT_FOLLOWS, count, null);
-    }
-
-    @GetMapping("/me/followings/count")
-    public ResponseEntity<BaseResponse<Long>> getFollwingsCount(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long count = followService.getFollowingCount(Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(COUNT_FOLLOWS, count, null);
-    }
 }
