@@ -12,6 +12,7 @@ public class ErrorResponse<T> {
     private final String code;
     private final String message;
 
+    // 추가적인 오류 세부 정보를 담기 위한 필드
     @JsonInclude(Include.NON_EMPTY)
     private final T errors;
 

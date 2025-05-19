@@ -1,9 +1,8 @@
-
 import axios, { AxiosError } from "axios";
 
 // API 기본 설정
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: import.meta.env.VITE_APIç_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -35,7 +34,7 @@ const processQueue = (error: AxiosError | null, token: string | null = null) => 
       prom.resolve(token);
     }
   });
-  
+
   failedQueue = [];
 };
 
@@ -50,7 +49,7 @@ api.interceptors.response.use(
     if (
       error.response.data.code === "JWT-002" &&
       !originalRequest._retry &&
-      originalRequest.url !== "/api/token/refresh"
+      originalRequest.url !== "/token/refresh"
     ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -70,14 +69,14 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
-        
+
         if (!refreshToken) {
           // 리프레시 토큰이 없으면 로그아웃
           handleLogout();
           return Promise.reject(error);
         }
-        
-        const response = await api.post("/api/token/refresh", {
+
+        const response = await api.post("/token/refresh", {
           refreshToken
         });
 
@@ -87,10 +86,10 @@ api.interceptors.response.use(
           localStorage.setItem("accessToken", newAccessToken);
           localStorage.setItem("refreshToken", newRefreshToken);
           api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
-          
+
           // 대기 중인 요청 처리
           processQueue(null, newAccessToken);
-          
+
           // 원래 요청 재시도
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return api(originalRequest);
@@ -108,16 +107,16 @@ api.interceptors.response.use(
         isRefreshing = false;
       }
     }
-    
+
     // 리프레시 토큰도 만료된 경우 (403 또는 특정 에러 코드)
     if (
       error.response?.data.code === "JWT-007" ||
-      (error.response?.data?.message && 
+      (error.response?.data?.message &&
        error.response?.data?.message.includes("refresh token expired"))
     ) {
       handleLogout();
     }
-    
+
     return Promise.reject(error);
   }
 );
@@ -127,9 +126,24 @@ const handleLogout = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   delete api.defaults.headers.common["Authorization"];
-  
+
   // 로그인 페이지로 리다이렉트
   window.location.href = "/";
 };
+
+// 예외처리
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const res = err.response;
+    if (res?.data?.code && res?.data?.message) {
+      console.error(`[${res.data.code}] ${res.data.message}`);
+      alert(res.data.message); // 💬 또는 toast, modal 등으로 교체 가능
+    } else {
+      alert("예기치 못한 오류가 발생했습니다.");
+    }
+    return Promise.reject(err); // 필수: 호출자에서 catch 가능하게 함
+  }
+);
 
 export default api;

@@ -27,10 +27,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Decode and restore SQL files
-        run: |
-          echo "${{ secrets.SCHEMA_SQL_B64 }}" | base64 -d > ${{ env.PROJECT_DIR }}/src/test/resources/schema.sql
-
       - name: Run tests
         run: ./gradlew test
         working-directory: ${{ env.PROJECT_DIR }}

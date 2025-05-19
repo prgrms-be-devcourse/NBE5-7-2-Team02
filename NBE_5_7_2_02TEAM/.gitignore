@@ -35,6 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+node_modules/
+dist/
 
 ### Test Schema ###
 src/test/resources/schema.sql

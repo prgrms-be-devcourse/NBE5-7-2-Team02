@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshToken = async (): Promise<string | null> => {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      const response = await api.post("/api/token/refresh", { refreshToken });
+      const response = await api.post("/token/refresh", { refreshToken });
       
       if (response.data?.accessToken) {
         const newAccessToken = response.data.accessToken;
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (refreshToken) {
       // 서버에 로그아웃 요청
-      api.post("/api/logout", { refreshToken })
+      api.post("/logout", { refreshToken })
         .catch(error => console.error("로그아웃 오류:", error));
     }
     

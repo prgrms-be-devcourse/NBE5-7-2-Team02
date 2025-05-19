@@ -1,5 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
+import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
+
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -9,7 +11,7 @@ import java.util.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @Column(name = "member_id")
@@ -32,6 +34,10 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void updateProfile(String profileImage) {
+        this.profileImage = profileImage;
+    }
 
     @Builder
     public Member(

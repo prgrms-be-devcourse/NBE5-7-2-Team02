@@ -5,11 +5,13 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
-
 
   datasource:
     url: ${DB_URL}

@@ -7,15 +7,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
         show_sql: true
-  sql:
-    init:
-      schema-locations: classpath:schema.sql
-      mode: always
 
   config:
     import: optional:file:.env[.properties]

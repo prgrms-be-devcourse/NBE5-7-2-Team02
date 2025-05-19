@@ -13,6 +13,8 @@ public enum SuccessCode {
     // MEMBER
     FOUND_MEMBER(OK, "MEMBER-200", "Found member"),
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
+    READ_MEMBER(OK, "MEMBER-202", "Read member"),
+    UPDATE_MEMBER(OK, "MEMBER-203", "Update member"),
 
     // OAUTH
     GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),
@@ -33,7 +35,19 @@ public enum SuccessCode {
     // POST
     FOUND_POST(OK, "POST-200", "Found post"),
     CREATE_POST(CREATED, "POST-201", "Create post"),
+    UPDATE_POST(OK, "POST-202", "Update post"),
+    DELETE_POST(OK, "POST-203", "Delete post"),
     NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
+
+    // CHAT_MESSAGE
+    FOUND_CHAT_MESSAGE(CREATED, "CHAT-MESSAGE-200", "Found chat message"),
+    CREATE_CHAT_MESSAGE(OK, "CHAT-MESSAGE-201", "Create chat message"),
+    DELETE_CHAT_MESSAGE(OK, "CHAT-MESSAGE-204", "Delete chat message"),
+
+    // CHAT_MEMBER
+    FOUND_CHAT_MEMBER(OK, "CHAT-MEMBER-200", "Found chat member"),
+    CREATE_CHAT_MEMBER(CREATED, "CHAT-MEMBER-201", "Create chat member"),
+    UPDATE_CHAT_MEMBER(OK, "CHAT-MEMBER-202", "Update chat member"),
 
     // CHATROOM
     FOUND_CHATROOM(OK, "CHATROOM-200", "Found chatroom"),

@@ -39,7 +39,7 @@ const Signup = () => {
       setIsLoading(true);
       setError(null);
       
-      const response = await api.post("/api/signup", {
+      const response = await api.post("/signup", {
         name,
         job,
         course

@@ -110,8 +110,6 @@ public class JwtTokenProvider {
             throw new ErrorException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         } catch (UnsupportedJwtException e) {
             throw new ErrorException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN);
-        } catch (IllegalArgumentException e) {
-            throw new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 

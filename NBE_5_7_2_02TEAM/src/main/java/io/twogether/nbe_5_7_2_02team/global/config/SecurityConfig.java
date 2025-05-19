@@ -55,12 +55,12 @@ public class SecurityConfig {
                             "/api/tags",
                             "/api/token/**")
                         .permitAll()
-                        .requestMatchers("/api/**")
-                        .hasAnyAuthority("MEMBER")
                         .requestMatchers(HttpMethod.GET, "api/posts")
                         .permitAll()
+                        .requestMatchers("/api/**")
+                        .hasAnyAuthority("MEMBER")
                         .anyRequest()
-                        .authenticated())
+                        .permitAll())
             .addFilterBefore(
                 jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();

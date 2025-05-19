@@ -1,9 +1,12 @@
 package io.twogether.nbe_5_7_2_02team.chat.domain;
 
+import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,33 +18,36 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMember {
+public class ChatMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatroom_member_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "chatroom_id")
-    private ChatRoom chatroom;
+    private ChatRoom chatRoom;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private LocalDateTime joinedAt = LocalDateTime.now();
-    private Status status;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ChatMemberStatus chatMemberStatus;
 
     @Builder
-    public ChatMember(ChatRoom chatroom, Member member, Status status) {
-        this.chatroom = chatroom;
+    public ChatMember(ChatRoom chatRoom, Member member, ChatMemberStatus chatMemberStatus) {
+        this.chatRoom = chatRoom;
         this.member = member;
-        this.status = status;
+        this.chatMemberStatus = chatMemberStatus;
+    }
+
+    public void updateStatus(ChatMemberStatus chatMemberStatus) {
+        this.chatMemberStatus = chatMemberStatus;
     }
 }

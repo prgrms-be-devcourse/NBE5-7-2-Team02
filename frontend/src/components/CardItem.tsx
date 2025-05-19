@@ -10,7 +10,7 @@ export const CardItem = ({ post }: CardItemProps) => {
   return (
       <Card className="w-full dark:border-gray-600 dark:!bg-dark">
         <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {post.title}
+          {post.member_id}
         </h5>
         <p className="font-normal text-gray-700 dark:text-gray-400">
           {post.content}
