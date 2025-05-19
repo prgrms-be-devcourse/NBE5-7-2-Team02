@@ -39,11 +39,12 @@ class ChatRoomServiceTest {
         chatRoomRepository.deleteAll();
         postRepository.deleteAll();
 
-        post = Post.builder()
-            .title("제목")
-            .content("내용")
-            .recruitmentStatus(RecruitmentStatus.NONE)
-            .build();
+        post =
+                Post.builder()
+                        .title("제목")
+                        .content("내용")
+                        .recruitmentStatus(RecruitmentStatus.NONE)
+                        .build();
 
         postRepository.save(post);
 

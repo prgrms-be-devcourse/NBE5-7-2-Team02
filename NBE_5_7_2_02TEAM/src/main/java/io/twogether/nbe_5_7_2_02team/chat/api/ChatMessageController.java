@@ -1,8 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
 import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessageDeleteRequest;
-import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessagePostRequest;
+import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMessageService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
