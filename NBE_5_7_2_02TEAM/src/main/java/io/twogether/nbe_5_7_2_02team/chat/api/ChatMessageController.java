@@ -1,6 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
-import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessageDeleteRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessagePostRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMessageService;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -56,10 +56,10 @@ public class ChatMessageController {
     @DeleteMapping("/{chatroomId}/message")
     public ResponseEntity<BaseResponse<Long>> deleteChatMessage(
             @PathVariable Long chatroomId,
-            @RequestBody ChatMessageDeleteRequest chatMessageDeleteRequest,
+            @RequestParam Long chatMessageId,
             @AuthenticationPrincipal UserDetails userDetails) {
         chatMessageService.deleteChatMessage(
-                chatMessageDeleteRequest.getChatMessageId(), chatroomId, userDetails);
+            chatMessageId, chatroomId, userDetails);
 
         return BaseResponse.of(SuccessCode.DELETE_CHAT_MESSAGE, chatroomId, null);
     }
