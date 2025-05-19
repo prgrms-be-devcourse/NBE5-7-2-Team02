@@ -14,46 +14,46 @@ public class MemberMapper {
 
     public static MemberCreateResponse toMemberCreateResponse(Member member) {
         return MemberCreateResponse.builder()
-            .id(member.getId())
-            .email(member.getEmail())
-            .name(member.getName())
-            .profileImage(member.getProfileImage())
-            .job(member.getJob())
-            .course(member.getCourse())
-            .githubId(member.getGithubId())
-            .build();
+                .id(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .profileImage(member.getProfileImage())
+                .job(member.getJob())
+                .course(member.getCourse())
+                .githubId(member.getGithubId())
+                .build();
     }
 
     public static MyPageResponse toMyPageResponse(
-        Member member,
-        List<Post> posts,
-        Long followerCount,
-        Long followingCount,
-        boolean isFollowing,
-        boolean isOwner) {
+            Member member,
+            List<Post> posts,
+            Long followerCount,
+            Long followingCount,
+            boolean isFollowing,
+            boolean isOwner) {
 
         List<PostSummary> postSummaries =
-            posts.stream()
-                .map(
-                    post ->
-                        MyPageResponse.PostSummary.builder()
-                            .postId(post.getId())
-                            .title(post.getTitle())
-                            .build())
-                .toList();
+                posts.stream()
+                        .map(
+                                post ->
+                                        MyPageResponse.PostSummary.builder()
+                                                .postId(post.getId())
+                                                .title(post.getTitle())
+                                                .build())
+                        .toList();
 
         return MyPageResponse.builder()
-            .memberId(member.getId())
-            .email(member.getEmail())
-            .name(member.getName())
-            .job(member.getJob())
-            .course(member.getCourse())
-            .profileImage(member.getProfileImage())
-            .posts(postSummaries)
-            .followerCount(followerCount)
-            .followingCount(followingCount)
-            .isFollowing(isFollowing)
-            .isOwner(isOwner)
-            .build();
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .job(member.getJob())
+                .course(member.getCourse())
+                .profileImage(member.getProfileImage())
+                .posts(postSummaries)
+                .followerCount(followerCount)
+                .followingCount(followingCount)
+                .isFollowing(isFollowing)
+                .isOwner(isOwner)
+                .build();
     }
 }
