@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { InfiniteScroll } from "../components/InfiniteScroll";
+import CardList from "../components/CardList";
 import { Member } from "../types/Member";
 import { Follow } from "../types/Follow";
 import FollowSummary from "../components/mypage/FollowSummary";
 import FollowListModal from "../components/mypage/FollowListModal";
 import ProfileEditorModal from "../components/mypage/ProfileEditorModal";
-import MyPostList from "../components/mypage/MyPostList";
 import api from "../api/axiosInstance";
 
 
 export default function MyPage() {
-  const { userId } = useParams();
   const navigate = useNavigate();
-
+  const [ searchParams ] = useSearchParams();
+  const memberId = searchParams.get("memberId");
+  const [limit] = useState<number>(10);
   const [user, setUser] = useState<Member | null>(null);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowings, setShowFollowings] = useState(false);
@@ -23,17 +25,17 @@ export default function MyPage() {
 // ✅ 사용자 정보 조회
   const fetchUser = async () => {
     try {
-      const res = await api.get(`/member/${userId || "me"}`);
+      const res = await api.get(`/member/${memberId || "me"}`);
       const raw = res.data.data;
 
       const user: Member = {
-        id: raw.memberId,
+        id: raw.member_id,
         username: raw.name,
-        profileImage: raw.profileImage,
-        followerCount: raw.followerCount,
-        followingCount: raw.followingCount,
-        isFollowing: raw.isFollowing,
-        isOwner: raw.isOwner,
+        profileImage: raw.profile_image,
+        followerCount: raw.follower_count,
+        followingCount: raw.following_count,
+        isFollowing: raw.is_following,
+        isOwner: raw.is_owner,
       };
 
       setUser(user);
@@ -44,7 +46,7 @@ export default function MyPage() {
 
   useEffect(() => {
     fetchUser();
-  }, [userId]);
+  }, [memberId]);
 
   // ✅ 팔로우 / 언팔로우 요청
   const handleFollowToggle = async () => {
@@ -114,46 +116,57 @@ export default function MyPage() {
   }
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <FollowSummary
-        username={user.username}
-        profileImage={user.profileImage}
-        followerCount={user.followerCount}
-        followingCount={user.followingCount}
-        isOwner={user.isOwner}
-        isFollowing={user.isFollowing}
-        onEditProfile={() => setShowProfileEdit(true)}
-        onFollowToggle={handleFollowToggle}
-        onShowFollowers={fetchFollowers}
-        onShowFollowings={fetchFollowings}
-      />
+      <div className="min-h-screen bg-bright dark:bg-dark">
+        <div className="p-4 max-w-2xl mx-auto">
+          <FollowSummary
+              username={user.username}
+              profileImage={user.profileImage}
+              followerCount={user.followerCount}
+              followingCount={user.followingCount}
+              isOwner={user.isOwner}
+              isFollowing={user.isFollowing}
+              onEditProfile={() => setShowProfileEdit(true)}
+              onFollowToggle={handleFollowToggle}
+              onShowFollowers={fetchFollowers}
+              onShowFollowings={fetchFollowings}
+          />
 
-      <MyPostList userId={user.id} />
+          <FollowListModal
+              show={showFollowers}
+              onClose={() => setShowFollowers(false)}
+              title="팔로워"
+              users={followers}
+              onProfileClick={(id) => navigate(`/mypage/${id}`)}
+          />
 
-      <FollowListModal
-        show={showFollowers}
-        onClose={() => setShowFollowers(false)}
-        title="팔로워"
-        users={followers}
-        onProfileClick={(id) => navigate(`/mypage/${id}`)}
-      />
+          <FollowListModal
+              show={showFollowings}
+              onClose={() => setShowFollowings(false)}
+              title="팔로잉"
+              users={followings}
+              onProfileClick={(id) => navigate(`/mypage/${id}`)}
+          />
 
-      <FollowListModal
-        show={showFollowings}
-        onClose={() => setShowFollowings(false)}
-        title="팔로잉"
-        users={followings}
-        onProfileClick={(id) => navigate(`/mypage/${id}`)}
-      />
-
-      <ProfileEditorModal
-        show={showProfileEdit}
-        onClose={() => setShowProfileEdit(false)}
-        username={user.username}
-        profileImage={user.profileImage}
-        onSave={handleSaveProfile}
-      />
-    </div>
+          <ProfileEditorModal
+              show={showProfileEdit}
+              onClose={() => setShowProfileEdit(false)}
+              username={user.username}
+              profileImage={user.profileImage}
+              onSave={handleSaveProfile}
+          />
+        </div>
+        <div className="p-4 max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4">My Posts</h2>
+          <InfiniteScroll
+              apiEndpoint={`/posts/${memberId}`}
+              limit={limit}
+              fetchKey={`member-${memberId}`} // Add a unique key based on memberId
+              renderPosts={(posts, lastPostRef) => (
+                  <CardList posts={posts} lastPostRef={lastPostRef} />
+              )}
+          />
+        </div>
+      </div>
   );
 }
 

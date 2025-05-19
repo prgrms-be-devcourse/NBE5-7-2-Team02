@@ -1,44 +1,53 @@
-import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
-export function ImageComponent() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const images = [
-    "https://picsum.photos/200",
-    "https://picsum.photos/300",
-    "https://picsum.photos/400",
-  ];
+interface ImageCarouselProps {
+  images: string[];
+  className?: string;
+}
 
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) =>
-        prev === 0 ? images.length - 1 : prev - 1
-    );
-  };
-
+export function ImageComponent({ images, className }: ImageCarouselProps) {
   return (
-      <div className="relative w-full max-w-md mx-auto overflow-hidden">
-        <div className="w-full h-64 flex items-center justify-center">
-          <img
-              src={images[currentSlide]}
-              alt={`Slide ${currentSlide + 1}`}
-              className="w-full h-full object-cover"
-          />
-        </div>
-        <button
-            className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white bg-gray-800 p-2 rounded-full"
-            onClick={handlePrev}
-        >
-          ❮
-        </button>
-        <button
-            className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white bg-gray-800 p-2 rounded-full"
-            onClick={handleNext}
-        >
-          ❯
-        </button>
-      </div>
+      <Carousel
+          className={cn("w-full max-w-md mx-auto", className)}
+          opts={{
+            align: "center",
+            loop: true,
+          }}
+      >
+        <CarouselContent className="h-64">
+          {images.map((image, index) => (
+              <CarouselItem key={index} className="h-full">
+                <div className="h-full w-full p-1">
+                  <div className="relative h-full w-full overflow-hidden rounded-md">
+                    <img
+                        src={image}
+                        alt={`Slide ${index + 1}`}
+                        className="h-full w-full object-cover"
+                        loading={index === 0 ? "eager" : "lazy"}
+                    />
+                  </div>
+                </div>
+              </CarouselItem>
+          ))}
+        </CarouselContent>
+
+        {images.length > 1 && (
+            <>
+              <CarouselPrevious
+                  className="absolute left-1 bg-background/80 hover:bg-background border-border text-foreground"
+              />
+              <CarouselNext
+                  className="absolute right-1 bg-background/80 hover:bg-background border-border text-foreground"
+              />
+            </>
+        )}
+      </Carousel>
   );
 }

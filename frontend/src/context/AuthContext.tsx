@@ -1,9 +1,9 @@
 
-import React, { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import api from "../api/axiosInstance";
 
 interface User {
-  id: number;
+  member_id: number;
   name: string;
   job?: string;
   course?: string;
@@ -31,14 +31,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       
       // 사용자 정보 가져오기 (API 엔드포인트에 맞게 수정 필요)
-      // api.get("/api/members/me")
-      //   .then(response => {
-      //     setUser(response.data.data);
-      //   })
-      //   .catch(error => {
-      //     console.error("사용자 정보 가져오기 오류:", error);
-      //     logout();
-      //   });
+      api.get("/member/me")
+        .then(response => {
+          setUser(response.data.data);
+        })
+        .catch(error => {
+          console.error("사용자 정보 가져오기 오류:", error);
+          logout();
+        });
     }
   }, []);
 
