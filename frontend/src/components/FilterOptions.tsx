@@ -3,6 +3,7 @@ import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { Filter, Users } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 interface FilterOptionsProps {
   isRecruit: boolean | null;
@@ -19,6 +20,7 @@ export const FilterOptions: React.FC<FilterOptionsProps> = ({
                                                               onFollowingChange,
                                                               onReset,
                                                             }) => {
+  const { isAuthenticated } = useAuth();
   return (
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4 p-4 bg-card dark:bg-dark rounded-lg border">
         {/* 모집 여부 필터 (ToggleGroup 사용) */}
@@ -52,18 +54,19 @@ export const FilterOptions: React.FC<FilterOptionsProps> = ({
         {/* 필터 컨트롤 영역 */}
         <div className="flex items-center gap-4">
           {/* 팔로잉 필터 (Switch 사용) */}
-          <div className="flex items-center gap-2">
+          {isAuthenticated?
             <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <Label htmlFor="following-filter" className="text-sm font-medium cursor-pointer">팔로잉한 사용자만</Label>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                <Label htmlFor="following-filter" className="text-sm font-medium cursor-pointer">팔로잉한 사용자만</Label>
+              </div>
+              <Switch
+                  id="following-filter"
+                  checked={isFollowing}
+                  onCheckedChange={onFollowingChange}
+              />
             </div>
-            <Switch
-                id="following-filter"
-                checked={isFollowing}
-                onCheckedChange={onFollowingChange}
-            />
-          </div>
-
+          : null }
           {/* 초기화 버튼 */}
           <Button
               variant="outline"

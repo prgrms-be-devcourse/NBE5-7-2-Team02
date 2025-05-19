@@ -3,7 +3,7 @@ import {Avatar, Badge, Card} from "flowbite-react";
 import {ImageComponent} from "./ImageComponent";
 import {FaHeart, FaRegHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
 
 interface CardItemProps {
   post: Post;
@@ -11,6 +11,7 @@ interface CardItemProps {
 
 export const CardItem = ({ post }: CardItemProps) => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const handleMemberClick = () => {
     navigate(`/mypage?memberId=${post.member_id}`);
@@ -21,8 +22,8 @@ export const CardItem = ({ post }: CardItemProps) => {
         <div className="flex items-center justify-between mb-2">
           {/* ✅ 작성자 정보 */}
           <div
-              className="flex items-center space-x-4 cursor-pointer"
-              onClick={handleMemberClick}
+              className={`flex items-center space-x-4 ${isAuthenticated ? "cursor-pointer" : ""}`}
+              onClick={isAuthenticated ? handleMemberClick : undefined}
           >
             <Avatar img={post.member_image} />
             <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
