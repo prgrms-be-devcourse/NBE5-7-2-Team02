@@ -50,7 +50,7 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
                         groupBy(post.id)
                                 .list(
                                         new QPostGetResponse_PostGetResult(
-                                                post, likeCount(), chatRoom.id, list(tag.name))));
+                                                post, likeCount(), chatRoom.id, list(tag.name), isLike(memberId))));
     }
 
     @Override
@@ -71,20 +71,40 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
                         lastPostIdCondition(lastPostId),
                         tagsCondition(tags),
                         followingCondition(memberId, isFollowing),
-                        post.recruitmentStatus.eq(recruitmentStatus))
+                        recruitmentStatusCondition(recruitmentStatus))
                 .orderBy(post.createdAt.desc())
                 .limit(limit)
                 .transform(
                         groupBy(post.id)
                                 .list(
                                         new QPostGetResponse_PostGetResult(
-                                                post, likeCount(), chatRoom.id, list(tag.name))));
+                                                post, likeCount(), chatRoom.id, list(tag.name), isLike(memberId))));
     }
 
     private Expression<Long> likeCount() {
         return ExpressionUtils.as(
                 JPAExpressions.select(likes.count()).from(likes).where(likes.post.eq(post)),
                 "likeCount");
+    }
+
+    private Expression<Boolean> isLike(Long memberId) {
+        if (memberId == null) {
+            return Expressions.FALSE;
+        }
+        return ExpressionUtils.as(JPAExpressions
+            .selectOne()
+            .from(likes)
+            .where(
+                likes.post.id.eq(post.id),
+                likes.member.id.eq(memberId))
+            .exists(), "isLike");
+    }
+
+    private BooleanExpression recruitmentStatusCondition(RecruitmentStatus recruitmentStatus) {
+        if (recruitmentStatus == RecruitmentStatus.NONE) {
+            return null;
+        }
+        return post.recruitmentStatus.eq(recruitmentStatus);
     }
 
     private BooleanExpression lastPostIdCondition(Long lastPostId) {

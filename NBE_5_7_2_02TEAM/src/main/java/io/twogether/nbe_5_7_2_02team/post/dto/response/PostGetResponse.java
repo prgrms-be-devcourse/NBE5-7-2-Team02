@@ -37,9 +37,10 @@ public class PostGetResponse {
         private String memberImage;
         private List<String> tags;
         private List<String> images;
+        private Boolean isLike;
 
         @QueryProjection
-        public PostGetResult(Post post, Long numLikes, Long chatRoomId, List<String> tags) {
+        public PostGetResult(Post post, Long numLikes, Long chatRoomId, List<String> tags, Boolean isLike) {
             this.postId = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
@@ -53,6 +54,7 @@ public class PostGetResponse {
             this.numLikes = numLikes;
             this.tags = tags;
             this.images = post.getImageUrls();
+            this.isLike = isLike;
         }
     }
 }
