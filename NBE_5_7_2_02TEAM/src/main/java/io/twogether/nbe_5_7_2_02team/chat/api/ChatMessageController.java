@@ -58,8 +58,7 @@ public class ChatMessageController {
             @PathVariable Long chatroomId,
             @RequestParam Long chatMessageId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        chatMessageService.deleteChatMessage(
-            chatMessageId, chatroomId, userDetails);
+        chatMessageService.deleteChatMessage(chatMessageId, chatroomId, userDetails);
 
         return BaseResponse.of(SuccessCode.DELETE_CHAT_MESSAGE, chatroomId, null);
     }
