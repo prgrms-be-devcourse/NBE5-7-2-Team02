@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableJpaAuditing
 @SpringBootApplication
 @ConfigurationPropertiesScan
+@EnableJpaAuditing
 public class Nbe57202TeamApplication {
 
     public static void main(String[] args) {

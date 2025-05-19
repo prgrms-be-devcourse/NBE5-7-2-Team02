@@ -22,22 +22,23 @@ public class ChatMessage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_message_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "chatroom_id")
-    private ChatRoom chatroom;
+    private ChatRoom chatRoom;
 
     @ManyToOne
     @JoinColumn(name = "chatroom_member_id")
     private ChatMember chatMember;
 
+    @Column(name = "content")
     private String content;
 
     @Builder
-    public ChatMessage(ChatRoom chatroom, ChatMember chatMember, String content) {
-        this.chatroom = chatroom;
+    public ChatMessage(ChatRoom chatRoom, ChatMember chatMember, String content) {
+        this.chatRoom = chatRoom;
         this.chatMember = chatMember;
         this.content = content;
     }
