@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 
 // API 기본 설정
 const api = axios.create({
-  baseURL: import.meta.env.VITE_APIç_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
