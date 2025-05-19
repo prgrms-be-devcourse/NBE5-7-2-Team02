@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TextInput, Badge } from "flowbite-react";
 import { HiXCircle } from "react-icons/hi";
-import api from "../api/axiosInstance.ts";
+import api from "../api/axiosInstance";
 
 interface TagFormProps {
   externalTags?: string[];

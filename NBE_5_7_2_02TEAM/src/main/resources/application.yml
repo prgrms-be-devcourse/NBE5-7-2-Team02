@@ -21,8 +21,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
-
+      ddl-auto: update
 
   security:
     oauth2:
@@ -30,8 +29,8 @@ spring:
         registration:
           github:
             client-name: GitHub
-            client-id: Ov23li06as0VfMDE0kwl
-            client-secret: 9055bc9dc2f567678376f8f3e11e4c7b2c3d3695
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - read:user

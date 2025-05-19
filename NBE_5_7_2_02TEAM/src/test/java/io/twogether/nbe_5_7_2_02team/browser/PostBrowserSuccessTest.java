@@ -187,21 +187,24 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     }
 
     @Test
-    @DisplayName("GET: /api/posts/{memberId} 비회원 접근 - 특정 멤버 작성 게시글 조회")
+    @DisplayName("GET: /api/posts/{memberId} 회원 접근 - 특정 멤버 작성 게시글 조회")
     void getPostsWithMemberId() throws Exception {
         // given
         Member targetMember = createAndSaveMockMember();
         createAndSaveMockPosts(targetMember, 5);
 
         // when & then
-        mockMvc.perform(get("/api/posts/" + targetMember.getId()).param("limit", "10"))
+        mockMvc.perform(
+                        get("/api/posts/" + targetMember.getId())
+                                .param("limit", "10")
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.posts.length()").value(5))
                 .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()));
     }
 
     @Test
-    @DisplayName("GET: /api/posts/{memberId} 비회원 접근 - 페이징 테스트")
+    @DisplayName("GET: /api/posts/{memberId} 회원 접근 - 페이징 테스트")
     void getPostsPaging() throws Exception {
         // given
         Member targetMember = createAndSaveMockMember();
@@ -222,7 +225,10 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
          * 이에 따라 posts.getLast()는 가장 최신 항목을 반환함.
          * 따라서 "limit=1"을 통해 조회할 경우, 가장 최신 항목인 post.getLast()를 반환해야 함.
          */
-        mockMvc.perform(get("/api/posts/" + targetMember.getId()).param("limit", "1"))
+        mockMvc.perform(
+                        get("/api/posts/" + targetMember.getId())
+                                .param("limit", "1")
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.posts.length()").value(1))
                 .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
@@ -237,7 +243,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         mockMvc.perform(
                         get("/api/posts/" + targetMember.getId())
                                 .param("limit", "1")
-                                .param("lastPostId", posts.get(5).getId().toString()))
+                                .param("lastPostId", posts.get(5).getId().toString())
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.posts.length()").value(1))
                 .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))

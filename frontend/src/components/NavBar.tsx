@@ -1,7 +1,7 @@
 
 import { Button, Navbar, NavbarBrand, Avatar, Dropdown, DropdownItem, DropdownDivider, DropdownHeader } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.tsx";
+import { useAuth } from "../context/AuthContext";
 
 export function NavBar() {
   const navigate = useNavigate();
@@ -44,9 +44,9 @@ export function NavBar() {
                     }
                 >
                   <DropdownHeader>
-                    <span className="block text-sm">{user?.name || '사용자'}</span>
+                    <span className="block text-sm">{user?.name || '사용자'}id:{user?.member_id}</span>
                   </DropdownHeader>
-                  <DropdownItem onClick={() => navigate("/profile")}>
+                  <DropdownItem onClick={() => navigate(`/mypage?memberId=${user?.member_id}`)}>
                     프로필
                   </DropdownItem>
                   <DropdownDivider />

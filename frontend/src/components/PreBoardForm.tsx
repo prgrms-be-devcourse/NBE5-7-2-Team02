@@ -6,7 +6,7 @@ import {
   TextInput
 } from "flowbite-react";
 import {useState} from "react";
-import {ModalBoardForm} from "./ModalBoardForm.tsx";
+import {ModalBoardForm} from "./ModalBoardForm";
 
 export function PreBoardForm() {
   const [openModal, setOpenModal] = useState(false);

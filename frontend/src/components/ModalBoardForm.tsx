@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   FileInput,
@@ -9,7 +9,7 @@ import {
   Textarea,
 } from "flowbite-react";
 import { TagForm } from "./TagForm";
-import api from "../api/axiosInstance.ts";
+import api from "../api/axiosInstance";
 
 interface ModalComponentProps {
   open: boolean;
