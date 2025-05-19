@@ -13,5 +13,4 @@ public interface TokenRepository {
     RefreshTokenBlackList addBlackList(RefreshToken refreshToken);
 
     Optional<RefreshToken> findValidRefToken(Long memberId);
-
 }

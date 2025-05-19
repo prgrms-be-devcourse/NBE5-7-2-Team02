@@ -2,8 +2,8 @@ package io.twogether.nbe_5_7_2_02team.global.config;
 
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtAuthenticationFilter;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
-
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.RestAuthenticationEntryPoint;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -33,37 +33,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic(httpB -> httpB.disable())
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .formLogin(form -> form.disable())
-            .sessionManagement(
-                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(restAuthenticationEntryPoint)
-            )
-            .oauth2Login(
-                oauth -> {
-                    oauth.successHandler(oAuth2SuccessHandler);
-                })
-            .authorizeHttpRequests(
-                auth ->
-                    auth.requestMatchers(CorsUtils::isPreFlightRequest)
-                        .permitAll()
-                        .requestMatchers(
-                            "/api/tags/**",
-                            "/api/oauth2/**",
-                            "/api/tags",
-                            "/api/token/**")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "api/posts")
-                        .permitAll()
-                        .requestMatchers("/api/**")
-                        .hasAnyAuthority("MEMBER")
-                        .anyRequest()
-                        .permitAll())
-            .addFilterBefore(
-                jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .formLogin(form -> form.disable())
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(
+                        exception ->
+                                exception.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .oauth2Login(
+                        oauth -> {
+                            oauth.successHandler(oAuth2SuccessHandler);
+                        })
+                .authorizeHttpRequests(
+                        auth ->
+                                auth.requestMatchers(CorsUtils::isPreFlightRequest)
+                                        .permitAll()
+                                        .requestMatchers(
+                                                "/api/tags/**",
+                                                "/api/oauth2/**",
+                                                "/api/tags",
+                                                "/api/token/**")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, "api/posts")
+                                        .permitAll()
+                                        .requestMatchers("/api/**")
+                                        .hasAnyAuthority("MEMBER")
+                                        .anyRequest()
+                                        .permitAll())
+                .addFilterBefore(
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean

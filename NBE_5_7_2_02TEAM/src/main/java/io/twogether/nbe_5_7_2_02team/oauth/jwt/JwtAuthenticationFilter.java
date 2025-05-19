@@ -31,8 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String token = resolveToken(request);
 
@@ -41,11 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 TokenBody tokenBody = jwtTokenProvider.parseJwt(token);
                 MemberDetails memberDetails =
-                    oAuthService.getMemberDetailsById(tokenBody.getMemberId());
+                        oAuthService.getMemberDetailsById(tokenBody.getMemberId());
 
                 Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(
-                        memberDetails, token, memberDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(
+                                memberDetails, token, memberDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
