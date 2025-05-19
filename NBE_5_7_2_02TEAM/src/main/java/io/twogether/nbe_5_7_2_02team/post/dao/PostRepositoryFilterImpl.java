@@ -50,7 +50,11 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
                         groupBy(post.id)
                                 .list(
                                         new QPostGetResponse_PostGetResult(
-                                                post, likeCount(), chatRoom.id, list(tag.name), isLike(memberId))));
+                                                post,
+                                                likeCount(),
+                                                chatRoom.id,
+                                                list(tag.name),
+                                                isLike(memberId))));
     }
 
     @Override
@@ -78,7 +82,11 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
                         groupBy(post.id)
                                 .list(
                                         new QPostGetResponse_PostGetResult(
-                                                post, likeCount(), chatRoom.id, list(tag.name), isLike(memberId))));
+                                                post,
+                                                likeCount(),
+                                                chatRoom.id,
+                                                list(tag.name),
+                                                isLike(memberId))));
     }
 
     private Expression<Long> likeCount() {
@@ -91,13 +99,12 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
         if (memberId == null) {
             return Expressions.FALSE;
         }
-        return ExpressionUtils.as(JPAExpressions
-            .selectOne()
-            .from(likes)
-            .where(
-                likes.post.id.eq(post.id),
-                likes.member.id.eq(memberId))
-            .exists(), "isLike");
+        return ExpressionUtils.as(
+                JPAExpressions.selectOne()
+                        .from(likes)
+                        .where(likes.post.id.eq(post.id), likes.member.id.eq(memberId))
+                        .exists(),
+                "isLike");
     }
 
     private BooleanExpression recruitmentStatusCondition(RecruitmentStatus recruitmentStatus) {

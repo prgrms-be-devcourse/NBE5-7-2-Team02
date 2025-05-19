@@ -40,7 +40,8 @@ public class PostGetResponse {
         private Boolean isLike;
 
         @QueryProjection
-        public PostGetResult(Post post, Long numLikes, Long chatRoomId, List<String> tags, Boolean isLike) {
+        public PostGetResult(
+                Post post, Long numLikes, Long chatRoomId, List<String> tags, Boolean isLike) {
             this.postId = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
