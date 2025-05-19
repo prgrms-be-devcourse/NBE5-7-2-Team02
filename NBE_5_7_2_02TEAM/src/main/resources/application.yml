@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: NBE_5_7_2_02TEAM
+
+  config:
+    import: optional:file:.env[.properties]
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+  datasource:
+    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-name: GitHub
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - read:user
+              - user:email
+              - read:org
+
+file:
+  upload-dir: uploads/
+
+custom:
+  jwt:
+    validation:
+      access: ${JWT_ACCESS_EXP}
+      refresh: ${JWT_REFRESH_EXP}
+    redirection:
+      base: http://localhost:5173/callback
+    secrets:
+      origin-key: ${JWT_ORIGIN_KEY}
+      app-key: ${JWT_APP_KEY}

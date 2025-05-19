@@ -1,0 +1,18 @@
+name: Java Style Check
+
+on:
+  push:
+    branches-ignore: 
+      - main
+      - dev
+
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Google Java Format
+        uses: axel-op/googlejavaformat-action@v4
+        with:
+          args: "--replace --aosp"
+          commit-message: "chore: Java 스타일 수정"
