@@ -58,8 +58,7 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(HttpMethod.GET, "/api/posts")
                                         .permitAll()
-                                        .requestMatchers("/api/**",
-                                            "/ws/chatroom/**")
+                                        .requestMatchers("/api/**", "/ws/chatroom/**")
                                         .hasAnyAuthority("MEMBER")
                                         .anyRequest()
                                         .permitAll())
