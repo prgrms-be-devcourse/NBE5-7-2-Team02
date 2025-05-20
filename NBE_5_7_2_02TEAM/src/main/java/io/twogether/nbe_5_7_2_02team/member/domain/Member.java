@@ -35,10 +35,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-//    public void updateProfile(String profileImage, String nickname) {
-//        this.profileImage = profileImage;
-//        this.name = nickname;
-//    }
+    //    public void updateProfile(String profileImage, String nickname) {
+    //        this.profileImage = profileImage;
+    //        this.name = nickname;
+    //    }
 
     public void updateProfile(String nickname, String profileImageUrl) {
         if (nickname != null && !nickname.isBlank()) {

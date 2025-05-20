@@ -15,13 +15,12 @@ import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -62,19 +61,20 @@ public class MemberService {
                 target, posts, followerCount, followingCount, following, owner);
     }
 
-@Transactional
-public MemberUpdateResponse updateProfile(Long memberId, UpdateProfileRequest request) {
-    Member member = memberRepository.findById(memberId)
-        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
+    @Transactional
+    public MemberUpdateResponse updateProfile(Long memberId, UpdateProfileRequest request) {
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
 
-    String imageUrl = imageUpload.saveProfileImage(request.getImage(), memberId);
+        String imageUrl = imageUpload.saveProfileImage(request.getImage(), memberId);
 
-    member.updateProfile(request.getNickname(), imageUrl);
+        member.updateProfile(request.getNickname(), imageUrl);
 
-    long followerCount = followRepository.countByFollowing(member);
-    long followingCount = followRepository.countByFollower(member);
+        long followerCount = followRepository.countByFollowing(member);
+        long followingCount = followRepository.countByFollower(member);
 
-    return MemberUpdateResponse.of(member, followerCount, followingCount);
+        return MemberUpdateResponse.of(member, followerCount, followingCount);
     }
-
 }
