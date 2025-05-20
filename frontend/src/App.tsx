@@ -9,6 +9,9 @@ import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
 import EditPostPage from "./pages/EditPostPage";
 import { AuthProvider } from "./context/AuthContext";
+import ChatRoomList from "./pages/ChatRoomList";
+import ChatRoom from "./components/ChatRoom";
+import StompTestComponent from "./pages/stompTest";
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/callback" element={<OAuthCallback />} />
+            <Route path="/ChatRoomList" element={<ChatRoomList />} />
+            <Route path="/ChatRoom/:chatRoomId" element={<ChatRoom />} />
+            <Route path="/StompTestComponent/" element={<StompTestComponent />} />
           </Routes>
           <ToastContainer
             position="top-center"
