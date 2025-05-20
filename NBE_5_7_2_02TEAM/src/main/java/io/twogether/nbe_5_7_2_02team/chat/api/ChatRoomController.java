@@ -32,7 +32,8 @@ public class ChatRoomController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<BaseResponse<ChatRoomGetResponse>> getChatRoomByPost(@PathVariable("postId") Long postId) {
+    public ResponseEntity<BaseResponse<ChatRoomGetResponse>> getChatRoomByPost(
+            @PathVariable("postId") Long postId) {
         ChatRoomGetResponse chatRoomGetResponse = chatRoomService.getChatRoomByPost(postId);
 
         return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomGetResponse, null);
