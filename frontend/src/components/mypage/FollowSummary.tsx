@@ -6,7 +6,7 @@ interface Props {
   followerCount: number;
   followingCount: number;
   owner: boolean;
-  following?: boolean;
+  following: boolean;
   onEditProfile: () => void;
   onFollowToggle: () => void;
   onShowFollowers: () => void;

@@ -5,7 +5,7 @@ import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import jakarta.persistence.*;
 
 import lombok.*;
-
+import org.springframework.util.StringUtils;
 import java.util.*;
 
 @Entity
@@ -35,16 +35,11 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    //    public void updateProfile(String profileImage, String nickname) {
-    //        this.profileImage = profileImage;
-    //        this.name = nickname;
-    //    }
-
     public void updateProfile(String nickname, String profileImageUrl) {
-        if (nickname != null && !nickname.isBlank()) {
+        if (StringUtils.hasText(nickname)) {
             this.name = nickname;
         }
-        if (profileImageUrl != null && !profileImageUrl.isBlank()) {
+        if (StringUtils.hasText(profileImageUrl)) {
             this.profileImage = profileImageUrl;
         }
     }
