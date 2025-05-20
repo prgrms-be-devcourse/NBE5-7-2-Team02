@@ -5,21 +5,27 @@ import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.
 
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.UpdateProfileRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberUpdateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse;
 import io.twogether.nbe_5_7_2_02team.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
@@ -39,13 +45,17 @@ public class MemberController {
     }
 
     // 내 프로필 수정
-    @PatchMapping("/me")
-    public ResponseEntity<BaseResponse<Void>> updateMyProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody UpdateProfileRequest request) {
+    @PatchMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<MemberUpdateResponse>> updateMyProfile(
+        @AuthenticationPrincipal UserDetails userDetails,
+        @RequestPart("nickname") String nickname,
+        @RequestPart(value = "image", required = false) MultipartFile image) {
 
-        memberService.updateProfile(Long.parseLong(userDetails.getUsername()), request);
-        return BaseResponse.of(UPDATE_MEMBER, null, null);
+        UpdateProfileRequest request = new UpdateProfileRequest(image, nickname);
+        Long memberId = Long.parseLong(userDetails.getUsername());
+
+        MemberUpdateResponse response = memberService.updateProfile(memberId, request);
+        return BaseResponse.of(UPDATE_MEMBER, response, null);
     }
 
     // 상대방 프로필 조회

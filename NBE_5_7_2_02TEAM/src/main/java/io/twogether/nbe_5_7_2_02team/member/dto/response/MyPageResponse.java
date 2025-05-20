@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public class MyPageResponse {
 
-    private Long memberId;
+    private Long id;
     private String email;
     private String name;
     private String job;
@@ -20,8 +20,8 @@ public class MyPageResponse {
     private Long followerCount;
     private Long followingCount;
 
-    private boolean isFollowing;
-    private boolean isOwner;
+    private boolean following;
+    private boolean owner;
 
     @Getter
     @Builder

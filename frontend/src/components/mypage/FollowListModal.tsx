@@ -26,9 +26,6 @@ export default function FollowListModal({
       <div className="p-6 max-w-md mx-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-bold">{title}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-xl">
-            &times;
-          </button>
         </div>
         {users.length === 0 ? (
           <p className="text-center text-gray-500">{title}가 없습니다.</p>

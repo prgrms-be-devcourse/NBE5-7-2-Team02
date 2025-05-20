@@ -19,7 +19,8 @@ function App() {
           </div>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/mypage" element={<MyPage />} /> {/* 마이페이지 */}
+            <Route path="/mypage" element={<MyPage />} /> // 내 마이페이지
+            <Route path="/mypage/:id" element={<MyPage />} /> // 타인 마이페이지
             <Route path="/login" element={<Login />} />
             <Route path="/posts/edit/:postId" element={<EditPostPage />} />
             {/* 잘못된 경로로 접근시 Home으로 이동 */}
