@@ -17,6 +17,7 @@ import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostDetailResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
@@ -142,5 +143,23 @@ public class PostService {
             return isRecruit ? RECRUITING : DONE;
         }
         return NONE;
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailResponse getPostById(Long postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+
+        List<String> tagNames = post.getPostTags().stream()
+            .map(tag -> tag.getTag().getName())
+            .toList();
+
+        return new PostDetailResponse(
+            post.getTitle(),
+            post.getContent(),
+            post.getRecruitmentStatus(),
+            tagNames,
+            post.getImageUrls()
+        );
     }
 }
