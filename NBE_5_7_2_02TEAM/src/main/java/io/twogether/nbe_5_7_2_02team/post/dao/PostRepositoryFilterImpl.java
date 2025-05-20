@@ -37,16 +37,14 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
 
     @Override
     public List<PostGetResult> findPostsByMemberId(Long memberId, Long lastPostId, Integer limit) {
-        List<Long> limitedPostIds = queryFactory
-            .select(post.id)
-            .from(post)
-            .where(
-                lastPostIdCondition(lastPostId),
-                post.member.id.eq(memberId)
-            )
-            .orderBy(post.createdAt.desc())
-            .limit(limit)
-            .fetch();
+        List<Long> limitedPostIds =
+                queryFactory
+                        .select(post.id)
+                        .from(post)
+                        .where(lastPostIdCondition(lastPostId), post.member.id.eq(memberId))
+                        .orderBy(post.createdAt.desc())
+                        .limit(limit)
+                        .fetch();
 
         return getPostResultJoinWithChatRoomAndTag(limitedPostIds, memberId);
     }
@@ -60,40 +58,41 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
             Boolean isFollowing,
             List<String> tags) {
 
-        List<Long> limitedPostIds = queryFactory
-            .select(post.id)
-            .from(post)
-            .where(
-                recruitmentStatusCondition(recruitmentStatus),
-                followingCondition(memberId, isFollowing),
-                tagsCondition(tags),
-                lastPostIdCondition(lastPostId)
-            )
-            .orderBy(post.createdAt.desc())
-            .limit(limit)
-            .fetch();
+        List<Long> limitedPostIds =
+                queryFactory
+                        .select(post.id)
+                        .from(post)
+                        .where(
+                                recruitmentStatusCondition(recruitmentStatus),
+                                followingCondition(memberId, isFollowing),
+                                tagsCondition(tags),
+                                lastPostIdCondition(lastPostId))
+                        .orderBy(post.createdAt.desc())
+                        .limit(limit)
+                        .fetch();
 
         return getPostResultJoinWithChatRoomAndTag(limitedPostIds, memberId);
     }
 
-    private List<PostGetResult> getPostResultJoinWithChatRoomAndTag(List<Long> limitedPostIds, Long memberId) {
+    private List<PostGetResult> getPostResultJoinWithChatRoomAndTag(
+            List<Long> limitedPostIds, Long memberId) {
         return queryFactory
-            .from(post)
-            .leftJoin(post.postTags, postTag)
-            .leftJoin(postTag.tag, tag)
-            .leftJoin(chatRoom)
-            .on(post.id.eq(chatRoom.post.id))
-            .where(post.id.in(limitedPostIds))
-            .orderBy(post.createdAt.desc())
-            .transform(
-                groupBy(post.id)
-                    .list(
-                        new QPostGetResponse_PostGetResult(
-                            post,
-                            likeCount(),
-                            chatRoom.id,
-                            list(tag.name),
-                            isLike(memberId))));
+                .from(post)
+                .leftJoin(post.postTags, postTag)
+                .leftJoin(postTag.tag, tag)
+                .leftJoin(chatRoom)
+                .on(post.id.eq(chatRoom.post.id))
+                .where(post.id.in(limitedPostIds))
+                .orderBy(post.createdAt.desc())
+                .transform(
+                        groupBy(post.id)
+                                .list(
+                                        new QPostGetResponse_PostGetResult(
+                                                post,
+                                                likeCount(),
+                                                chatRoom.id,
+                                                list(tag.name),
+                                                isLike(memberId))));
     }
 
     private Expression<Long> likeCount() {
