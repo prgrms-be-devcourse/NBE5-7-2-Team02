@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -40,13 +40,13 @@ public class PostController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<PostResponse>> createPost(
-        @AuthenticationPrincipal UserDetails userDetails,
-        @Valid @ModelAttribute PostCreateRequest request) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @ModelAttribute PostCreateRequest request) {
 
         PostResponse response =
-            postService.createPost(request, Long.parseLong(userDetails.getUsername()));
+                postService.createPost(request, Long.parseLong(userDetails.getUsername()));
         return BaseResponse.of(
-            SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
+                SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
     }
 
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
