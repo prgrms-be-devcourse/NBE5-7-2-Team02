@@ -2,8 +2,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Signup from "./pages/Signup";
 import OAuthCallback from "./components/OAuthCallback";
-import {BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import {NavBar} from "./components/NavBar";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { NavBar } from "./components/NavBar";
 import Home from "./pages/Home";
 import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
@@ -11,12 +11,11 @@ import EditPostPage from "./pages/EditPostPage";
 import { AuthProvider } from "./context/AuthContext";
 import ChatRoomList from "./pages/ChatRoomList";
 import ChatRoom from "./components/ChatRoom";
-import StompTestComponent from "./pages/stompTest";
 
 function App() {
   return (
-      <Router>
-        <AuthProvider>
+    <Router>
+      <AuthProvider>
         <div className="min-h-screen bg-bright dark:bg-dark">
           <div className="pt-16">
             <NavBar />
@@ -32,7 +31,6 @@ function App() {
             <Route path="/callback" element={<OAuthCallback />} />
             <Route path="/ChatRoomList" element={<ChatRoomList />} />
             <Route path="/ChatRoom/:chatRoomId" element={<ChatRoom />} />
-            <Route path="/StompTestComponent/" element={<StompTestComponent />} />
           </Routes>
           <ToastContainer
             position="top-center"
@@ -42,8 +40,8 @@ function App() {
             pauseOnHover
           />
         </div>
-        </AuthProvider>
-      </Router>
+      </AuthProvider>
+    </Router>
   );
 }
 export default App;
