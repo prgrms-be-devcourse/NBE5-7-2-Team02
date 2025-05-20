@@ -18,6 +18,12 @@ export function NavBar() {
     navigate("/");
   };
 
+  const handleLogoClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    e.preventDefault(); // 기본 a 태그 새로고침 방지
+    navigate("/");      // React Router 방식으로 이동
+  };
+
+
   return (
       <div className="fixed top-0 left-0 right-0 w-full z-50 border-b-1 border-blue-900 dark:border-gray-600">
         <Navbar fluid rounded className="w-full !bg-bright dark:!bg-dark">
@@ -28,6 +34,7 @@ export function NavBar() {
                   src={darklogo}
                   className="mr-3 h-6 sm:h-9"
                   alt="Flowbite React Logo"
+                  onClick={handleLogoClick} // ✅ 이 부분
               />
             </picture>
 
@@ -49,7 +56,7 @@ export function NavBar() {
                   <DropdownHeader>
                     <span className="block text-sm">{user?.username || '사용자'}</span>
                   </DropdownHeader>
-                  <DropdownItem onClick={() => navigate(`/mypage?memberId=${user?.id}`)}>
+                  <DropdownItem onClick={() => navigate("/mypage")}>
                     프로필
                   </DropdownItem>
                   <DropdownDivider />

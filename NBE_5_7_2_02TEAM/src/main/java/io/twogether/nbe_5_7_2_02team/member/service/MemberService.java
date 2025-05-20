@@ -7,18 +7,23 @@ import io.twogether.nbe_5_7_2_02team.member.dao.FollowRepository;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.UpdateProfileRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberUpdateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse;
+import io.twogether.nbe_5_7_2_02team.member.util.Uploader.ImageUpload;
 import io.twogether.nbe_5_7_2_02team.member.util.mapper.MemberMapper;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -26,6 +31,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final FollowRepository followRepository;
+    private final ImageUpload imageUpload;
 
     @Transactional(readOnly = true)
     public MyPageResponse getMemberPage(Long targetMemberId, Long viewerId) {
@@ -39,12 +45,12 @@ public class MemberService {
         Long followingCount = followRepository.countByFollower(target);
 
         // 자기 자신 조회하는 경우에는 false로 고정
-        boolean isFollowing = false;
+        boolean following = false;
         // 자기 자신 조회하는 경우에는 true로 고정
-        boolean isOwner = targetMemberId.equals(viewerId);
+        boolean owner = targetMemberId.equals(viewerId);
 
         if (!targetMemberId.equals(viewerId)) {
-            isFollowing =
+            following =
                     followRepository.existsByFollowerAndFollowing(
                             memberRepository
                                     .findById(viewerId)
@@ -53,15 +59,22 @@ public class MemberService {
         }
 
         return MemberMapper.toMyPageResponse(
-                target, posts, followerCount, followingCount, isFollowing, isOwner);
+                target, posts, followerCount, followingCount, following, owner);
     }
 
-    @Transactional
-    public void updateProfile(Long memberId, UpdateProfileRequest request) {
-        Member member =
-                memberRepository
-                        .findById(memberId)
-                        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
-        member.updateProfile(request.getProfileImage());
+@Transactional
+public MemberUpdateResponse updateProfile(Long memberId, UpdateProfileRequest request) {
+    Member member = memberRepository.findById(memberId)
+        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
+
+    String imageUrl = imageUpload.saveProfileImage(request.getImage(), memberId);
+
+    member.updateProfile(request.getNickname(), imageUrl);
+
+    long followerCount = followRepository.countByFollowing(member);
+    long followingCount = followRepository.countByFollower(member);
+
+    return MemberUpdateResponse.of(member, followerCount, followingCount);
     }
+
 }
