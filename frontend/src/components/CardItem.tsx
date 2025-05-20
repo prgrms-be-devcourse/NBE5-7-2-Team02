@@ -8,6 +8,7 @@ import { useState } from "react";
 import { DeleteConfirmModal } from "./mypage/DeleteConfirmModal";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 interface CardItemProps {
   post: Post;
@@ -22,6 +23,10 @@ export const CardItem = ({ post }: CardItemProps) => {
   const [likeCount, setLikeCount] = useState(post.num_likes);
 
   const handleMemberClick = () => {
+    if (!isAuthenticated) {
+      toast.info("로그인이 필요합니다.");
+      return;
+    }
     navigate(`/mypage?memberId=${post.member_id}`);
   };
 
@@ -45,7 +50,10 @@ export const CardItem = ({ post }: CardItemProps) => {
   };
 
   const handleToggleLike = async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      toast.info("로그인이 필요합니다.");
+      return;
+    }
 
     try {
       if (isLiked) {
@@ -93,8 +101,8 @@ export const CardItem = ({ post }: CardItemProps) => {
 
         <div className="flex items-center justify-between mb-2 mt-2">
           <div
-            className={`flex items-center space-x-4 ${isAuthenticated ? "cursor-pointer" : ""}`}
-            onClick={isAuthenticated ? handleMemberClick : undefined}
+            className={`flex items-center space-x-4 cursor-pointer`}
+            onClick={handleMemberClick}
           >
             <Avatar img={post.member_image} />
             <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
@@ -102,11 +110,32 @@ export const CardItem = ({ post }: CardItemProps) => {
             </p>
           </div>
 
-          <div
-            className="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-400 cursor-pointer"
-            onClick={handleToggleLike}
-          >
-            {isLiked ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
+          <div className="flex items-center space-x-1 text-sm text-gray-700 dark:text-gray-400">
+            {isAuthenticated ? (
+              isLiked ? (
+                <FaHeart
+                  className="text-red-500 cursor-pointer"
+                  onClick={handleToggleLike}
+                />
+              ) : (
+                <FaRegHeart
+                  className="cursor-pointer"
+                  onClick={handleToggleLike}
+                />
+              )
+            ) : (
+              isLiked ? (
+                <FaHeart
+                  className="text-red-500 cursor-pointer"
+                  onClick={() => toast.info("로그인이 필요합니다.")}
+                />
+              ) : (
+                <FaRegHeart
+                  className="cursor-pointer"
+                  onClick={() => toast.info("로그인이 필요합니다.")}
+                />
+              )
+            )}
             <span>{likeCount}</span>
           </div>
         </div>

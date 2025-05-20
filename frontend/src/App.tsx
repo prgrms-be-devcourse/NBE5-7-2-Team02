@@ -1,4 +1,5 @@
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Signup from "./pages/Signup";
 import OAuthCallback from "./components/OAuthCallback";
 import {BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
@@ -27,6 +28,13 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/callback" element={<OAuthCallback />} />
           </Routes>
+          <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            hideProgressBar={false}
+            closeOnClick
+            pauseOnHover
+          />
         </div>
         </AuthProvider>
       </Router>
