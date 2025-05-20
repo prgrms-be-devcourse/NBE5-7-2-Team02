@@ -195,7 +195,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
         // when & then
         mockMvc.perform(
-                        get("/api/posts/member" + targetMember.getId())
+                        get("/api/posts/member/" + targetMember.getId())
                                 .param("limit", "10")
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
@@ -226,7 +226,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
          * 따라서 "limit=1"을 통해 조회할 경우, 가장 최신 항목인 post.getLast()를 반환해야 함.
          */
         mockMvc.perform(
-                        get("/api/posts/member" + targetMember.getId())
+                        get("/api/posts/member/" + targetMember.getId())
                                 .param("limit", "1")
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
@@ -241,7 +241,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
          * 따라서 "limit=1"을 통해 조회할 경우, posts.get(4)를 반환해야 함.
          */
         mockMvc.perform(
-                        get("/api/posts/" + targetMember.getId())
+                        get("/api/posts/member/" + targetMember.getId())
                                 .param("limit", "1")
                                 .param("lastPostId", posts.get(5).getId().toString())
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
