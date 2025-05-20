@@ -25,7 +25,6 @@ import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -171,24 +171,21 @@ public class PostService {
     public void likePost(Long postId, Long memberId) {
 
         Member member =
-            memberRepository
-                .findById(memberId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         Post post =
-            postRepository
-                .findById(postId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
         Optional<Likes> existingLike = likesRepository.findByPostAndMember(post, member);
         if (existingLike.isPresent()) {
             throw new ErrorException(ErrorCode.LIKE_ALREADY_EXIST);
         }
 
-        Likes likes = Likes.builder()
-            .member(member)
-            .post(post)
-            .build();
+        Likes likes = Likes.builder().member(member).post(post).build();
         likesRepository.save(likes);
     }
 
@@ -196,14 +193,14 @@ public class PostService {
     public void unlikePost(Long postId, Long memberId) {
 
         Member member =
-            memberRepository
-                .findById(memberId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         Post post =
-            postRepository
-                .findById(postId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
         Optional<Likes> likes = likesRepository.findByPostAndMember(post, member);
         if (likes.isPresent()) {
