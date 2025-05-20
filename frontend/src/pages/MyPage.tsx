@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { InfiniteScroll } from "../components/InfiniteScroll";
-import CardList from "../components/CardList";
 import { Member } from "../types/Member";
 import { Follow } from "../types/Follow";
 import FollowSummary from "../components/mypage/FollowSummary";
 import FollowListModal from "../components/mypage/FollowListModal";
 import ProfileEditorModal from "../components/mypage/ProfileEditorModal";
 import api from "../api/axiosInstance";
+import CardList from "@/components/CardList";
 
 
 export default function MyPage() {
   const navigate = useNavigate();
+  const [memberId, setMemberId] = useState<string | null>(null); // 🔧 상태 추가
   const [ searchParams ] = useSearchParams();
-  const memberId = searchParams.get("memberId");
+  const rawParamId = searchParams.get("memberId");
   const [limit] = useState<number>(10);
   const [user, setUser] = useState<Member | null>(null);
   const [showFollowers, setShowFollowers] = useState(false);
@@ -25,7 +26,7 @@ export default function MyPage() {
 // ✅ 사용자 정보 조회
   const fetchUser = async () => {
     try {
-      const res = await api.get(`/member/${memberId || "me"}`);
+      const res = await api.get(`/member/${rawParamId || "me"}`);
       const raw = res.data.data;
 
       const user: Member = {
@@ -39,6 +40,7 @@ export default function MyPage() {
       };
 
       setUser(user);
+      setMemberId(raw.member_id.toString());
     } catch (e) {
       console.error("사용자 정보 조회 실패", e);
     }
@@ -158,7 +160,7 @@ export default function MyPage() {
         <div className="p-4 max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">My Posts</h2>
           <InfiniteScroll
-              apiEndpoint={`/posts/${memberId}`}
+              apiEndpoint={`/posts/member/${memberId}`}
               limit={limit}
               fetchKey={`member-${memberId}`} // Add a unique key based on memberId
               renderPosts={(posts, lastPostRef) => (

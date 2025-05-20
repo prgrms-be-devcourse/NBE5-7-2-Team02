@@ -27,7 +27,7 @@ export function ImageComponent({ images, className }: ImageCarouselProps) {
                 <div className="h-full w-full p-1">
                   <div className="relative h-full w-full overflow-hidden rounded-md">
                     <img
-                        src={image}
+                        src={`http://localhost:8080${image}`}
                         alt={`Slide ${index + 1}`}
                         className="h-full w-full object-cover"
                         loading={index === 0 ? "eager" : "lazy"}
