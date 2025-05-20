@@ -147,19 +147,19 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostDetailResponse getPostById(Long postId) {
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+        Post post =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
-        List<String> tagNames = post.getPostTags().stream()
-            .map(tag -> tag.getTag().getName())
-            .toList();
+        List<String> tagNames =
+                post.getPostTags().stream().map(tag -> tag.getTag().getName()).toList();
 
         return new PostDetailResponse(
-            post.getTitle(),
-            post.getContent(),
-            post.getRecruitmentStatus(),
-            tagNames,
-            post.getImageUrls()
-        );
+                post.getTitle(),
+                post.getContent(),
+                post.getRecruitmentStatus(),
+                tagNames,
+                post.getImageUrls());
     }
 }
