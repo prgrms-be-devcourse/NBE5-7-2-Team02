@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback, JSX } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "../api/axiosInstance";
-import { useNavigate } from "react-router-dom";
 
 interface InfiniteScrollProps {
   apiEndpoint: string;
@@ -20,7 +19,6 @@ export const InfiniteScroll = ({
                                  lastPostId = null,
                                  renderPosts
                                }: InfiniteScrollProps) => {
-  const navigate = useNavigate();
   const [posts, setPosts] = useState<any[]>([]);
   const [currentLastPostId, setCurrentLastPostId] = useState<number | null>(lastPostId);
   const [hasMore, setHasMore] = useState<boolean>(true);
