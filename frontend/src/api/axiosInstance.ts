@@ -68,21 +68,22 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refresh_token = localStorage.getItem("refreshToken");
 
-        if (!refreshToken) {
+        if (!refresh_token) {
           // 리프레시 토큰이 없으면 로그아웃
           handleLogout();
           return Promise.reject(error);
         }
 
         const response = await api.post("/token/refresh", {
-          refreshToken
+          refresh_token
         });
 
-        if (response.data.data?.accessToken) {
-          const newAccessToken = response.data.data.accessToken;
-          const newRefreshToken = response.data.data.refreshToken;
+        if (response.data.data?.access_token) {
+
+          const newAccessToken = response.data.data.access_token;
+          const newRefreshToken = response.data.data.refresh_token;
           localStorage.setItem("accessToken", newAccessToken);
           localStorage.setItem("refreshToken", newRefreshToken);
           api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
