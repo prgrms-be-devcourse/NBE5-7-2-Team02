@@ -73,11 +73,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    const refreshToken = localStorage.getItem("refreshToken");
+    const refresh_token = localStorage.getItem("refreshToken");
 
-    if (refreshToken) {
+    if (refresh_token) {
       // 서버에 로그아웃 요청
-      api.post("/logout", { refreshToken })
+      api.post("/logout", { refresh_token })
         .catch(error => console.error("로그아웃 오류:", error));
     }
 
