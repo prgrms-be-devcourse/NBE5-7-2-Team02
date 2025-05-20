@@ -38,6 +38,8 @@ public enum SuccessCode {
     UPDATE_POST(OK, "POST-202", "Update post"),
     DELETE_POST(OK, "POST-203", "Delete post"),
     NO_CONTENT_POST(NO_CONTENT, "POST-204", "No posts to response"),
+    LIKE_POST(OK, "POST-205", "Like post"),
+    UNLIKE_POST(OK, "POST-206", "Unlike post"),
 
     // CHAT_MESSAGE
     FOUND_CHAT_MESSAGE(CREATED, "CHAT-MESSAGE-200", "Found chat message"),

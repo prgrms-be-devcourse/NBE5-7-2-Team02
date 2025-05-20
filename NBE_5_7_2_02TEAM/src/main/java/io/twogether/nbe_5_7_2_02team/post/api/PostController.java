@@ -94,4 +94,20 @@ public class PostController {
         PostDetailResponse response = postService.getPostById(postId);
         return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
     }
+
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<BaseResponse<Void>> likePost(
+            @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+
+        postService.likePost(postId, Long.parseLong(userDetails.getUsername()));
+        return BaseResponse.of(SuccessCode.LIKE_POST, null, null);
+    }
+
+    @DeleteMapping("/{postId}/likes")
+    public ResponseEntity<BaseResponse<Void>> unlikePost(
+            @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+
+        postService.unlikePost(postId, Long.parseLong(userDetails.getUsername()));
+        return BaseResponse.of(SuccessCode.UNLIKE_POST, null, null);
+    }
 }
