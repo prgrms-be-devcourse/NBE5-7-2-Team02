@@ -4,6 +4,7 @@ import CardList from "../components/CardList";
 import { TagForm } from "../components/TagForm";
 import { PreBoardForm } from "../components/PreBoardForm";
 import { FilterOptions } from "../components/FilterOptions";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -11,6 +12,7 @@ function Home() {
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [limit] = useState<number>(10);
   const [lastPostId] = useState<number | null>(null);
+  const { isAuthenticated } = useAuth();
 
   const handleResetFilters = () => {
     setSelectedTags([]);
@@ -27,7 +29,7 @@ function Home() {
   return (
       <div className="min-h-screen bg-bright dark:bg-dark">
         <div className="p-4 max-w-3xl mx-auto">
-          <PreBoardForm />
+          {isAuthenticated ? <PreBoardForm /> : null}
 
           <div className="mt-4">
             <TagForm
