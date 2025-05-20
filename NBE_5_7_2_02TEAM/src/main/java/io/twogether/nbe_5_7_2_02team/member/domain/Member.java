@@ -5,7 +5,9 @@ import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import jakarta.persistence.*;
 
 import lombok.*;
+
 import org.springframework.util.StringUtils;
+
 import java.util.*;
 
 @Entity
