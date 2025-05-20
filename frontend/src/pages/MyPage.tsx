@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { InfiniteScroll } from "../components/InfiniteScroll";
-import { MyCardList } from "@/components/mypage/MyCardList.tsx";
 import { Member } from "../types/Member";
 import { Follow } from "../types/Follow";
 import FollowSummary from "../components/mypage/FollowSummary";
 import FollowListModal from "../components/mypage/FollowListModal";
 import ProfileEditorModal from "../components/mypage/ProfileEditorModal";
 import api from "../api/axiosInstance";
-import { Post } from "@/types/Post.ts";
+import CardList from "@/components/CardList";
 
 
 export default function MyPage() {
@@ -16,8 +15,6 @@ export default function MyPage() {
   const [memberId, setMemberId] = useState<string | null>(null); // 🔧 상태 추가
   const [ searchParams ] = useSearchParams();
   const rawParamId = searchParams.get("memberId");
-  //const [ searchParams ] = useSearchParams();
-  //const memberId = searchParams.get("memberId");
   const [limit] = useState<number>(10);
   const [user, setUser] = useState<Member | null>(null);
   const [showFollowers, setShowFollowers] = useState(false);
@@ -25,7 +22,6 @@ export default function MyPage() {
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [followers, setFollowers] = useState<Follow[]>([]);
   const [followings, setFollowings] = useState<Follow[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
 
 // ✅ 사용자 정보 조회
   const fetchUser = async () => {
@@ -167,16 +163,9 @@ export default function MyPage() {
               apiEndpoint={`/posts/member/${memberId}`}
               limit={limit}
               fetchKey={`member-${memberId}`} // Add a unique key based on memberId
-              renderPosts={(fetchedPosts, lastPostRef) =>  {
-
-                useEffect(() => {
-                  setPosts(fetchedPosts);
-                }, [fetchedPosts]);
-
-                return (
-                  <MyCardList posts={posts} setPosts={setPosts} lastPostRef={lastPostRef} />
-                );
-              }}
+              renderPosts={(posts, lastPostRef) => (
+                  <CardList posts={posts} lastPostRef={lastPostRef} />
+              )}
           />
         </div>
       </div>

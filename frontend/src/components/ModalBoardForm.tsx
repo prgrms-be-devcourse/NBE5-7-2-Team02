@@ -36,6 +36,7 @@ export const ModalBoardForm = ({open, onClose}: ModalComponentProps) => {
   const handleClose = () => {
     resetForm();
     onClose();
+    window.location.reload();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
