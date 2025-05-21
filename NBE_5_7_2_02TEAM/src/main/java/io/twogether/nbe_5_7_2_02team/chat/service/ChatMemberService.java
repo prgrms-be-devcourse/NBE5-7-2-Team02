@@ -40,7 +40,7 @@ public class ChatMemberService {
             @AuthenticationPrincipal UserDetails userDetails) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
-        Optional<ChatMember> chatMemberList = chatMemberRepository.findByMember(member);
+        List<ChatMember> chatMemberList = chatMemberRepository.findByMember(member);
 
         return chatMemberList.stream()
                 .map(chatMember -> ChatRoomGetResponse.from(chatMember.getChatRoom()))

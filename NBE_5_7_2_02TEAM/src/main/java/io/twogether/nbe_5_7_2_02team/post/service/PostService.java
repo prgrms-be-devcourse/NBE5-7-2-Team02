@@ -1,5 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.post.service;
 
+import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRepository;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
@@ -44,7 +45,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final PostMapper postMapper;
     private final ImageUploader imageUploader;
-    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
     private final LikesRepository likesRepository;
 
     @Transactional
@@ -116,7 +117,7 @@ public class PostService {
         }
 
         likesRepository.deleteByPost(deletePost);
-        chatRoomRepository.deleteByPost(deletePost);
+        chatRepository.deleteByPost(deletePost);
         imageUploader.deletePostImageByFolder(deletePost.getId());
         postRepository.delete(deletePost);
     }

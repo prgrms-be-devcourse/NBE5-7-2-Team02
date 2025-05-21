@@ -47,7 +47,7 @@ custom:
       access: ${JWT_ACCESS_EXP}
       refresh: ${JWT_REFRESH_EXP}
     redirection:
-      base: http://localhost:5173/callback
+      base: ${REDIRECTION_BASE}
     secrets:
       origin-key: ${JWT_ORIGIN_KEY}
       app-key: ${JWT_APP_KEY}
