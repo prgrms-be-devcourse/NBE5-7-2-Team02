@@ -37,24 +37,16 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
 
     @Override
     public List<PostGetResult> findPostsByMemberId(Long memberId, Long lastPostId, Integer limit) {
-        return queryFactory
-                .from(post)
-                .leftJoin(post.postTags, postTag)
-                .leftJoin(postTag.tag, tag)
-                .leftJoin(chatRoom)
-                .on(post.id.eq(chatRoom.post.id))
-                .where(lastPostIdCondition(lastPostId), post.member.id.eq(memberId))
-                .orderBy(post.createdAt.desc())
-                .limit(limit)
-                .transform(
-                        groupBy(post.id)
-                                .list(
-                                        new QPostGetResponse_PostGetResult(
-                                                post,
-                                                likeCount(),
-                                                chatRoom.id,
-                                                list(tag.name),
-                                                isLike(memberId))));
+        List<Long> limitedPostIds =
+                queryFactory
+                        .select(post.id)
+                        .from(post)
+                        .where(lastPostIdCondition(lastPostId), post.member.id.eq(memberId))
+                        .orderBy(post.createdAt.desc())
+                        .limit(limit)
+                        .fetch();
+
+        return getPostResultJoinWithChatRoomAndTag(limitedPostIds, memberId);
     }
 
     @Override
@@ -65,19 +57,33 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
             RecruitmentStatus recruitmentStatus,
             Boolean isFollowing,
             List<String> tags) {
+
+        List<Long> limitedPostIds =
+                queryFactory
+                        .select(post.id)
+                        .from(post)
+                        .where(
+                                recruitmentStatusCondition(recruitmentStatus),
+                                followingCondition(memberId, isFollowing),
+                                tagsCondition(tags),
+                                lastPostIdCondition(lastPostId))
+                        .orderBy(post.createdAt.desc())
+                        .limit(limit)
+                        .fetch();
+
+        return getPostResultJoinWithChatRoomAndTag(limitedPostIds, memberId);
+    }
+
+    private List<PostGetResult> getPostResultJoinWithChatRoomAndTag(
+            List<Long> limitedPostIds, Long memberId) {
         return queryFactory
                 .from(post)
                 .leftJoin(post.postTags, postTag)
                 .leftJoin(postTag.tag, tag)
                 .leftJoin(chatRoom)
                 .on(post.id.eq(chatRoom.post.id))
-                .where(
-                        lastPostIdCondition(lastPostId),
-                        tagsCondition(tags),
-                        followingCondition(memberId, isFollowing),
-                        recruitmentStatusCondition(recruitmentStatus))
+                .where(post.id.in(limitedPostIds))
                 .orderBy(post.createdAt.desc())
-                .limit(limit)
                 .transform(
                         groupBy(post.id)
                                 .list(
@@ -91,7 +97,7 @@ public class PostRepositoryFilterImpl implements PostRepositoryFilter {
 
     private Expression<Long> likeCount() {
         return ExpressionUtils.as(
-                JPAExpressions.select(likes.count()).from(likes).where(likes.post.eq(post)),
+                JPAExpressions.select(likes.count()).from(likes).where(likes.post.id.eq(post.id)),
                 "likeCount");
     }
 
