@@ -7,7 +7,6 @@ interface AuthContextType {
   user: Member | null;
   login: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
-  // refreshToken: () => Promise<string | null>;
   setUser: React.Dispatch<React.SetStateAction<Member | null>>;
 }
 
