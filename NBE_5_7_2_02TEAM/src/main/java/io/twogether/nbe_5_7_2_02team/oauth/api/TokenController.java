@@ -11,7 +11,6 @@ import io.twogether.nbe_5_7_2_02team.oauth.dto.request.RefreshRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 import io.twogether.nbe_5_7_2_02team.oauth.service.TokenService;
 
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,12 +44,12 @@ public class TokenController {
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
-        @RequestBody SignUpRequest request, @AuthenticationPrincipal MemberDetails memberDetails) {
-        SignUpResponse response =
-            oAuthService.signup(request, memberDetails.getId());
+            @RequestBody SignUpRequest request,
+            @AuthenticationPrincipal MemberDetails memberDetails) {
+        SignUpResponse response = oAuthService.signup(request, memberDetails.getId());
         return BaseResponse.of(
-            SuccessCode.SIGNUP_MEMBER,
-            response,
-            URI.create("/api/members/" + response.getId()));
+                SuccessCode.SIGNUP_MEMBER,
+                response,
+                URI.create("/api/members/" + response.getId()));
     }
 }

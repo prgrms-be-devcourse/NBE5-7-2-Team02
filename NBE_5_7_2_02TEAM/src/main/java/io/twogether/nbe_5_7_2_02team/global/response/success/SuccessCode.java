@@ -17,7 +17,6 @@ public enum SuccessCode {
     UPDATE_MEMBER(OK, "MEMBER-203", "Update member"),
     SIGNUP_MEMBER(CREATED, "MEMBER-204", "Signup member"),
 
-
     // JWT
     REFRESH_TOKEN(OK, "JWT-200", "Token refreshed successfully"),
     LOGOUT_TOKEN(OK, "JWT-201", "Logout successful"),
