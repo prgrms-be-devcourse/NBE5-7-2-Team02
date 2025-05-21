@@ -54,6 +54,7 @@ public class SecurityConfig {
                                         .requestMatchers("/api/chatroom/entered")
                                         .authenticated()
                                         .requestMatchers(
+                                                "/ws/chatroom/**",
                                                 "/api/chatroom/**",
                                                 "/api/tags/**",
                                                 "/api/oauth2/**",

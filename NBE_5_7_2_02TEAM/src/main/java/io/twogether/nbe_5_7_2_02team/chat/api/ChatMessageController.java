@@ -6,21 +6,25 @@ import io.twogether.nbe_5_7_2_02team.chat.service.ChatMessageService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -38,19 +42,58 @@ public class ChatMessageController {
         return BaseResponse.of(SuccessCode.FOUND_CHAT_MESSAGE, chatMessage, null);
     }
 
-    @PostMapping("/{chatroomId}/message")
-    public ResponseEntity<BaseResponse<Long>> createChatMessage(
-            @PathVariable Long chatroomId,
-            @RequestBody ChatMessagePostRequest chatMessagePostRequest,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long chatMessageId =
-                chatMessageService.createChatMessage(
-                        chatroomId, chatMessagePostRequest, userDetails);
+    @MessageMapping("/{chatroomId}/message")
+    @SendTo("/sub/{chatroomId}/message")
+    public ChatMessageGetResponse createChatMessage(
+            @DestinationVariable Long chatroomId,
+            @Payload ChatMessagePostRequest chatMessagePostRequest,
+            Principal principal) {
 
-        return BaseResponse.of(
-                SuccessCode.CREATE_CHAT_MESSAGE,
-                chatMessageId,
-                URI.create("/api/chatroom/" + chatroomId + "/message"));
+        TokenBody tokenBody = null;
+        Long memberId = null;
+        String userRole = null;
+
+        System.out.println("==============={Security Info}===============");
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            Object authPrincipal = authentication.getPrincipal();
+            System.out.println("Principal name from injected Principal: " + principal.getName());
+            System.out.println("Authentication Principal object type: " + (authPrincipal != null ? authPrincipal.getClass().getName() : "null"));
+
+            if (authPrincipal instanceof TokenBody) {
+                tokenBody = (TokenBody) authPrincipal;
+                memberId = tokenBody.getMemberId();
+                userRole = tokenBody.getRole().name();
+                System.out.println("TokenBody found in Authentication Principal. MemberId: " + memberId + ", Role: " + userRole);
+            } else if (authPrincipal != null) {
+                System.out.println("Authentication Principal is NOT TokenBody. Type: " + authPrincipal.getClass().getName());
+            }
+        } else if (principal != null) {
+            System.out.println("Principal received (not Authentication instance, using getName()): " + principal.getName());
+        } else {
+            System.out.println("Principal is null.");
+        }
+
+        System.out.println("==============={req}===============");
+        if (memberId != null) {
+            System.out.println("Authenticated Member ID: " + memberId);
+            System.out.println("Authenticated User Role: " + userRole);
+        } else {
+            System.out.println("Authenticated Member ID: Not available");
+        }
+        System.out.println("UserDetails: null (not directly using UserDetails object here)");
+        System.out.println("Request chatMessagePostRequest.getContent: " + chatMessagePostRequest.getContent());
+
+        ChatMessageGetResponse ChatMessageGetResponse = chatMessageService.createChatMessage(
+                chatroomId, chatMessagePostRequest, memberId);
+
+        System.out.println("===============ChatMessageGetResponse===============");
+        System.out.println("ChatMessageGetResponse.getId: " + ChatMessageGetResponse.getId());
+        System.out.println("ChatMessageGetResponse.getChatMemberId: " + ChatMessageGetResponse.getMemberId());
+        System.out.println("ChatMessageGetResponse.getChatMemberName: " + ChatMessageGetResponse.getMemberName());
+        System.out.println("ChatMessageGetResponse.getContent: " + ChatMessageGetResponse.getContent());
+
+        return ChatMessageGetResponse;
     }
 
     @DeleteMapping("/{chatroomId}/message")
