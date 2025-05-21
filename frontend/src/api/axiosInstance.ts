@@ -128,7 +128,7 @@ const handleLogout = () => {
   localStorage.removeItem("refreshToken");
   delete api.defaults.headers.common["Authorization"];
 
-  // 로그인 페이지로 리다이렉트
+
   window.location.href = "/";
 };
 

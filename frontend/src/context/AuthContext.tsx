@@ -8,7 +8,7 @@ interface AuthContextType {
   user: Member | null;
   login: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
-  refreshToken: () => Promise<string | null>;
+  // refreshToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,24 +46,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // 액세스 토큰 갱신 함수
-  const refreshToken = async (): Promise<string | null> => {
-    try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      const response = await api.post("/token/refresh", { refreshToken });
+  // 액세스 토큰 갱신 함수(명시적)
+  // const refreshToken = async (): Promise<string | null> => {
+  //   try {
+  //     const refresh_token = localStorage.getItem("refreshToken");
+  //     const response = await api.post("/token/refresh", { refresh_token });
 
-      if (response.data?.accessToken) {
-        const newAccessToken = response.data.accessToken;
-        localStorage.setItem("accessToken", newAccessToken);
-        api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
-        return newAccessToken;
-      }
-    } catch (error) {
-      console.error("토큰 갱신 오류:", error);
-      logout();
-    }
-    return null;
-  };
+  //     if (response.data?.access_token) {
+  //       const newAccessToken = response.data.access_token;
+  //       localStorage.setItem("accessToken", newAccessToken);
+  //       api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+  //       return newAccessToken;
+  //     }
+  //   } catch (error) {
+  //     console.error("토큰 갱신 오류:", error);
+  //     logout();
+  //   }
+  //   return null;
+  // };
 
   const login = (accessToken: string, refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, refreshToken }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

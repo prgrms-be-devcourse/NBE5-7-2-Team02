@@ -15,15 +15,12 @@ public enum SuccessCode {
     CREATE_MEMBER(CREATED, "MEMBER-201", "Create member"),
     READ_MEMBER(OK, "MEMBER-202", "Read member"),
     UPDATE_MEMBER(OK, "MEMBER-203", "Update member"),
+    SIGNUP_MEMBER(CREATED, "MEMBER-204", "Signup member"),
 
-    // OAUTH
-    GITHUB_CALLBACK_SUCCESS(OK, "OAUTH-200", "GitHub access token received successfully"),
-    GITHUB_LOGIN_SUCCESS(OK, "OAUTH-201", "GitHub login successful"),
-    SIGNUP_SUCCESS(CREATED, "OAUTH-202", "Signup successful"),
 
     // JWT
-    REFRESH_TOKEN_SUCCESS(OK, "JWT-200", "Token refreshed successfully"),
-    LOGOUT_SUCCESS(OK, "JWT-201", "Logout successful"),
+    REFRESH_TOKEN(OK, "JWT-200", "Token refreshed successfully"),
+    LOGOUT_TOKEN(OK, "JWT-201", "Logout successful"),
 
     // FOLLOW
     CREATE_FOLLOWER(CREATED, "FOLLOWER-200", "Create follower"),
