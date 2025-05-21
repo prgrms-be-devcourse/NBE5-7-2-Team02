@@ -51,6 +51,8 @@ public class SecurityConfig {
                         auth ->
                                 auth.requestMatchers(CorsUtils::isPreFlightRequest)
                                         .permitAll()
+                                        .requestMatchers("/api/chatroom/entered")
+                                        .authenticated()
                                         .requestMatchers(
                                                 "/api/chatroom/**",
                                                 "/api/tags/**",
@@ -60,7 +62,7 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(HttpMethod.GET, "/api/posts")
                                         .permitAll()
-                                        .requestMatchers("/api/**", "/ws/chatroom/**")
+                                        .requestMatchers("/api/**")
                                         .hasAnyAuthority("MEMBER")
                                         .anyRequest()
                                         .permitAll())

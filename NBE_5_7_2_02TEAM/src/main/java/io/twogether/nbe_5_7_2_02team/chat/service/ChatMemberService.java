@@ -11,12 +11,16 @@ import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMember;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMemberGetResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatRoomGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
+import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +35,16 @@ public class ChatMemberService {
 
     private final ChatMemberRepository chatMemberRepository;
     private final CheckUserLogin checkUserLogin;
+
+    @Transactional(readOnly = true)
+    public List<ChatRoomGetResponse> getChatRoomListByUser(@AuthenticationPrincipal UserDetails userDetails) {
+        Member member = checkUserLogin.checkUserLogin(userDetails);
+
+        Optional<ChatMember> chatMemberList = chatMemberRepository.findByMember(member);
+
+        return chatMemberList.stream()
+            .map(chatMember -> ChatRoomGetResponse.from(chatMember.getChatRoom())).toList();
+    }
 
     @Transactional(readOnly = true)
     public List<ChatMemberGetResponse> getChatMember(Long chatroomId) {
