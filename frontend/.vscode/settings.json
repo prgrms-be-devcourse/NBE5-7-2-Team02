@@ -16,8 +16,5 @@
     ]
   ],
   "typescript.preferences.preferTypeOnlyAutoImports": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
