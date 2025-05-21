@@ -5,7 +5,9 @@ import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRepository;
 import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,10 +20,13 @@ public class ChatRepositoryAdapter implements ChatRepository {
 
     @Override
     public void deleteByPost(Post post) {
-        chatRoomRepository.findByPost(post).ifPresent(chatRoom -> {
-            chatMessageRepository.deleteByChatRoom(chatRoom);
-            chatMemberRepository.deleteByChatRoom(chatRoom);
-            chatRoomRepository.delete(chatRoom);
-        });
+        chatRoomRepository
+                .findByPost(post)
+                .ifPresent(
+                        chatRoom -> {
+                            chatMessageRepository.deleteByChatRoom(chatRoom);
+                            chatMemberRepository.deleteByChatRoom(chatRoom);
+                            chatRoomRepository.delete(chatRoom);
+                        });
     }
 }

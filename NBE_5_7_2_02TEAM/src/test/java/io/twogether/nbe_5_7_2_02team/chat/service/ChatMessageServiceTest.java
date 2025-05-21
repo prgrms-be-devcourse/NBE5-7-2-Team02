@@ -1,45 +1,49 @@
-//package io.twogether.nbe_5_7_2_02team.chat.service;
+// package io.twogether.nbe_5_7_2_02team.chat.service;
 //
-//import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_ENTER;
-//import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_LOGIN;
-//import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_CONTENT_BLANK;
-//import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_NOT_FOUND;
-//import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
+// import static
+// io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_ENTER;
+// import static
+// io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_LOGIN;
+// import static
+// io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_CONTENT_BLANK;
+// import static
+// io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MESSAGE_NOT_FOUND;
+// import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_NOT_FOUND;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
 //
-//import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
-//import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
-//import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
-//import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
-//import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessagePostRequest;
-//import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
-//import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
-//import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
-//import io.twogether.nbe_5_7_2_02team.member.domain.Member;
-//import io.twogether.nbe_5_7_2_02team.member.domain.Role;
-//import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
-//import io.twogether.nbe_5_7_2_02team.post.domain.Post;
-//import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
+// import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMemberRepository;
+// import io.twogether.nbe_5_7_2_02team.chat.dao.ChatMessageRepository;
+// import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
+// import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
+// import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessagePostRequest;
+// import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
+// import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
+// import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
+// import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+// import io.twogether.nbe_5_7_2_02team.member.domain.Role;
+// import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
+// import io.twogether.nbe_5_7_2_02team.post.domain.Post;
+// import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 //
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.test.context.support.WithMockUser;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.DisplayName;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.security.core.userdetails.User;
+// import org.springframework.security.core.userdetails.UserDetails;
+// import org.springframework.security.test.context.support.WithMockUser;
 //
-//import java.util.Collections;
-//import java.util.List;
+// import java.util.Collections;
+// import java.util.List;
 //
-//@SpringBootTest
-//@AutoConfigureMockMvc
-//@WithMockUser(username = "1", password = "<PASSWORD>")
-//class ChatMessageServiceTest {
+// @SpringBootTest
+// @AutoConfigureMockMvc
+// @WithMockUser(username = "1", password = "<PASSWORD>")
+// class ChatMessageServiceTest {
 //
 //    @Autowired private ChatRoomService chatRoomService;
 //    @Autowired private ChatMemberService chatMemberService;
@@ -214,7 +218,8 @@
 //
 //        ErrorException errorException =
 //                assertThrows(
-//                        ErrorException.class, () -> chatMessageService.getChatMessage(chatRoomId));
+//                        ErrorException.class, () ->
+// chatMessageService.getChatMessage(chatRoomId));
 //
 //        assertEquals(CHAT_ROOM_NOT_FOUND, errorException.getErrorCode());
 //    }
@@ -283,4 +288,4 @@
 //
 //        assertEquals(CHAT_MESSAGE_NOT_FOUND, errorException.getErrorCode());
 //    }
-//}
+// }

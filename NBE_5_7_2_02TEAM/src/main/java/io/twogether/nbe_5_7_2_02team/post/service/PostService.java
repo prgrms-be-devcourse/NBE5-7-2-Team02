@@ -1,11 +1,10 @@
 package io.twogether.nbe_5_7_2_02team.post.service;
 
-import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRepository;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
 
-import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRoomRepository;
+import io.twogether.nbe_5_7_2_02team.chat.dao.ChatRepository;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
