@@ -29,8 +29,8 @@ public class MemberMapper {
             List<Post> posts,
             Long followerCount,
             Long followingCount,
-            boolean isFollowing,
-            boolean isOwner) {
+            boolean following,
+            boolean owner) {
 
         List<PostSummary> postSummaries =
                 posts.stream()
@@ -43,7 +43,7 @@ public class MemberMapper {
                         .toList();
 
         return MyPageResponse.builder()
-                .memberId(member.getId())
+                .id(member.getId())
                 .email(member.getEmail())
                 .name(member.getName())
                 .job(member.getJob())
@@ -52,8 +52,8 @@ public class MemberMapper {
                 .posts(postSummaries)
                 .followerCount(followerCount)
                 .followingCount(followingCount)
-                .isFollowing(isFollowing)
-                .isOwner(isOwner)
+                .following(following)
+                .owner(owner)
                 .build();
     }
 }

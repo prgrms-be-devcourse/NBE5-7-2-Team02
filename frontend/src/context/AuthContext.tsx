@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect } from "react";
 import api from "../api/axiosInstance";
 import { Member } from "@/types/Member";
@@ -9,6 +8,7 @@ interface AuthContextType {
   login: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
   // refreshToken: () => Promise<string | null>;
+  setUser: React.Dispatch<React.SetStateAction<Member | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,27 +17,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<Member | null>(null);
 
-  // 토큰이 있으면 사용자 인증 상태로 설정
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        console.error("로컬 유저 정보 파싱 실패", e);
+      }
+    }
+
     if (accessToken) {
       setIsAuthenticated(true);
       api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-      // 사용자 정보 가져오기 (API 엔드포인트에 맞게 수정 필요)
       api.get("/member/me")
         .then(response => {
           const raw = response.data.data;
           const user: Member = {
-            id: raw.member_id,
+            id: raw.id,
             username: raw.name,
             profileImage: raw.profile_image,
             followerCount: raw.follower_count,
             followingCount: raw.following_count,
-            isFollowing: raw.is_following,
-            isOwner: raw.is_owner,
+            following: raw.following,
+            owner: raw.owner,
           };
           setUser(user);
+          localStorage.setItem("user", JSON.stringify(user));
         })
         .catch(error => {
           console.error("사용자 정보 가져오기 오류:", error);
@@ -76,21 +85,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const refresh_token = localStorage.getItem("refreshToken");
 
     if (refresh_token) {
-      // 서버에 로그아웃 요청
       api.post("/logout", { refresh_token })
         .catch(error => console.error("로그아웃 오류:", error));
     }
 
-    // 로컬 스토리지 및 상태 초기화
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
     delete api.defaults.headers.common["Authorization"];
     setIsAuthenticated(false);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

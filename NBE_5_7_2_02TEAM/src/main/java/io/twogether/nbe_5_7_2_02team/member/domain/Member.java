@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
+import org.springframework.util.StringUtils;
+
 import java.util.*;
 
 @Entity
@@ -35,8 +37,13 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void updateProfile(String profileImage) {
-        this.profileImage = profileImage;
+    public void updateProfile(String nickname, String profileImageUrl) {
+        if (StringUtils.hasText(nickname)) {
+            this.name = nickname;
+        }
+        if (StringUtils.hasText(profileImageUrl)) {
+            this.profileImage = profileImageUrl;
+        }
     }
 
     @Builder

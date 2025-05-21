@@ -7,6 +7,7 @@ import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostDetailResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.service.PostService;
@@ -78,7 +79,7 @@ public class PostController {
         return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/member/{memberId}")
     public ResponseEntity<BaseResponse<PostGetResponse>> findPosts(
             @ModelAttribute PostGetRequest request, @PathVariable Long memberId) {
         PostGetResponse response = postService.getPostsByMember(request, memberId);
@@ -86,5 +87,27 @@ public class PostController {
             return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
         }
         return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<BaseResponse<PostDetailResponse>> getPost(@PathVariable Long postId) {
+        PostDetailResponse response = postService.getPostById(postId);
+        return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
+    }
+
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<BaseResponse<Void>> likePost(
+            @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+
+        postService.likePost(postId, Long.parseLong(userDetails.getUsername()));
+        return BaseResponse.of(SuccessCode.LIKE_POST, null, null);
+    }
+
+    @DeleteMapping("/{postId}/likes")
+    public ResponseEntity<BaseResponse<Void>> unlikePost(
+            @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+
+        postService.unlikePost(postId, Long.parseLong(userDetails.getUsername()));
+        return BaseResponse.of(SuccessCode.UNLIKE_POST, null, null);
     }
 }

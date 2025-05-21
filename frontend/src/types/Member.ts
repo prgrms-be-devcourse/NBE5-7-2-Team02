@@ -4,6 +4,6 @@ export interface Member {
   profileImage: string;
   followerCount: number;
   followingCount: number;
-  isFollowing?: boolean;
-  isOwner: boolean;
+  following: boolean;
+  owner: boolean;
 }

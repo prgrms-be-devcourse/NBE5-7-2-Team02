@@ -1,9 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.oauth.api;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
@@ -28,17 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Tag(name = "인증 관리", description = "인증 관련 API")
 public class TokenController {
 
     private final TokenService tokenService;
     private final OAuthService oAuthService;
 
-    @Operation(summary = "토큰 갱신", description = "리프레시 토큰을 사용하여 새로운 액세스 토큰 발급")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "토큰 갱신 성공"),
-        @ApiResponse(responseCode = "401", description = "유효하지 않은 리프레시 토큰")
-    })
     @PostMapping("/token/refresh")
     public ResponseEntity<BaseResponse<TokenPair>> refresh(@RequestBody RefreshRequest request) {
         TokenPair newToken = tokenService.refreshToken(request.getRefreshToken());

@@ -9,14 +9,17 @@ import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+import io.twogether.nbe_5_7_2_02team.post.dao.LikesRepository;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostTagRepository;
+import io.twogether.nbe_5_7_2_02team.post.domain.Likes;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.post.dto.response.PostDetailResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
@@ -30,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +45,7 @@ public class PostService {
     private final PostMapper postMapper;
     private final ImageUploader imageUploader;
     private final ChatRoomRepository chatRoomRepository;
+    private final LikesRepository likesRepository;
 
     @Transactional
     public PostResponse createPost(PostCreateRequest request, Long memberId) {
@@ -110,7 +115,7 @@ public class PostService {
             throw new ErrorException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
         }
 
-        // TODO: 연결된 좋아요 삭제
+        likesRepository.deleteByPost(deletePost);
         chatRoomRepository.deleteByPost(deletePost);
         imageUploader.deletePostImageByFolder(deletePost.getId());
         postRepository.delete(deletePost);
@@ -142,5 +147,66 @@ public class PostService {
             return isRecruit ? RECRUITING : DONE;
         }
         return NONE;
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailResponse getPostById(Long postId) {
+        Post post =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+
+        List<String> tagNames =
+                post.getPostTags().stream().map(tag -> tag.getTag().getName()).toList();
+
+        return new PostDetailResponse(
+                post.getTitle(),
+                post.getContent(),
+                post.getRecruitmentStatus(),
+                tagNames,
+                post.getImageUrls());
+    }
+
+    @Transactional
+    public void likePost(Long postId, Long memberId) {
+
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+
+        Post post =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+
+        Optional<Likes> existingLike = likesRepository.findByPostAndMember(post, member);
+        if (existingLike.isPresent()) {
+            throw new ErrorException(ErrorCode.LIKE_ALREADY_EXIST);
+        }
+
+        Likes likes = Likes.builder().member(member).post(post).build();
+        likesRepository.save(likes);
+    }
+
+    @Transactional
+    public void unlikePost(Long postId, Long memberId) {
+
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+
+        Post post =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+
+        Optional<Likes> likes = likesRepository.findByPostAndMember(post, member);
+        if (likes.isPresent()) {
+            likesRepository.delete(likes.get());
+        } else {
+            throw new ErrorException(ErrorCode.NOT_FOUND_LIKE);
+        }
     }
 }

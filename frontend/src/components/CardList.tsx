@@ -8,7 +8,7 @@ interface CardListProps {
 
 const CardList = ({ posts, lastPostRef }: CardListProps) => {
   if (posts.length === 0) {
-    return <p className="text-center py-8 text-muted-foreground">No posts to display</p>;
+    return;
   }
 
   return (

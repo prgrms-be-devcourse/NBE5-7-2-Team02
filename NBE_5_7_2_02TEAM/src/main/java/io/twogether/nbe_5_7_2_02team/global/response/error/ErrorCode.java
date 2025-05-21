@@ -42,6 +42,8 @@ public enum ErrorCode {
     // POST
     NOT_FOUND_POST(NOT_FOUND, "POST-001", "해당 게시글이 존재하지 않습니다."),
     UNAUTHORIZED_POST_ACCESS(UNAUTHORIZED, "POST-002", "게시글에 대한 권한이 없습니다."),
+    LIKE_ALREADY_EXIST(BAD_REQUEST, "POST-003", "좋아요가 이미 존재합니다."),
+    NOT_FOUND_LIKE(NOT_FOUND, "POST-004", "해당 좋아요가 존재하지 않습니다."),
 
     // CHAT MESSAGE
     CHAT_MESSAGE_CONTENT_BLANK(BAD_REQUEST, "CHAT-00", "메세지 내용이 비어있습니다."),
