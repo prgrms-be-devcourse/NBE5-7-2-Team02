@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.chat.api;
 
 import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMemberUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMemberGetResponse;
+import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatRoomGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMemberService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
@@ -28,6 +29,16 @@ import java.util.List;
 public class ChatMemberController {
 
     private final ChatMemberService chatMemberService;
+
+    @GetMapping("/entered")
+    public ResponseEntity<BaseResponse<List<ChatRoomGetResponse>>> getChatRoomListByUser(
+            @AuthenticationPrincipal UserDetails memberDetails) {
+
+        List<ChatRoomGetResponse> ChatRoomGetResponse =
+                chatMemberService.getChatRoomListByUser(memberDetails);
+
+        return BaseResponse.of(SuccessCode.FOUND_CHAT_MEMBER, ChatRoomGetResponse, null);
+    }
 
     @GetMapping("/{chatroomId}/member")
     public ResponseEntity<BaseResponse<List<ChatMemberGetResponse>>> getChatMemberList(

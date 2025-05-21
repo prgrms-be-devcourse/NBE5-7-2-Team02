@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 public class ChatMessageGetResponse {
 
     private final Long id;
-    private final Long chatMemberId;
+    private final Long memberId;
+    private final String memberName;
     private final String content;
     private final LocalDateTime createdAt;
 
@@ -20,6 +21,7 @@ public class ChatMessageGetResponse {
         return new ChatMessageGetResponse(
                 chatMessage.getId(),
                 chatMessage.getChatMember().getMember().getId(),
+                chatMessage.getChatMember().getMember().getName(),
                 chatMessage.getContent(),
                 chatMessage.getCreatedAt());
     }
