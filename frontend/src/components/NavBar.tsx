@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import darklogo from "../assets/images/programmers-logo-dark.png";
 import lightlogo from "../assets/images/programmers-logo-light.png";
+import { Link } from "react-router-dom"
 
 export function NavBar() {
   const navigate = useNavigate();
@@ -40,6 +41,27 @@ export function NavBar() {
 
           </NavbarBrand>
           <div className="flex md:order-2">
+          <Link
+            to="/ChatRoomList"
+            className="inline-flex items-center justify-center mr-3 p-2 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            title="참여중인 채팅방 목록 보기"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              />
+            </svg>
+            <span className="sr-only">참여중인 채팅방 목록 보기</span>
+          </Link>
             {isAuthenticated ? (
                 <Dropdown
                     arrowIcon={false}

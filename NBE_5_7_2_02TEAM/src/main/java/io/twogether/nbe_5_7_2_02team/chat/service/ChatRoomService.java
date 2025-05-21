@@ -32,6 +32,21 @@ public class ChatRoomService {
         return chatRoomList.stream().map(ChatRoomGetResponse::from).toList();
     }
 
+    @Transactional(readOnly = true)
+    public ChatRoomGetResponse getChatRoomByPost(Long postId) {
+        Post post =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(NOT_FOUND_POST));
+
+        ChatRoom chatRoom =
+                chatRoomRepository
+                        .findByPost(post)
+                        .orElseThrow(() -> new ErrorException(CHAT_ROOM_NOT_FOUND));
+
+        return ChatRoomGetResponse.from(chatRoom);
+    }
+
     @Transactional
     public Long createChatroom(Long postId) {
         Post post =
