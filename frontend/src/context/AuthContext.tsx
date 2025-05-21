@@ -55,25 +55,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // 액세스 토큰 갱신 함수(명시적)
-  // const refreshToken = async (): Promise<string | null> => {
-  //   try {
-  //     const refresh_token = localStorage.getItem("refreshToken");
-  //     const response = await api.post("/token/refresh", { refresh_token });
-
-  //     if (response.data?.access_token) {
-  //       const newAccessToken = response.data.access_token;
-  //       localStorage.setItem("accessToken", newAccessToken);
-  //       api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
-  //       return newAccessToken;
-  //     }
-  //   } catch (error) {
-  //     console.error("토큰 갱신 오류:", error);
-  //     logout();
-  //   }
-  //   return null;
-  // };
-
   const login = (accessToken: string, refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
