@@ -47,7 +47,7 @@ export const ModalBoardForm = ({open, onClose}: ModalComponentProps) => {
     }
   };
 
-  const handleSubmit = async () => {
+   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);

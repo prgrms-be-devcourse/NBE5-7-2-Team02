@@ -5,6 +5,7 @@ import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.RestAuthenticationEntryPoint;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+@Slf4j
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -73,7 +75,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-
+        log.info("CORS 설정 동작: {}", config.getAllowedOrigins());
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
