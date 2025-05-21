@@ -34,7 +34,8 @@ public class ChatMemberController {
     public ResponseEntity<BaseResponse<List<ChatRoomGetResponse>>> getChatRoomListByUser(
             @AuthenticationPrincipal UserDetails memberDetails) {
 
-        List<ChatRoomGetResponse> ChatRoomGetResponse = chatMemberService.getChatRoomListByUser(memberDetails);
+        List<ChatRoomGetResponse> ChatRoomGetResponse =
+                chatMemberService.getChatRoomListByUser(memberDetails);
 
         return BaseResponse.of(SuccessCode.FOUND_CHAT_MEMBER, ChatRoomGetResponse, null);
     }

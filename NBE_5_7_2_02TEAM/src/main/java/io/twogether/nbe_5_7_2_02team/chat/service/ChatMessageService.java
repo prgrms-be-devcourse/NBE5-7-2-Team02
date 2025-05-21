@@ -49,13 +49,12 @@ public class ChatMessageService {
 
     @Transactional
     public ChatMessageGetResponse createChatMessage(
-            Long chatRoomId,
-            ChatMessagePostRequest chatMessagePostRequest,
-            Long memberId) {
+            Long chatRoomId, ChatMessagePostRequest chatMessagePostRequest, Long memberId) {
 
-        Member member = memberRepository
-            .findById(memberId)
-            .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(NOT_FOUND_MEMBER));
 
         ChatRoom chatRoom = chatRoomService.checkChatRoomExists(chatRoomId);
 
@@ -71,13 +70,15 @@ public class ChatMessageService {
             throw new ErrorException(CHAT_MESSAGE_CONTENT_BLANK);
         }
 
-        Long chatMessageId = chatMessageRepository.save(
-                ChatMessage.builder()
-                    .chatRoom(chatRoom)
-                    .chatMember(chatMember)
-                    .content(content)
-                    .build())
-            .getId();
+        Long chatMessageId =
+                chatMessageRepository
+                        .save(
+                                ChatMessage.builder()
+                                        .chatRoom(chatRoom)
+                                        .chatMember(chatMember)
+                                        .content(content)
+                                        .build())
+                        .getId();
 
         ChatMessage chatMessage = chatMessageRepository.findById(chatMessageId).get();
 

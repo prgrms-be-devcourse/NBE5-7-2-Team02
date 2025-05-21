@@ -5,9 +5,8 @@ import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMessageService;
 import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
-
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
-import java.security.Principal;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -58,18 +58,30 @@ public class ChatMessageController {
             Authentication authentication = (Authentication) principal;
             Object authPrincipal = authentication.getPrincipal();
             System.out.println("Principal name from injected Principal: " + principal.getName());
-            System.out.println("Authentication Principal object type: " + (authPrincipal != null ? authPrincipal.getClass().getName() : "null"));
+            System.out.println(
+                    "Authentication Principal object type: "
+                            + (authPrincipal != null
+                                    ? authPrincipal.getClass().getName()
+                                    : "null"));
 
             if (authPrincipal instanceof TokenBody) {
                 tokenBody = (TokenBody) authPrincipal;
                 memberId = tokenBody.getMemberId();
                 userRole = tokenBody.getRole().name();
-                System.out.println("TokenBody found in Authentication Principal. MemberId: " + memberId + ", Role: " + userRole);
+                System.out.println(
+                        "TokenBody found in Authentication Principal. MemberId: "
+                                + memberId
+                                + ", Role: "
+                                + userRole);
             } else if (authPrincipal != null) {
-                System.out.println("Authentication Principal is NOT TokenBody. Type: " + authPrincipal.getClass().getName());
+                System.out.println(
+                        "Authentication Principal is NOT TokenBody. Type: "
+                                + authPrincipal.getClass().getName());
             }
         } else if (principal != null) {
-            System.out.println("Principal received (not Authentication instance, using getName()): " + principal.getName());
+            System.out.println(
+                    "Principal received (not Authentication instance, using getName()): "
+                            + principal.getName());
         } else {
             System.out.println("Principal is null.");
         }
@@ -82,16 +94,22 @@ public class ChatMessageController {
             System.out.println("Authenticated Member ID: Not available");
         }
         System.out.println("UserDetails: null (not directly using UserDetails object here)");
-        System.out.println("Request chatMessagePostRequest.getContent: " + chatMessagePostRequest.getContent());
+        System.out.println(
+                "Request chatMessagePostRequest.getContent: "
+                        + chatMessagePostRequest.getContent());
 
-        ChatMessageGetResponse ChatMessageGetResponse = chatMessageService.createChatMessage(
-                chatroomId, chatMessagePostRequest, memberId);
+        ChatMessageGetResponse ChatMessageGetResponse =
+                chatMessageService.createChatMessage(chatroomId, chatMessagePostRequest, memberId);
 
         System.out.println("===============ChatMessageGetResponse===============");
         System.out.println("ChatMessageGetResponse.getId: " + ChatMessageGetResponse.getId());
-        System.out.println("ChatMessageGetResponse.getChatMemberId: " + ChatMessageGetResponse.getMemberId());
-        System.out.println("ChatMessageGetResponse.getChatMemberName: " + ChatMessageGetResponse.getMemberName());
-        System.out.println("ChatMessageGetResponse.getContent: " + ChatMessageGetResponse.getContent());
+        System.out.println(
+                "ChatMessageGetResponse.getChatMemberId: " + ChatMessageGetResponse.getMemberId());
+        System.out.println(
+                "ChatMessageGetResponse.getChatMemberName: "
+                        + ChatMessageGetResponse.getMemberName());
+        System.out.println(
+                "ChatMessageGetResponse.getContent: " + ChatMessageGetResponse.getContent());
 
         return ChatMessageGetResponse;
     }
