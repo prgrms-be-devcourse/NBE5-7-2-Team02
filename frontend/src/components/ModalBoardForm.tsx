@@ -36,7 +36,6 @@ export const ModalBoardForm = ({open, onClose}: ModalComponentProps) => {
   const handleClose = () => {
     resetForm();
     onClose();
-    window.location.reload();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +61,7 @@ export const ModalBoardForm = ({open, onClose}: ModalComponentProps) => {
         },
       });
       console.log("Post created successfully.");
+      window.location.reload();
       handleClose();
     } catch (error) {
       console.error("Error creating post:", error);

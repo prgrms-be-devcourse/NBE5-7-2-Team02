@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class ChatMemberService {
             @AuthenticationPrincipal UserDetails userDetails) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
-        Optional<ChatMember> chatMemberList = chatMemberRepository.findByMember(member);
+        List<ChatMember> chatMemberList = chatMemberRepository.findByMember(member);
 
         return chatMemberList.stream()
                 .map(chatMember -> ChatRoomGetResponse.from(chatMember.getChatRoom()))

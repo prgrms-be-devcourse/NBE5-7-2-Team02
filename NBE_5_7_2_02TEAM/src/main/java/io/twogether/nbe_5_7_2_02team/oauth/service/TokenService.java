@@ -33,7 +33,7 @@ public class TokenService {
         jwtTokenProvider
                 .findRefreshToken(memberId)
                 .filter(rt -> rt.getRefreshToken().equals(refreshTokenValue))
-                .orElseThrow(() -> new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN));
+                .orElseThrow(() -> new ErrorException(ErrorCode.EXPIRED_REFRESH_TOKEN));
 
         Member member =
                 memberRepository
@@ -55,7 +55,7 @@ public class TokenService {
                 jwtTokenProvider
                         .findRefreshToken(memberId)
                         .filter(rt -> rt.getRefreshToken().equals(refreshTokenValue))
-                        .orElseThrow(() -> new ErrorException(ErrorCode.INVALID_REFRESH_TOKEN));
+                        .orElseThrow(() -> new ErrorException(ErrorCode.EXPIRED_REFRESH_TOKEN));
 
         jwtTokenProvider.addBlackList(refreshToken);
     }
