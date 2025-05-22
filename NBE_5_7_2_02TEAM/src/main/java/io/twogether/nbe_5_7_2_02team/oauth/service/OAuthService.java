@@ -15,7 +15,6 @@ import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubUserInfoResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.MemberDetailsFactory;
 
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -225,22 +225,20 @@ public class OAuthService extends DefaultOAuth2UserService {
         return SignUpResponse.from(memberRepository.save(member));
     }
 
-
-    private static final Set<String> ALLOWED_ORGS = Set.of(
-        "prgrms-web-devcourse",
-        "prgrms-bd-devcourse",
-        "prgrms-fe-devcourse",
-        "prgrms-ad-devcourse",
-        "prgrms-aibe-devcourse",
-        "prgrms-app-devcourse",
-        "prgrms-linux-devcourse",
-        "prgrms-fullcycle-devcourse"
-    );
+    private static final Set<String> ALLOWED_ORGS =
+            Set.of(
+                    "prgrms-web-devcourse",
+                    "prgrms-bd-devcourse",
+                    "prgrms-fe-devcourse",
+                    "prgrms-ad-devcourse",
+                    "prgrms-aibe-devcourse",
+                    "prgrms-app-devcourse",
+                    "prgrms-linux-devcourse",
+                    "prgrms-fullcycle-devcourse");
 
     private void validatePrgrmsOrganization(List<String> organizations) {
-        boolean hasPrgrms = organizations.stream()
-            .map(String::toLowerCase)
-            .anyMatch(ALLOWED_ORGS::contains);
+        boolean hasPrgrms =
+                organizations.stream().map(String::toLowerCase).anyMatch(ALLOWED_ORGS::contains);
 
         if (!hasPrgrms) {
             throw new ErrorException(ErrorCode.OAUTH_PRGRMS_ORG_REQUIRED);
