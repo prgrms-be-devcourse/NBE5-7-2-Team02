@@ -228,7 +228,7 @@ public class OAuthService extends DefaultOAuth2UserService {
     private static final Set<String> ALLOWED_ORGS =
             Set.of(
                     "prgrms-web-devcourse",
-                    "prgrms-bd-devcourse",
+                    "prgrms-be-devcourse",
                     "prgrms-fe-devcourse",
                     "prgrms-ad-devcourse",
                     "prgrms-aibe-devcourse",
