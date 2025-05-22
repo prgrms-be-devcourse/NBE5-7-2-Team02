@@ -12,4 +12,6 @@ public class FollowCreateResponse {
 
     private Long followerId;
     private Long followingId;
+    private Long updatedFollowerCount;
+    private Long updatedFollowingCount;
 }
