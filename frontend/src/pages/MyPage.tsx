@@ -59,16 +59,28 @@ export default function MyPage() {
     fetchUser();
   }, [member_id]);
 
-  // ✅ 팔로우 / 언팔로우 요청
+  // ✅ 팔로우 / 언팔로우 요청 및 수치 반영
   const handleFollowToggle = async () => {
     if (!user) return;
     try {
+      let res;
       if (user.following) {
         await api.delete(`/follow/${user.id}`);
+        // 팔로우 취소 시 count는 줄여줌
+        setUser((prev) => prev && {
+          ...prev,
+          following: false,
+          followerCount: prev.followerCount - 1
+        });
       } else {
-        await api.post(`/follow/${user.id}`);
+        res = await api.post(`/follow/${user.id}`);
+        const data = res.data.data;
+        setUser((prev) => prev && {
+          ...prev,
+          following: true,
+          followerCount: data.updatedFollowerCount,
+        });
       }
-      setUser((prev) => prev && { ...prev, following: !prev.following });
     } catch (e) {
       console.error("팔로우 상태 변경 실패", e);
     }
@@ -159,7 +171,9 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
           onClose={() => setShowFollowers(false)}
           title="팔로워"
           users={followers}
-          onProfileClick={(id) => navigate(`/mypage/${id}`)}
+          onProfileClick={(id) => {
+          setShowFollowers(false); // ✅ 추가
+          navigate(`/mypage/${id}`);}}
         />
 
         <FollowListModal
@@ -167,7 +181,9 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
           onClose={() => setShowFollowings(false)}
           title="팔로잉"
           users={followings}
-          onProfileClick={(id) => navigate(`/mypage/${id}`)}
+          onProfileClick={(id) => {
+          setShowFollowings(false); // ✅ 추가
+          navigate(`/mypage/${id}`);}}
         />
 
         <ProfileEditorModal
