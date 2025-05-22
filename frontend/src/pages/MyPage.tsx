@@ -71,7 +71,7 @@ export default function MyPage() {
         setUser((prev) => prev && {
           ...prev,
           following: true,
-          followerCount: data.updatedFollowerCount,
+          followerCount: data.updated_follower_count,
         });
       }
     } catch (e) {
