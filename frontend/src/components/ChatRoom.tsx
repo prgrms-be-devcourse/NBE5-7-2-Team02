@@ -131,13 +131,17 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     }, [items])
 
     useEffect(() => {
+        setNewMessage("");
+    }, [chatRoomId]);
+
+    useEffect(() => {
         const fetchData = async () => {
             if (!chatRoomId) return;
             setLoading(true);
             setError(null);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/chatroom/${chatRoomId}/message`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${chatRoomId}/message`, {
                     method: 'GET',
                 });
 
@@ -180,7 +184,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
             setLoadingParticipants(true);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/chatroom/${chatRoomId}/member`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${chatRoomId}/member`, {
                     method: 'GET',
                 });
 
@@ -223,7 +227,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         }
 
         const client = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:8080/ws/chatroom"),
+            webSocketFactory: () => new SockJS(`${import.meta.env.VITE_BASE_URL}/ws/chatroom`),
             debug: (str) => {
                 console.log("STOMP DEBUG: " + str)
             },
@@ -588,7 +592,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                         value={newMessage}
                         onChange={handleMessageChange}
                         placeholder="메시지를 입력하세요..."
-                        className="flex-grow py-2 px-3 border border-[#e4e6eb] rounded-[20px] outline-none text-[14px]"
+                        className="flex-grow py-2 px-3 border border-[#e4e6eb] rounded-[20px] outline-none text-[14px] text-dark"
                     />
                     <button
                         type="submit"

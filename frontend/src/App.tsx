@@ -10,7 +10,7 @@ import Login from "./pages/Login";
 import EditPostPage from "./pages/EditPostPage";
 import { AuthProvider } from "./context/AuthContext";
 import ChatRoomList from "./pages/ChatRoomList";
-import ChatRoom from "./components/ChatRoom";
+// import ChatRoom from "./components/ChatRoom";
 
 function App() {
   return (
@@ -23,15 +23,15 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/mypage" element={<MyPage />} /> // 내 마이페이지
-            <Route path="/mypage/:id" element={<MyPage />} /> // 타인 마이페이지
+            <Route path="/mypage/:postMemberId" element={<MyPage />} /> // 타인 마이페이지
             <Route path="/login" element={<Login />} />
             <Route path="/posts/edit/:postId" element={<EditPostPage />} />
             {/* 잘못된 경로로 접근시 Home으로 이동 */}
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/callback" element={<OAuthCallback />} />
-            <Route path="/ChatRoomList" element={<ChatRoomList />} />
-            <Route path="/ChatRoom/:chatRoomId" element={<ChatRoom />} />
+            <Route path="/chats" element={<ChatRoomList />} />
+            {/*<Route path="/ChatRoom/:chatRoomId" element={<ChatRoom />} />*/}
           </Routes>
           <ToastContainer
             position="top-center"

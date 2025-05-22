@@ -15,7 +15,7 @@ export default function MyPage() {
   const navigate = useNavigate();
   const { setUser: setAuthUser } = useAuth();
   const [memberId, setMemberId] = useState<string | null>(null);
-  const { member_id } = useParams();
+  const { postMemberId } = useParams();
   const [limit] = useState<number>(10);
   const [user, setUser] = useState<Member | null>(null);
   const [showFollowers, setShowFollowers] = useState(false);
@@ -27,7 +27,7 @@ export default function MyPage() {
 // ✅ 사용자 정보 조회
   const fetchUser = async () => {
     try {
-      const res = await api.get(`/member/${member_id || "me"}`);
+      const res = await api.get(`/member/${postMemberId || "me"}`);
       const raw = res.data.data;
 
       const fetchedUser: Member = {
@@ -43,13 +43,6 @@ export default function MyPage() {
       setUser(fetchedUser);
       setMemberId(raw.id?.toString()); // 여기가 InfiniteScroll에 들어감
 
-
-      // 👇 현재 로그인 사용자의 정보면 전역 상태도 동기화
-      if (!member_id || member_id === raw.id?.toString()) {
-        setAuthUser(fetchedUser);
-        localStorage.setItem("user", JSON.stringify(fetchedUser));
-      }
-
     } catch (e) {
       console.error("사용자 정보 조회 실패", e);
     }
@@ -57,7 +50,7 @@ export default function MyPage() {
 
   useEffect(() => {
     fetchUser();
-  }, [member_id]);
+  }, [postMemberId]);
 
   // ✅ 팔로우 / 언팔로우 요청
   const handleFollowToggle = async () => {

@@ -46,7 +46,7 @@ function ChatRoomList() {
     }
 
     try {
-      const res = await fetch("http://localhost:8080/api/chatroom/entered", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/entered`, {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
