@@ -70,8 +70,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                                                                         "ROLE_"
                                                                                 + tokenBody
                                                                                         .getRole()
-                                                                                        .name()))
-                                                        );
+                                                                                        .name())));
 
                                         accessor.setUser(authentication);
                                     }
