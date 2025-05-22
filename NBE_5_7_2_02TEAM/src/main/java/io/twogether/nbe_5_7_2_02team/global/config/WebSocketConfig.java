@@ -58,48 +58,29 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             if (token != null && token.startsWith("Bearer ")) {
                                 token = token.substring(7);
                                 try {
-                                    // 토큰 검증
                                     if (jwtTokenProvider.validate(token)) {
-                                        // 토큰에서 사용자 정보 추출
                                         TokenBody tokenBody = jwtTokenProvider.parseJwt(token);
 
-                                        // 인증 객체 생성 - Principal로 TokenBody 사용
                                         Authentication authentication =
                                                 new UsernamePasswordAuthenticationToken(
-                                                        tokenBody, // Principal: TokenBody 객체 자체를 사용
-                                                        null, // Credentials
+                                                        tokenBody,
+                                                        null,
                                                         Collections.singletonList(
                                                                 new SimpleGrantedAuthority(
                                                                         "ROLE_"
                                                                                 + tokenBody
                                                                                         .getRole()
-                                                                                        .name())) // Authorities
+                                                                                        .name()))
                                                         );
 
-                                        // SecurityContextHolder에 인증 정보 저장 (선택적이며, Principal 주입을 우선시
-                                        // 할 경우 주석 처리)
-                                        // SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                                        // WebSocket 세션에 사용자 정보 설정 (이것이 @MessageMapping 메소드로
-                                        // Principal을 주입하는 핵심)
                                         accessor.setUser(authentication);
-                                        //
-                                        // System.out.println("====================
                                     }
                                 } catch (ErrorException e) {
-                                    // 토큰 검증 실패 시 연결 거부
-                                    // SecurityContextHolder.clearContext(); // 실패 시 컨텍스트 정리 (선택적)
                                     throw new ErrorException(ErrorCode.INVALID_ACCESS_TOKEN);
                                 }
                             } else {
-                                // 토큰이 없는 경우 연결 거부
-                                // SecurityContextHolder.clearContext(); // 실패 시 컨텍스트 정리 (선택적)
                                 throw new ErrorException(ErrorCode.INVALID_ACCESS_TOKEN);
                             }
-                        } else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
-                            // DISCONNECT 시 SecurityContext 정리 (선택적, Stateless 환경에서는 크게 중요하지 않을 수
-                            // 있음)
-                            // SecurityContextHolder.clearContext();
                         }
                         return message;
                     }
