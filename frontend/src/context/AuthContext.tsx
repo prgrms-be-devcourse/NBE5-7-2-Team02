@@ -7,7 +7,6 @@ interface AuthContextType {
   user: Member | null;
   login: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
-  refreshToken: () => Promise<string | null>;
   setUser: React.Dispatch<React.SetStateAction<Member | null>>;
 }
 
@@ -55,24 +54,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const refreshToken = async (): Promise<string | null> => {
-    try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      const response = await api.post("/token/refresh", { refreshToken });
-
-      if (response.data?.accessToken) {
-        const newAccessToken = response.data.accessToken;
-        localStorage.setItem("accessToken", newAccessToken);
-        api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
-        return newAccessToken;
-      }
-    } catch (error) {
-      console.error("토큰 갱신 오류:", error);
-      logout();
-    }
-    return null;
-  };
-
   const login = (accessToken: string, refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
@@ -97,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, refreshToken, setUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

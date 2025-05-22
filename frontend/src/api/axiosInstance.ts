@@ -118,6 +118,14 @@ api.interceptors.response.use(
       handleLogout();
     }
 
+    const res = error.response;
+    if (res?.data?.code && res?.data?.message) {
+      console.error(`[${res.data.code}] ${res.data.message}`);
+      alert(res.data.message); // 💬 또는 toast, modal 등으로 교체 가능
+    } else {
+      alert("예기치 못한 오류가 발생했습니다.");
+    }
+
     return Promise.reject(error);
   }
 );
@@ -128,23 +136,8 @@ const handleLogout = () => {
   localStorage.removeItem("refreshToken");
   delete api.defaults.headers.common["Authorization"];
 
-  // 로그인 페이지로 리다이렉트
+
   window.location.href = "/";
 };
-
-// 예외처리
-api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    const res = err.response;
-    if (res?.data?.code && res?.data?.message) {
-      console.error(`[${res.data.code}] ${res.data.message}`);
-      alert(res.data.message); // 💬 또는 toast, modal 등으로 교체 가능
-    } else {
-      alert("예기치 못한 오류가 발생했습니다.");
-    }
-    return Promise.reject(err); // 필수: 호출자에서 catch 가능하게 함
-  }
-);
 
 export default api;

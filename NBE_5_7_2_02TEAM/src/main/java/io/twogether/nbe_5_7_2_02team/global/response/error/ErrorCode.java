@@ -31,7 +31,7 @@ public enum ErrorCode {
     INVALID_ACCESS_TOKEN(UNAUTHORIZED, "JWT-004", "유효하지 않은 Access Token 토큰입니다."),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "JWT-005", "유효하지 않은 Refresh 토큰입니다."),
     INVALID_REFRESH_SIGNATURE(UNAUTHORIZED, "JWT-006", "잘못된 Refresh Token 서명입니다."),
-    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "JWT-007", "만료된 Refresh Token 토큰입니다."),
+    EXPIRED_REFRESH_TOKEN(UNAUTHORIZED, "JWT-007", "로그인이 만료되었습니다."),
     UNSUPPORTED_REFRESH_TOKEN(UNAUTHORIZED, "JWT-008", "지원되지 않는 Refresh Token 토큰입니다."),
 
     // IMAGE
