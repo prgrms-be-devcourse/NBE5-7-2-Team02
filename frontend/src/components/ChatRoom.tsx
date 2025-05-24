@@ -378,6 +378,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 <div className="flex-grow">
                     <div className="font-bold text-[16px]">{postTitle || `채팅방 ${chatRoomId}`}</div>
                 </div>
+                {/* TODO: 채팅 Info 버튼 - 기능 구현 필요*/}
                 {/*<button*/}
                 {/*    onClick={toggleParticipantsList}*/}
                 {/*    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"*/}
