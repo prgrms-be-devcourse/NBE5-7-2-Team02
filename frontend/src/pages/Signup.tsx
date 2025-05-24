@@ -46,7 +46,7 @@ const Signup = () => {
       });
       
       // 회원가입 성공 시, 홈페이지로 리다이렉트
-      if (response.data?.code === "OAUTH-202") {
+      if (response.data?.code === "MEMBER-204") {
         navigate("/");
       }
     } catch (err) {
