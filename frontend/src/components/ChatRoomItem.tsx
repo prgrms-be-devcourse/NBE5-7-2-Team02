@@ -29,9 +29,6 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
         // 컴팩트 모드 (채팅방이 선택되었을 때)
         <div className="flex flex-col">
           <div className="flex items-center mb-2">
-            <div className="w-10 h-10 rounded-full bg-[#e4e6eb] flex items-center justify-center mr-3 text-[#1877f2] font-bold">
-              {chatRoom.title.charAt(0).toUpperCase()}
-            </div>
             <h3 className="text-[15px] font-semibold text-[#050505] truncate">{chatRoom.title}</h3>
           </div>
           <div className="text-[13px] text-[#65676b] mb-2">
@@ -51,9 +48,6 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
         // 기본 모드 (채팅방 목록만 표시될 때)
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full bg-[#e4e6eb] flex items-center justify-center mr-3 text-[#1877f2] font-bold">
-              {chatRoom.title.charAt(0).toUpperCase()}
-            </div>
             <div>
               <h3 className="text-[15px] font-semibold text-[#050505]">{chatRoom.title}</h3>
               <div className="text-[13px] text-[#65676b]">
