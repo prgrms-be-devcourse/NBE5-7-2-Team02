@@ -46,7 +46,7 @@ export default function ProfileEditor({ username, profileImage, onSave, onCancel
       />
 
       <div className="flex justify-center gap-3 pt-2">
-        <Button onClick={() => onSave(nickname, selectedFile)}>저장</Button>
+        <Button className="bg-blue-300 hover:bg-blue-500" onClick={() => onSave(nickname, selectedFile)}>저장</Button>
         <Button color="gray" onClick={onCancel}>취소</Button>
       </div>
     </div>

@@ -118,7 +118,7 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
     const list: Follow[] = res.data.data.content.map((f: any) => ({
       id: f.id,
       username: f.name,
-      profileImage: f.profileImage,
+      profileImage: f.profile_image,
     }));
     setFollowers(list);
     setShowFollowers(true);
@@ -133,7 +133,7 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
     const list: Follow[] = res.data.data.content.map((f: any) => ({
       id: f.id,
       username: f.name,
-      profileImage: f.profileImage,
+      profileImage: f.profile_image,
     }));
     setFollowings(list);
     setShowFollowings(true);

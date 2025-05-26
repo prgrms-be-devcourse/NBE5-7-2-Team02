@@ -30,17 +30,17 @@ export default function FollowSummary({
       <div className="flex items-center justify-center gap-4">
         <Avatar img={profileImage} size="xl" />
         <div className="flex flex-col items-start">
-          <p className="text-xl font-bold text-white">{username}</p>
+          <p className="text-xl font-bold text-dark dark:text-white">{username}</p>
 
           {/* ✅ 버튼 공통 스타일 분기 처리 */}
           <button
             onClick={owner ? onEditProfile : onFollowToggle}
             className={`mt-1 px-4 py-1 text-sm font-medium rounded-full transition
               ${owner
-                ? "bg-white text-black hover:bg-gray-200"
+                ? "bg-white text-black hover:bg-gray-200 border-dark"
                 : following
-                  ? "bg-transparent border border-white text-white hover:bg-white hover:text-black"
-                  : "bg-white text-black hover:bg-gray-200"
+                  ? "bg-transparent border-dark text-dark bg-white hover:bg-dark hover:text-white"
+                  : "bg-white border-dark text-black hover:bg-gray-200"
               }`}
           >
             {owner ? "프로필 편집" : following ? "언팔로우" : "팔로우"}
