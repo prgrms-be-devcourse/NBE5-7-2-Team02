@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  config:
+    import: optional:file:.env[.properties]
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-name: GitHub
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - read:user
+              - user:email
+              - read:org
+
+file:
+  upload-dir: uploads/
+
+custom:
+  jwt:
+    validation:
+      access: ${JWT_ACCESS_EXP}
+      refresh: ${JWT_REFRESH_EXP}
+    redirection:
+      base: http://localhost8080
+    secrets:
+      origin-key: ${JWT_ORIGIN_KEY}
+      app-key: ${JWT_APP_KEY}
