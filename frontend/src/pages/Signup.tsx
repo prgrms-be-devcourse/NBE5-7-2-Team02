@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Label, Select, TextInput } from "flowbite-react";
+import { StatusCodes } from "http-status-codes";
 import api from "../api/axiosInstance";
 
 const Signup = () => {
@@ -46,7 +47,7 @@ const Signup = () => {
       });
       
       // 회원가입 성공 시, 홈페이지로 리다이렉트
-      if (response.data?.code === "MEMBER-204") {
+      if (response.status === StatusCodes.CREATED) {
         navigate("/");
       }
     } catch (err) {

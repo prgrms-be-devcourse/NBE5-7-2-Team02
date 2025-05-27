@@ -100,7 +100,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         // when & then
         mockMvc.perform(get("/api/posts").param("limit", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(10));
+                .andExpect(jsonPath("$.posts.length()").value(10));
     }
 
     @Test
@@ -114,9 +114,9 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         // when & then
         mockMvc.perform(get("/api/posts").param("limit", "10").param("isRecruit", "true"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(1))
+                .andExpect(jsonPath("$.posts.length()").value(1))
                 .andExpect(
-                        jsonPath("$.data.posts[0].recruitment_status")
+                        jsonPath("$.posts[0].recruitment_status")
                                 .value(RECRUITING.toString()));
     }
 
@@ -136,8 +136,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                                 .param("tags", targetTag)
                                 .param("isRecruit", "true"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(1))
-                .andExpect(jsonPath("$.data.posts[0].tags[0]").value(targetTag));
+                .andExpect(jsonPath("$.posts.length()").value(1))
+                .andExpect(jsonPath("$.posts[0].tags[0]").value(targetTag));
     }
 
     @Test
@@ -161,10 +161,10 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                                 .param("tags", targetTags)
                                 .param("isRecruit", "true"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(1))
-                .andExpect(jsonPath("$.data.posts[0].tags.length()").value(2))
-                .andExpect(jsonPath("$.data.posts[0].tags[0]").value(targetTags[0]))
-                .andExpect(jsonPath("$.data.posts[0].tags[1]").value(targetTags[1]));
+                .andExpect(jsonPath("$.posts.length()").value(1))
+                .andExpect(jsonPath("$.posts[0].tags.length()").value(2))
+                .andExpect(jsonPath("$.posts[0].tags[0]").value(targetTags[0]))
+                .andExpect(jsonPath("$.posts[0].tags[1]").value(targetTags[1]));
     }
 
     @Test
@@ -182,8 +182,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                                 .param("isFollowing", "true")
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(5))
-                .andExpect(jsonPath("$.data.posts[0].member_id").value(followingMember.getId()));
+                .andExpect(jsonPath("$.posts.length()").value(5))
+                .andExpect(jsonPath("$.posts[0].member_id").value(followingMember.getId()));
     }
 
     @Test
@@ -199,8 +199,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                                 .param("limit", "10")
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(5))
-                .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()));
+                .andExpect(jsonPath("$.posts.length()").value(5))
+                .andExpect(jsonPath("$.posts[0].member_id").value(targetMember.getId()));
     }
 
     @Test
@@ -230,9 +230,9 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                                 .param("limit", "1")
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(1))
-                .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
-                .andExpect(jsonPath("$.data.posts[0].post_id").value(posts.getLast().getId()));
+                .andExpect(jsonPath("$.posts.length()").value(1))
+                .andExpect(jsonPath("$.posts[0].member_id").value(targetMember.getId()))
+                .andExpect(jsonPath("$.posts[0].post_id").value(posts.getLast().getId()));
 
         /*
          * [Offset 조회 검증]
@@ -246,9 +246,9 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                                 .param("lastPostId", posts.get(5).getId().toString())
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.posts.length()").value(1))
-                .andExpect(jsonPath("$.data.posts[0].member_id").value(targetMember.getId()))
-                .andExpect(jsonPath("$.data.posts[0].post_id").value(posts.get(4).getId()));
+                .andExpect(jsonPath("$.posts.length()").value(1))
+                .andExpect(jsonPath("$.posts[0].member_id").value(targetMember.getId()))
+                .andExpect(jsonPath("$.posts[0].post_id").value(posts.get(4).getId()));
     }
 
     private List<Post> createAndSaveMockPosts(Member member, int numPosts) {

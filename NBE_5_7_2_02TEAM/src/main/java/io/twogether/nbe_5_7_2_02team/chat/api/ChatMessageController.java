@@ -3,8 +3,6 @@ package io.twogether.nbe_5_7_2_02team.chat.api;
 import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMessagePostRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMessageGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatMessageService;
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
-import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenBody;
 
 import lombok.RequiredArgsConstructor;
@@ -35,11 +33,11 @@ public class ChatMessageController {
     private final ChatMessageService chatMessageService;
 
     @GetMapping("/{chatroomId}/message")
-    public ResponseEntity<BaseResponse<List<ChatMessageGetResponse>>> getChatMessageList(
+    public ResponseEntity<List<ChatMessageGetResponse>> getChatMessageList(
             @PathVariable Long chatroomId) {
         List<ChatMessageGetResponse> chatMessage = chatMessageService.getChatMessage(chatroomId);
 
-        return BaseResponse.of(SuccessCode.FOUND_CHAT_MESSAGE, chatMessage, null);
+        return ResponseEntity.ok(chatMessage);
     }
 
     @MessageMapping("/{chatroomId}/message")
@@ -115,12 +113,12 @@ public class ChatMessageController {
     }
 
     @DeleteMapping("/{chatroomId}/message")
-    public ResponseEntity<BaseResponse<Long>> deleteChatMessage(
+    public ResponseEntity<Long> deleteChatMessage(
             @PathVariable Long chatroomId,
             @RequestParam Long chatMessageId,
             @AuthenticationPrincipal UserDetails userDetails) {
         chatMessageService.deleteChatMessage(chatMessageId, chatroomId, userDetails);
 
-        return BaseResponse.of(SuccessCode.DELETE_CHAT_MESSAGE, chatroomId, null);
+        return ResponseEntity.ok(chatroomId);
     }
 }

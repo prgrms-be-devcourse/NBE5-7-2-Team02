@@ -1,7 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.oauth.api;
 
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
-import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.SignUpResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
@@ -13,14 +11,13 @@ import io.twogether.nbe_5_7_2_02team.oauth.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,25 +28,22 @@ public class TokenController {
     private final OAuthService oAuthService;
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<BaseResponse<TokenPair>> refresh(@RequestBody RefreshRequest request) {
+    public ResponseEntity<TokenPair> refresh(@RequestBody RefreshRequest request) {
         TokenPair newToken = tokenService.refreshToken(request.getRefreshToken());
-        return BaseResponse.of(SuccessCode.REFRESH_TOKEN, newToken, null);
+        return ResponseEntity.ok(newToken);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<BaseResponse<Void>> logout(@RequestBody LogoutRequest request) {
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequest request) {
         tokenService.invalidateRefreshToken(request.getRefreshToken());
-        return BaseResponse.of(SuccessCode.LOGOUT_TOKEN, null, null);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<BaseResponse<SignUpResponse>> signUp(
+    public ResponseEntity<SignUpResponse> signUp(
             @RequestBody SignUpRequest request,
             @AuthenticationPrincipal MemberDetails memberDetails) {
         SignUpResponse response = oAuthService.signup(request, memberDetails.getId());
-        return BaseResponse.of(
-                SuccessCode.SIGNUP_MEMBER,
-                response,
-                URI.create("/api/members/" + response.getId()));
+        return ResponseEntity.status(CREATED).body(response);
     }
 }

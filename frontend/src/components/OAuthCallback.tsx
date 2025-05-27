@@ -18,7 +18,7 @@ const OAuthCallback = () => {
       
       api.get("/member/me")
       .then(response => {
-        const {name, job, course} = response.data.data;
+        const {name, job, course} = response.data;
 
         if(!name || !job || !course) {
             navigate("/signup");

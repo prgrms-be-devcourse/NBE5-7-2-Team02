@@ -6,14 +6,6 @@ import ChatRoom from "../components/ChatRoom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// 1. API 응답의 전체 구조를 위한 인터페이스
-interface ApiChatRoomResponse {
-  code: string;
-  status: string;
-  message: string;
-  data: ServerChatRoom[]; // 서버 응답은 ServerChatRoom[] 타입으로 가정
-}
-
 // 2a. 서버 응답 객체의 인터페이스 (스네이크 케이스)
 interface ServerChatRoom {
   id: number;
@@ -71,10 +63,10 @@ function ChatRoomList() {
         return;
       }
 
-      const responseData: ApiChatRoomResponse = await res.json();
+      const responseData: ServerChatRoom[] = await res.json();
 
-      if (responseData && Array.isArray(responseData.data)) {
-        setItems(responseData.data);
+      if (responseData && Array.isArray(responseData)) {
+        setItems(responseData);
       } else {
         setItems([]);
         console.warn("[fetchData] API 응답에서 data 필드를 찾을 수 없거나 형식이 배열이 아닙니다.", responseData);
