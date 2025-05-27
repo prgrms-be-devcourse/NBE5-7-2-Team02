@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.member.api;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.http.HttpStatus.CREATED;
 
 import io.twogether.nbe_5_7_2_02team.member.dto.request.FollowRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,8 +66,7 @@ public class MyFollowController {
     }
 
     @GetMapping("/me/followers/count")
-    public ResponseEntity<Long> getFollwersCount(
-            @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Long> getFollwersCount(@AuthenticationPrincipal UserDetails userDetails) {
         Long count = followService.getFollowerCount(Long.parseLong(userDetails.getUsername()));
         return ResponseEntity.ok(count);
     }

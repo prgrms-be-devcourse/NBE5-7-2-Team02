@@ -115,9 +115,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         mockMvc.perform(get("/api/posts").param("limit", "10").param("isRecruit", "true"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.posts.length()").value(1))
-                .andExpect(
-                        jsonPath("$.posts[0].recruitment_status")
-                                .value(RECRUITING.toString()));
+                .andExpect(jsonPath("$.posts[0].recruitment_status").value(RECRUITING.toString()));
     }
 
     @Test

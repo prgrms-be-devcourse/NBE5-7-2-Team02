@@ -1,5 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import io.twogether.nbe_5_7_2_02team.chat.dto.request.ChatMemberUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatRoomGetResponse;
@@ -7,7 +9,6 @@ import io.twogether.nbe_5_7_2_02team.chat.service.ChatMemberService;
 
 import lombok.RequiredArgsConstructor;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

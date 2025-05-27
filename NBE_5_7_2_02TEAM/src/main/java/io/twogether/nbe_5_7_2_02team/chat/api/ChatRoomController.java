@@ -1,11 +1,12 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatRoomGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

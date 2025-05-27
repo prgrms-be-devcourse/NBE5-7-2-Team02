@@ -1,5 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.oauth.api;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.SignUpResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
@@ -11,7 +13,6 @@ import io.twogether.nbe_5_7_2_02team.oauth.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
