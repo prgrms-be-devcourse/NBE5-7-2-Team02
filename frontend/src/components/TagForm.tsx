@@ -26,7 +26,7 @@ export const TagForm = ({ externalTags = [], onTagsChange }: TagFormProps) => {
       try {
         const response = await api.get("/tags");
         if (response.status === 200) {
-          setAllTags(response.data.data.tags);
+          setAllTags(response.data.tags);
         }
       } catch (error) {
         console.error("Error fetching all tags:", error);

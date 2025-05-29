@@ -28,7 +28,7 @@ export default function MyPage() {
   const fetchUser = async () => {
     try {
       const res = await api.get(`/member/${postMemberId || "me"}`);
-      const raw = res.data.data;
+      const raw = res.data;
 
       const fetchedUser: Member = {
         id: raw.id,
@@ -67,7 +67,7 @@ export default function MyPage() {
         });
       } else {
         res = await api.post(`/follow/${user.id}`);
-        const data = res.data.data;
+        const data = res.data;
         setUser((prev) => prev && {
           ...prev,
           following: true,
@@ -89,7 +89,7 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    const raw = res.data.data;
+    const raw = res.data;
     const updatedUser: Member = {
       id: raw.id,
       username: raw.name,
@@ -115,7 +115,7 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
     const res = await api.get(
       user.owner ? `/follow/me/followers` : `/follow/public/${user.id}/followers`
     );
-    const list: Follow[] = res.data.data.content.map((f: any) => ({
+    const list: Follow[] = res.data.content.map((f: any) => ({
       id: f.id,
       username: f.name,
       profileImage: f.profile_image,
@@ -130,7 +130,7 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
     const res = await api.get(
       user.owner ? `/follow/me/followings` : `/follow/public/${user.id}/followings`
     );
-    const list: Follow[] = res.data.data.content.map((f: any) => ({
+    const list: Follow[] = res.data.content.map((f: any) => ({
       id: f.id,
       username: f.name,
       profileImage: f.profile_image,

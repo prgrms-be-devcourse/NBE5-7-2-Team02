@@ -1,9 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.post.api;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
-import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
@@ -29,8 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -39,75 +36,74 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BaseResponse<PostResponse>> createPost(
+    public ResponseEntity<PostResponse> createPost(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @ModelAttribute PostCreateRequest request) {
 
         PostResponse response =
                 postService.createPost(request, Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(
-                SuccessCode.CREATE_POST, response, URI.create("/api/posts/" + response.getId()));
+        return ResponseEntity.status(CREATED).body(response);
     }
 
     @PatchMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BaseResponse<PostResponse>> updatePost(
+    public ResponseEntity<PostResponse> updatePost(
             @PathVariable Long postId,
             @ModelAttribute PostUpdateRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
         PostResponse response =
                 postService.updatePost(postId, request, Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(SuccessCode.UPDATE_POST, response, null);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/{postId}")
-    public ResponseEntity<BaseResponse<Void>> deletePost(
+    public ResponseEntity<Void> deletePost(
             @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
         postService.deletePost(postId, Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(SuccessCode.DELETE_POST, null, null);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<PostGetResponse>> findFilteredPosts(
+    public ResponseEntity<PostGetResponse> findFilteredPosts(
             @ModelAttribute PostGetRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
         PostGetResponse response = postService.getFilteredPosts(request, userDetails);
         if (isEmpty(response.getPosts())) {
-            return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
+            return ResponseEntity.noContent().build();
         }
-        return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/member/{memberId}")
-    public ResponseEntity<BaseResponse<PostGetResponse>> findPosts(
+    public ResponseEntity<PostGetResponse> findPosts(
             @ModelAttribute PostGetRequest request, @PathVariable Long memberId) {
         PostGetResponse response = postService.getPostsByMember(request, memberId);
         if (isEmpty(response.getPosts())) {
-            return BaseResponse.of(SuccessCode.NO_CONTENT_POST, null, null);
+            return ResponseEntity.noContent().build();
         }
-        return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<BaseResponse<PostDetailResponse>> getPost(@PathVariable Long postId) {
+    public ResponseEntity<PostDetailResponse> getPost(@PathVariable Long postId) {
         PostDetailResponse response = postService.getPostById(postId);
-        return BaseResponse.of(SuccessCode.FOUND_POST, response, null);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{postId}/likes")
-    public ResponseEntity<BaseResponse<Void>> likePost(
+    public ResponseEntity<Void> likePost(
             @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
         postService.likePost(postId, Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(SuccessCode.LIKE_POST, null, null);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}/likes")
-    public ResponseEntity<BaseResponse<Void>> unlikePost(
+    public ResponseEntity<Void> unlikePost(
             @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
 
         postService.unlikePost(postId, Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(SuccessCode.UNLIKE_POST, null, null);
+        return ResponseEntity.ok().build();
     }
 }

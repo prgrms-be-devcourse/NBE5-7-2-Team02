@@ -24,7 +24,7 @@ export default function EditPostPage() {
     const fetchPost = async () => {
       try {
         const res = await api.get(`/posts/${postId}`);
-        const data = res.data?.data;
+        const data = res.data;
 
         if (!data) {
           console.error("게시글 데이터 없음");

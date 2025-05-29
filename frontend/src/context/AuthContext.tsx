@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       api.get("/member/me")
         .then(response => {
-          const raw = response.data.data;
+          const raw = response.data;
           const user: Member = {
             id: raw.id,
             username: raw.name,

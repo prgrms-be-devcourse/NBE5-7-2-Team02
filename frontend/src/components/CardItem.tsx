@@ -65,8 +65,8 @@ export const CardItem = ({ post }: CardItemProps) => {
 
       if (getChatroomResponse.ok) {
         const res = await getChatroomResponse.json();
-        if (res.data && res.data.id) {
-          resRoomId = res.data.id;
+        if (res && res.id) {
+          resRoomId = res.id;
         } else {
           console.error("채팅방 조회 성공했으나, 응답 데이터에 ID가 없습니다:", res);
           alert("채팅방 정보를 가져오는 중 오류가 발생했습니다. (데이터 형식 오류)");
@@ -80,8 +80,8 @@ export const CardItem = ({ post }: CardItemProps) => {
 
           if (getNewChatroomResponse.ok) {
             const newRes = await getNewChatroomResponse.json();
-            if (newRes.data && newRes.data.id) {
-              resRoomId = newRes.data.id;
+            if (newRes && newRes.id) {
+              resRoomId = newRes.id;
             } else {
               console.error("채팅방 생성 후 조회했으나, 응답 데이터에 ID가 없습니다:", newRes);
               alert("채팅방 생성 후 정보를 가져오는 중 오류가 발생했습니다. (데이터 형식 오류)");

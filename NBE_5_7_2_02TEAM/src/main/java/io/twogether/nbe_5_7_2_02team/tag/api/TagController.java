@@ -1,7 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.tag.api;
 
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
-import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.tag.dto.response.TagGetResponse;
 import io.twogether.nbe_5_7_2_02team.tag.service.TagService;
 
@@ -20,11 +18,11 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping
-    public ResponseEntity<BaseResponse<TagGetResponse>> getTag() {
+    public ResponseEntity<TagGetResponse> getTag() {
         TagGetResponse tagGetResponse = TagGetResponse.of(tagService.getAllTags());
 
         return tagGetResponse.getTags().isEmpty()
-                ? BaseResponse.of(SuccessCode.NO_CONTENT_TAG, null, null)
-                : BaseResponse.of(SuccessCode.FOUND_TAG, tagGetResponse, null);
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(tagGetResponse);
     }
 }

@@ -155,7 +155,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const resultContainer = await response.json();
-                const resultFromServer: ServerChatItem[] = resultContainer.data;
+                const resultFromServer: ServerChatItem[] = resultContainer;
                 if (Array.isArray(resultFromServer)) {
                     const mappedResult: ChatRes[] = resultFromServer.map((item) => ({
                         id: item.id,
@@ -196,7 +196,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json();
-                const serverParticipants: ServerChatParticipant[] = result.data || [];
+                const serverParticipants: ServerChatParticipant[] = result || [];
                 const mappedParticipants: ChatParticipant[] = serverParticipants.map((p) => ({
                     id: p.memberId,
                     name: p.memberName || "Unknown User",
