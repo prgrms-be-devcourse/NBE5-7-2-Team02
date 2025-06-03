@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 public class PostTag {
 
     @Id
-    @Column(name = "post_tag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

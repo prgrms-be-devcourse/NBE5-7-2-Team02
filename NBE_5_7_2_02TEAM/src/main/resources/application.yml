@@ -51,3 +51,17 @@ custom:
     secrets:
       origin-key: ${JWT_ORIGIN_KEY}
       app-key: ${JWT_APP_KEY}
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration/prod
+
+  jpa:
+    hibernate:
+      ddl-auto: none

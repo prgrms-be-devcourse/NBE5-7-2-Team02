@@ -31,7 +31,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collections;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class ChatMemberServiceTest {

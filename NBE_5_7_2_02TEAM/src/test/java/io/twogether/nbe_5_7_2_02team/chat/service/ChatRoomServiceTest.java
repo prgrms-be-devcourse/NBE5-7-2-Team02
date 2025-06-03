@@ -22,7 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 class ChatRoomServiceTest {
 

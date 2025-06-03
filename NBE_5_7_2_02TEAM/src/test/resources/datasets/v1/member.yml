@@ -1,0 +1,18 @@
+member:
+  - member_id: 1
+    name: 'backend'
+    github_id: 'be_github'
+    email: 'backend@test.com'
+    job: '백엔드 개발자'
+    course: '데브코스'
+    role: 'MEMBER'
+    created_at: 2025-06-03T15:36:35.223973
+
+  - member_id: 2
+    name: 'frontend'
+    github_id: 'fe_github'
+    email: 'frontend@test.com'
+    job: '프론트엔드 개발자'
+    course: '데브코스'
+    role: 'MEMBER'
+    created_at: 2025-06-04T15:36:35.223973

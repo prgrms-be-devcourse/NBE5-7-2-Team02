@@ -20,7 +20,6 @@ import java.util.List;
 public class Post extends BaseEntity {
 
     @Id
-    @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 public class RefreshTokenBlackList extends BaseEntity {
 
     @Id
-    @Column(name = "refresh_token_black_list_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 public class RefreshToken extends BaseEntity {
 
     @Id
-    @Column(name = "refresh_token_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
