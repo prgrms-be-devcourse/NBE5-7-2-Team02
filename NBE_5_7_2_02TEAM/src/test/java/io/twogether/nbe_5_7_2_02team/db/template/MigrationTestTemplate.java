@@ -1,15 +1,15 @@
 package io.twogether.nbe_5_7_2_02team.db.template;
 
-import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.sql.DataSource;
+
 @SpringBootTest
 public abstract class MigrationTestTemplate {
 
-    @Autowired
-    protected DataSource dataSource;
+    @Autowired protected DataSource dataSource;
 
     public void migrate(String targetVersion) {
         Flyway flyway = getFlyway(targetVersion);
@@ -24,10 +24,10 @@ public abstract class MigrationTestTemplate {
 
     private Flyway getFlyway(String targetVersion) {
         return Flyway.configure()
-            .cleanDisabled(false)
-            .dataSource(dataSource)
-            .locations("classpath:db/migration")
-            .target(targetVersion)
-            .load();
+                .cleanDisabled(false)
+                .dataSource(dataSource)
+                .locations("classpath:db/migration")
+                .target(targetVersion)
+                .load();
     }
 }

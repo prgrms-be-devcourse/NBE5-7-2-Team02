@@ -2,7 +2,6 @@ package io.twogether.nbe_5_7_2_02team.post.domain;
 
 import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
