@@ -23,7 +23,7 @@ function decodeJwtPayload(token: string): any | null {
         );
         return JSON.parse(jsonPayload);
     } catch (e) {
-        console.error("Failed to decode JWT payload:", e);
+        // console.error("Failed to decode JWT payload:", e);
         return null;
     }
 }
@@ -143,7 +143,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        console.error("Authentication error:", response.status, await response.text());
+                        // console.error("Authentication error:", response.status, await response.text());
                         setError("인증에 실패했습니다. 다시 로그인해주세요.");
                         return;
                     }
@@ -185,7 +185,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        console.error("Authentication error fetching participants:", response.status, await response.text());
+                        // console.error("Authentication error fetching participants:", response.status, await response.text());
                         return;
                     }
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -200,7 +200,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 }));
                 setParticipants(mappedParticipants);
             } catch (err: any) {
-                console.error("Failed to fetch participants:", err.message);
+                // console.error("Failed to fetch participants:", err.message);
                 setParticipants([]);
             } finally {
                 setLoadingParticipants(false);
@@ -311,7 +311,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!newMessage.trim() || !stompClientRef.current?.connected || currentMemberId === null) {
-            console.warn("[SendMessage] Cannot send: message empty, STOMP not connected, or currentMemberId is null.");
+            // console.warn("[SendMessage] Cannot send: message empty, STOMP not connected, or currentMemberId is null.");
             return;
         }
 
@@ -323,7 +323,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
             stompClientRef.current.publish({ destination: destination, body: JSON.stringify(messageToSend) });
             setNewMessage("");
         } catch (error) {
-            console.error("[SendMessage] Failed to send message:", error);
+            // console.error("[SendMessage] Failed to send message:", error);
         }
     };
 
@@ -332,17 +332,17 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     };
 
     const handleChangeParticipantState = (participantId: number) => {
-        console.log(`Change state for participant ID: ${participantId}`);
+        // console.log(`Change state for participant ID: ${participantId}`);
     };
 
     const handleSelfStatusChange = async (newStatus: string) => {
-        console.log(`My (ID: ${currentMemberId}) status changed to: ${newStatus}`);
+        // console.log(`My (ID: ${currentMemberId}) status changed to: ${newStatus}`);
     };
 
     const currentUserParticipant = participants.find((p) => p.id === currentMemberId);
 
     const handleBackButtonPress = () => {
-        console.log("[handleBackButtonPress] Back button pressed. Disconnecting STOMP and calling onBack.");
+        // console.log("[handleBackButtonPress] Back button pressed. Disconnecting STOMP and calling onBack.");
         disconnectStomp();
         onBack();
     };
