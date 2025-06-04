@@ -31,9 +31,9 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
           <div className="flex items-center mb-2">
             <h3 className="text-[15px] font-semibold text-[#050505] truncate">{chatRoom.title}</h3>
           </div>
-          <div className="text-[13px] text-[#65676b] mb-2">
+          {/* <div className="text-[13px] text-[#65676b] mb-2">
             Room ID: {chatRoom.id} • Post ID: {chatRoom.post_id}
-          </div>
+          </div> */}
           <button
             className="bg-[#1877f2] hover:bg-[#166fe5] text-white rounded-md py-2 text-sm font-medium transition-colors w-full"
             onClick={(e) => {
@@ -50,9 +50,9 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
           <div className="flex items-center">
             <div>
               <h3 className="text-[15px] font-semibold text-[#050505]">{chatRoom.title}</h3>
-              <div className="text-[13px] text-[#65676b]">
+              {/* <div className="text-[13px] text-[#65676b]">
                 Room ID: {chatRoom.id} • Post ID: {chatRoom.post_id}
-              </div>
+              </div> */}
             </div>
           </div>
           <button
