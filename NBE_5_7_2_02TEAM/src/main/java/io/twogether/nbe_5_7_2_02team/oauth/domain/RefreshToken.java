@@ -3,7 +3,6 @@ package io.twogether.nbe_5_7_2_02team.oauth.domain;
 import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +21,6 @@ import lombok.NoArgsConstructor;
 public class RefreshToken extends BaseEntity {
 
     @Id
-    @Column(name = "refresh_token_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

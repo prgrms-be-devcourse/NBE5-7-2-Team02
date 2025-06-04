@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 public class Follow extends BaseEntity {
 
     @Id
-    @Column(name = "follow_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
