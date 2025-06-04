@@ -24,6 +24,9 @@ spring:
     hibernate:
       ddl-auto: update
 
+  flyway:
+    enabled: false
+
   security:
     oauth2:
       client:

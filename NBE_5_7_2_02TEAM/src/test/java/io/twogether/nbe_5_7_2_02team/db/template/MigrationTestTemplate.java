@@ -24,10 +24,10 @@ public abstract class MigrationTestTemplate {
 
     private Flyway getFlyway(String targetVersion) {
         return Flyway.configure()
-                .cleanDisabled(false)
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .target(targetVersion)
-                .load();
+            .cleanDisabled(false)
+            .dataSource(dataSource)
+            .locations("classpath:db/migration/test")
+            .target(targetVersion)
+            .load();
     }
 }
