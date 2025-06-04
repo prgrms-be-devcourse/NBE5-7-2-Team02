@@ -21,8 +21,9 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
 
   return (
     <div
-      className={`bg-white rounded-lg p-4 mb-2 shadow-sm hover:shadow-md transition-all duration-200 border ${isActive ? "border-[#1877f2] bg-[#e7f3ff]" : "border-[#e4e6eb] hover:border-[#dddfe2]"
-        }`}
+      className={`bg-white rounded-lg p-4 mb-2 shadow-sm hover:shadow-md transition-all duration-200 border ${
+        isActive ? "border-[#1877f2] bg-[#e7f3ff]" : "border-[#e4e6eb] hover:border-[#dddfe2]"
+      }`}
       onClick={handleEnterRoom}
     >
       {isCompact ? (
@@ -47,16 +48,16 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
       ) : (
         // 기본 모드 (채팅방 목록만 표시될 때)
         <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <div>
-              <h3 className="text-[15px] font-semibold text-[#050505]">{chatRoom.title}</h3>
+          <div className="flex items-center flex-1 min-w-0 mr-3">
+            <div className="w-full">
+              <h3 className="text-[15px] font-semibold text-[#050505] truncate">{chatRoom.title}</h3>
               {/* <div className="text-[13px] text-[#65676b]">
                 Room ID: {chatRoom.id} • Post ID: {chatRoom.post_id}
               </div> */}
             </div>
           </div>
           <button
-            className="bg-[#1877f2] hover:bg-[#166fe5] text-white rounded-md px-4 py-2 text-sm font-medium transition-colors"
+            className="bg-[#1877f2] hover:bg-[#166fe5] text-white rounded-md px-4 py-2 text-sm font-medium transition-colors flex-shrink-0"
             onClick={(e) => {
               e.stopPropagation()
               handleEnterRoom()
