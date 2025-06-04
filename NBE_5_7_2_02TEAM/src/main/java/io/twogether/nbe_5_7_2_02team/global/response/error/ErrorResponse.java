@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 @JsonPropertyOrder({"code", "message", "errors"})
 public class ErrorResponse<T> {
     private final String code;
@@ -28,19 +26,5 @@ public class ErrorResponse<T> {
         this.code = code;
         this.message = message;
         this.errors = null;
-    }
-
-    public static ErrorResponse of(ErrorCode errorCode) {
-        return ErrorResponse.builder()
-            .code(errorCode.getCode())
-            .message(errorCode.getMessage())
-            .build();
-    }
-
-    public static ErrorResponse of(String code, String message) {
-        return ErrorResponse.builder()
-            .code(code)
-            .message(message)
-            .build();
     }
 }

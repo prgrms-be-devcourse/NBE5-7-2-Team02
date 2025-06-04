@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final OAuth2FailureHandler oauth2FailureHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .oauth2Login(
                         oauth -> {
                             oauth.successHandler(oAuth2SuccessHandler);
-                            oauth.failureHandler(oauth2FailureHandler);
+                            oauth.failureHandler(oAuth2FailureHandler);
                         })
                 .authorizeHttpRequests(
                         auth ->
