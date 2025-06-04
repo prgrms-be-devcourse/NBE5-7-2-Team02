@@ -370,12 +370,11 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <div className="flex-grow">
-                    <div className="font-bold text-[16px]">{postTitle || `채팅방 ${chatRoomId}`}</div>
-                </div>
-                <button
+                <div className="flex-grow max-w-[70%]">
+                    <div className="font-bold text-[16px] truncate">{postTitle || `채팅방 ${chatRoomId}`}</div>
+                </div>                <button
                     onClick={toggleParticipantsList}
-                    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"
+                    className="bg-transparent border-none cursor-pointer ml-auto text-[#1877f2] hover:text-[#166fe5]"
                     aria-label="Show chat participants"
                 >
                     <svg
