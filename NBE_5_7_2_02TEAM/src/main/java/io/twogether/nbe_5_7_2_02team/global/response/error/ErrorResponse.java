@@ -32,15 +32,12 @@ public class ErrorResponse<T> {
 
     public static ErrorResponse of(ErrorCode errorCode) {
         return ErrorResponse.builder()
-            .code(errorCode.getCode())
-            .message(errorCode.getMessage())
-            .build();
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
     }
 
     public static ErrorResponse of(String code, String message) {
-        return ErrorResponse.builder()
-            .code(code)
-            .message(message)
-            .build();
+        return ErrorResponse.builder().code(code).message(message).build();
     }
 }
