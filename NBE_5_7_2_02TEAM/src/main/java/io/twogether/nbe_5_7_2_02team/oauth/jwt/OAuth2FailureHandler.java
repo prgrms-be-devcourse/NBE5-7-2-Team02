@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -35,6 +35,6 @@ public class OAuth2FailureHandler implements AuthenticationFailureHandler {
 
         log.error("OAuth 인증 실패: {}", exception.getMessage());
 
-         response.sendRedirect(baseUrl+"?error=org");
+        response.sendRedirect(baseUrl + "?error=org");
     }
 }
