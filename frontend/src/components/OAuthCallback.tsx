@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"
 import api from "../api/axiosInstance";
@@ -7,11 +7,16 @@ const OAuthCallback = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
+    if (hasProcessed.current) return;
+    hasProcessed.current = true;
+
     const params = new URLSearchParams(location.search);
     const accessToken = params.get("accessToken");
     const refreshToken = params.get("refreshToken");
+    const error = params.get("error")
 
     if (accessToken && refreshToken) {
       login(accessToken, refreshToken);
@@ -30,8 +35,11 @@ const OAuthCallback = () => {
         console.error("사용자 정보 가져오기 실패: ", error);
         navigate("/login");
       });
+    } else if (error === "org") {
+      alert("프로그래머스 교육 과정에 등록된 사용자만 가입할 수 있습니다.");
+      navigate("/login");
     } else {
-      navigate("/login"); // 토큰 없으면 로그인 페이지로
+      navigate("/login");
     }
   }, [location, navigate, login]);
 

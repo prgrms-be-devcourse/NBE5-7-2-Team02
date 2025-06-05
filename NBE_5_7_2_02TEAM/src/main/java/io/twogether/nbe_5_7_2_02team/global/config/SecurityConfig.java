@@ -1,8 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.global.config;
 
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtAuthenticationFilter;
+import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2FailureHandler;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.OAuth2SuccessHandler;
-import io.twogether.nbe_5_7_2_02team.oauth.jwt.RestAuthenticationEntryPoint;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,12 +40,10 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(
-                        exception ->
-                                exception.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .oauth2Login(
                         oauth -> {
                             oauth.successHandler(oAuth2SuccessHandler);
+                            oauth.failureHandler(oAuth2FailureHandler);
                         })
                 .authorizeHttpRequests(
                         auth ->

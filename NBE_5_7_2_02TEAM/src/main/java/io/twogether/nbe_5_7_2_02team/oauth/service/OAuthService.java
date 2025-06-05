@@ -241,7 +241,7 @@ public class OAuthService extends DefaultOAuth2UserService {
                 organizations.stream().map(String::toLowerCase).anyMatch(ALLOWED_ORGS::contains);
 
         if (!hasPrgrms) {
-            throw new ErrorException(ErrorCode.OAUTH_PRGRMS_ORG_REQUIRED);
+            throw new OAuth2AuthenticationException("프로그래머스 교육 과정에 등록된 사용자만 가입할 수 있습니다.");
         }
     }
 
