@@ -117,13 +117,7 @@ export const CardItem = ({ post }: CardItemProps) => {
       navigate("/ChatRoomList");
     } catch (error: any) { // error 타입 명시
       console.error("채팅방 참여 처리 중 전체 오류 발생:", error);
-      let errorMessage = "채팅방 처리 중 오류가 발생했습니다.";
-      if (error.response && error.response.data && error.response.data.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      alert(errorMessage);
+      navigate(`/ChatRoomList`)
     }
   };
 
