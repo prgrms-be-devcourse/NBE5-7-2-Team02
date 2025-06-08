@@ -5,11 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
+import org.springframework.test.context.event.annotation.AfterTestClass;
 
 @SpringBootTest
 public abstract class MigrationTestTemplate {
 
-    @Autowired protected DataSource dataSource;
+    @Autowired private DataSource dataSource;
+    @Autowired private Flyway flyway;
+
+    @AfterTestClass
+    void tearDown() {
+        flyway.clean();
+    }
 
     public void migrate(String targetVersion) {
         Flyway flyway = getFlyway(targetVersion);

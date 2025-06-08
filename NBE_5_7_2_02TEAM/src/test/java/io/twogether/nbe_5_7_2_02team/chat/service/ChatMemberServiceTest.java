@@ -1,6 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.*;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+@FlywayReset
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc

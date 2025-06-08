@@ -1,9 +1,12 @@
 package io.twogether.nbe_5_7_2_02team.member.service;
 
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_DUPLICATION_FOLLOW;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.NOT_YOURSELF_FOLLOW;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+@FlywayReset
 @SpringBootTest
 @Transactional
 class FollowServiceTest {

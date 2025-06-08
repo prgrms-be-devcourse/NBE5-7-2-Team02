@@ -1,5 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.browser;
 
+import com.github.database.rider.core.api.dataset.DataSet;
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -7,33 +9,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.twogether.nbe_5_7_2_02team.browser.template.BrowserTestTemplate;
-import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
-import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+@FlywayReset
 public class TagBrowserSuccessTest extends BrowserTestTemplate {
 
-    @Autowired TagRepository tagRepository;
-
-    private final Random random = new Random();
-
     @Test
+    @DataSet(
+        value = {
+            "datasets/v2/member.yml",
+            "datasets/v2/post.yml",
+            "datasets/v2/tag.yml",
+        }
+    )
     @DisplayName("GET: /api/tags - 모든 태그 반환")
     void getAllTags() throws Exception {
         // given
-        List<String> tagNames = new ArrayList<>();
-        for (int i = 0; i < random.nextInt(10) + 1; i++) {
-            String tagName = "TAG-" + i;
-            tagRepository.save(new Tag(tagName));
-            tagNames.add(tagName);
-        }
+        String[] tagNames = {"TAG-1", "TAG-2"};
 
         // when & then
         mockMvc.perform(get("/api/tags"))
@@ -41,7 +35,7 @@ public class TagBrowserSuccessTest extends BrowserTestTemplate {
                 .andExpect(status().isOk())
                 .andExpect(
                         jsonPath("$.tags")
-                                .value(containsInAnyOrder(tagNames.toArray(new String[0]))));
+                                .value(containsInAnyOrder(tagNames)));
     }
 
     @Test

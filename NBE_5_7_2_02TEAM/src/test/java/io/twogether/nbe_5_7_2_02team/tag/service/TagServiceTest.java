@@ -1,9 +1,11 @@
 package io.twogether.nbe_5_7_2_02team.tag.service;
 
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@FlywayReset
 @SpringBootTest
 @Transactional
 class TagServiceTest {
