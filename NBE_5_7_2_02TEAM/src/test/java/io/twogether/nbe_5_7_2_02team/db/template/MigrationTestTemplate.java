@@ -3,9 +3,9 @@ package io.twogether.nbe_5_7_2_02team.db.template;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.event.annotation.AfterTestClass;
 
 import javax.sql.DataSource;
-import org.springframework.test.context.event.annotation.AfterTestClass;
 
 @SpringBootTest
 public abstract class MigrationTestTemplate {

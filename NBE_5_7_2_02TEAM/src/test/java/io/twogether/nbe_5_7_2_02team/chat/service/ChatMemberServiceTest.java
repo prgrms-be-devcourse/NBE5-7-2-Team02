@@ -1,8 +1,6 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
-import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.*;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,6 +12,7 @@ import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
