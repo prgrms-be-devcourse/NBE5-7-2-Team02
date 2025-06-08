@@ -20,7 +20,6 @@ import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,6 @@ import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.stream.Stream;
 
-@Slf4j
 @FlywayReset
 public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
