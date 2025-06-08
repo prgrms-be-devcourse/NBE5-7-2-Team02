@@ -46,10 +46,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @ParameterizedTest
     @MethodSource("postRequestProvider")
-    @DataSet(
-        value = "datasets/v2/member.yml",
-        cleanBefore = true, cleanAfter = true
-    )
+    @DataSet(value = "datasets/v2/member.yml", cleanBefore = true, cleanAfter = true)
     @DisplayName("POST: /api/posts 게시글 생성")
     void createPost(PostCreateRequest request) throws Exception {
         createPostHelper(request);
@@ -80,9 +77,9 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Test
     @DataSet(
-        value = {"datasets/v2/member.yml, datasets/v2/post.yml"},
-        cleanBefore = true, cleanAfter = true
-    )
+            value = {"datasets/v2/member.yml, datasets/v2/post.yml"},
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts 비회원 접근 - 필터 없음")
     void getPosts() throws Exception {
         // when & then
@@ -93,8 +90,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     @Test
     @DataSet(
             value = {"datasets/v2/member.yml, datasets/v2/post.yml"},
-            cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts 비회원 접근 - 모집 여부 필터링")
     void getPostsWithRecruitStatus() throws Exception {
         // when & then
@@ -112,8 +109,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                 "datasets/v2/post.yml",
                 "datasets/v2/tag.yml",
             },
-        cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts 비회원 접근 - 태그 필터링")
     void getPostsWithTag() throws Exception {
         // given
@@ -131,8 +128,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                 "datasets/v2/post.yml",
                 "datasets/v2/tag.yml",
             },
-        cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts 비회원 접근 - 여러 개 태그 필터링")
     void getPostsWithTags() throws Exception {
         // given
@@ -150,8 +147,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     @Test
     @DataSet(
             value = {"datasets/v2/member.yml", "datasets/v2/post.yml", "datasets/v2/follow.yml"},
-        cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts 회원 접근 - 팔로잉 필터링")
     void getPostsWithFollowing() throws Exception {
         // given
@@ -175,8 +172,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     @Test
     @DataSet(
             value = {"datasets/v2/member.yml, datasets/v2/post.yml"},
-        cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts/member/{memberId} 회원 접근 - 특정 멤버 작성 게시글 조회")
     void getPostsWithMemberId() throws Exception {
         // given
@@ -197,8 +194,8 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     @Test
     @DataSet(
             value = {"datasets/v2/member.yml, datasets/v2/post.yml"},
-        cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/posts/member/{memberId} 회원 접근 - 페이징 테스트")
     void getPostsPaging() throws Exception {
         // given

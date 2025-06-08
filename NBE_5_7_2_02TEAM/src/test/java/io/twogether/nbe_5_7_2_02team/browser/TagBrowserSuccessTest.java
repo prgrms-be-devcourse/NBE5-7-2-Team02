@@ -24,8 +24,8 @@ public class TagBrowserSuccessTest extends BrowserTestTemplate {
                 "datasets/v2/post.yml",
                 "datasets/v2/tag.yml",
             },
-        cleanBefore = true, cleanAfter = true
-    )
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/tags - 모든 태그 반환")
     void getAllTags() throws Exception {
         // given
