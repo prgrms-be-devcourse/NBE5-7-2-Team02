@@ -1,6 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.browser.template;
 
-import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 
 import io.twogether.nbe_5_7_2_02team.browser.config.MockTestConfig;
@@ -15,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @DBRider
 @FlywayReset
-@DataSet(cleanBefore = true, cleanAfter = true)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(MockTestConfig.class)
