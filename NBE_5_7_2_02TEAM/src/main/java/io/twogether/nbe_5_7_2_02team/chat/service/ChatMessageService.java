@@ -82,6 +82,10 @@ public class ChatMessageService {
 
         ChatMessage chatMessage = chatMessageRepository.findById(chatMessageId).get();
 
+        int messageCount = chatMessageRepository.findByChatRoom(chatRoom).size();
+
+        chatRoom.setMessageCount((long) messageCount);
+
         return ChatMessageGetResponse.from(chatMessage);
     }
 
