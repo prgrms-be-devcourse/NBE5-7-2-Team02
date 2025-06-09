@@ -2,9 +2,10 @@ package io.twogether.nbe_5_7_2_02team.chat.dto.response;
 
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
