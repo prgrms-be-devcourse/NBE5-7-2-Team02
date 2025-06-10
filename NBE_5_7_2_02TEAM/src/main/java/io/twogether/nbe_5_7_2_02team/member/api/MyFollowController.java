@@ -1,11 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.member.api;
 
-import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.*;
-
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.http.HttpStatus.CREATED;
 
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
-import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.FollowRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.FollowCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
@@ -26,8 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 @RequestMapping("/api/follow")
 @RequiredArgsConstructor
@@ -36,38 +31,50 @@ public class MyFollowController {
     private final FollowService followService;
 
     @PostMapping("/{targetId}")
-    public ResponseEntity<BaseResponse<FollowCreateResponse>> follow(
+    public ResponseEntity<FollowCreateResponse> follow(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long targetId) {
         FollowRequest followRequest =
                 FollowRequest.of(Long.parseLong(userDetails.getUsername()), targetId);
         FollowCreateResponse response = followService.createFollow(followRequest);
-        return BaseResponse.of(
-                SuccessCode.CREATE_FOLLOWER, response, URI.create("/api/follow/me/followings"));
+        return ResponseEntity.status(CREATED).body(response);
     }
 
     @DeleteMapping("/{targetId}")
-    public ResponseEntity<BaseResponse<Void>> unfollow(
+    public ResponseEntity<Void> unfollow(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long targetId) {
         followService.deleteFollow(
                 FollowRequest.of(Long.parseLong(userDetails.getUsername()), targetId));
-        return BaseResponse.of(DELETE_FOLLOWING, null, null);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me/followers")
-    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowers(
+    public ResponseEntity<Page<MemberCreateResponse>> getFollowers(
             @AuthenticationPrincipal UserDetails userDetails,
             @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followers =
                 followService.getFollowers(Long.parseLong(userDetails.getUsername()), pageable);
-        return BaseResponse.of(FOUND_FOLLOWS, followers, null);
+        return ResponseEntity.ok(followers);
     }
 
     @GetMapping("/me/followings")
-    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowings(
+    public ResponseEntity<Page<MemberCreateResponse>> getFollowings(
             @AuthenticationPrincipal UserDetails userDetails,
             @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followings =
                 followService.getFollowings(Long.parseLong(userDetails.getUsername()), pageable);
-        return BaseResponse.of(FOUND_FOLLOWS, followings, null);
+        return ResponseEntity.ok(followings);
+    }
+
+    @GetMapping("/me/followers/count")
+    public ResponseEntity<Long> getFollwersCount(@AuthenticationPrincipal UserDetails userDetails) {
+        Long count = followService.getFollowerCount(Long.parseLong(userDetails.getUsername()));
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/me/followings/count")
+    public ResponseEntity<Long> getFollwingsCount(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long count = followService.getFollowingCount(Long.parseLong(userDetails.getUsername()));
+        return ResponseEntity.ok(count);
     }
 }

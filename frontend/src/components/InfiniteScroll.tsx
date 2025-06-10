@@ -47,7 +47,7 @@ export const InfiniteScroll = ({
         return;
       }
 
-      const newPosts = response.data.data.posts ?? [];
+      const newPosts = response.data.posts ?? [];
 
       // Handle the case where there are no posts
       if (newPosts.length === 0) {

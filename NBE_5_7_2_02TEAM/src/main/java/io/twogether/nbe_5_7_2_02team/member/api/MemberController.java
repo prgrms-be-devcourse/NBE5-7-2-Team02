@@ -1,9 +1,5 @@
 package io.twogether.nbe_5_7_2_02team.member.api;
 
-import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.READ_MEMBER;
-import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.UPDATE_MEMBER;
-
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.request.UpdateProfileRequest;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberUpdateResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MyPageResponse;
@@ -34,18 +30,18 @@ public class MemberController {
 
     // 내 프로필 조회
     @GetMapping("/me")
-    public ResponseEntity<BaseResponse<MyPageResponse>> getMyProfile(
+    public ResponseEntity<MyPageResponse> getMyProfile(
             @AuthenticationPrincipal UserDetails userDetails) {
         MyPageResponse response =
                 memberService.getMemberPage(
                         Long.parseLong(userDetails.getUsername()),
                         Long.parseLong(userDetails.getUsername()));
-        return BaseResponse.of(READ_MEMBER, response, null);
+        return ResponseEntity.ok(response);
     }
 
     // 내 프로필 수정
     @PatchMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BaseResponse<MemberUpdateResponse>> updateMyProfile(
+    public ResponseEntity<MemberUpdateResponse> updateMyProfile(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestPart("nickname") String nickname,
             @RequestPart(value = "image", required = false) MultipartFile image) {
@@ -54,17 +50,17 @@ public class MemberController {
         Long memberId = Long.parseLong(userDetails.getUsername());
 
         MemberUpdateResponse response = memberService.updateProfile(memberId, request);
-        return BaseResponse.of(UPDATE_MEMBER, response, null);
+        return ResponseEntity.ok(response);
     }
 
     // 상대방 프로필 조회
     @GetMapping("/{memberId}")
-    public ResponseEntity<BaseResponse<MyPageResponse>> getOtherProfile(
+    public ResponseEntity<MyPageResponse> getOtherProfile(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long memberId) {
 
         MyPageResponse response =
                 memberService.getMemberPage(memberId, Long.parseLong(userDetails.getUsername()));
 
-        return BaseResponse.of(READ_MEMBER, response, null);
+        return ResponseEntity.ok(response);
     }
 }

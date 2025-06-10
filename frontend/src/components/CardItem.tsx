@@ -21,7 +21,6 @@ export const CardItem = ({ post }: CardItemProps) => {
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { user, isAuthenticated } = useAuth();
-  const [chatRoomId, setchatRoomId] = useState<string | undefined>(); // chatRoomId 타입 명시
 
   const [isLiked, setIsLiked] = useState(post.is_like);
   const [likeCount, setLikeCount] = useState(post.num_likes);
@@ -31,7 +30,7 @@ export const CardItem = ({ post }: CardItemProps) => {
       toast.info("로그인이 필요합니다.");
       return;
     }
-    navigate(`/mypage?memberId=${post.member_id}`);
+    navigate(`/mypage/${post.member_id}`);
   };
 
   const handleEdit = () => {
@@ -62,13 +61,12 @@ export const CardItem = ({ post }: CardItemProps) => {
     let resRoomId;
 
     try {
-      const getChatroomResponse = await fetch(`http://localhost:8080/api/chatroom/${post.post_id}`);
+      const getChatroomResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${post.post_id}`);
 
       if (getChatroomResponse.ok) {
         const res = await getChatroomResponse.json();
-        if (res.data && res.data.id) {
-          resRoomId = res.data.id;
-          setchatRoomId(resRoomId);
+        if (res && res.id) {
+          resRoomId = res.id;
         } else {
           console.error("채팅방 조회 성공했으나, 응답 데이터에 ID가 없습니다:", res);
           alert("채팅방 정보를 가져오는 중 오류가 발생했습니다. (데이터 형식 오류)");
@@ -78,13 +76,12 @@ export const CardItem = ({ post }: CardItemProps) => {
         const createResponse = await api.post(`/chatroom/${post.post_id}`);
 
         if (createResponse.status === 201 || createResponse.status === 200) {
-          const getNewChatroomResponse = await fetch(`http://localhost:8080/api/chatroom/${post.post_id}`);
+          const getNewChatroomResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${post.post_id}`);
 
           if (getNewChatroomResponse.ok) {
             const newRes = await getNewChatroomResponse.json();
-            if (newRes.data && newRes.data.id) {
-              resRoomId = newRes.data.id;
-              setchatRoomId(resRoomId);
+            if (newRes && newRes.id) {
+              resRoomId = newRes.id;
             } else {
               console.error("채팅방 생성 후 조회했으나, 응답 데이터에 ID가 없습니다:", newRes);
               alert("채팅방 생성 후 정보를 가져오는 중 오류가 발생했습니다. (데이터 형식 오류)");
@@ -113,8 +110,14 @@ export const CardItem = ({ post }: CardItemProps) => {
         return;
       }
 
-      await api.post(`/chatroom/${resRoomId}/member`);
-      navigate("/ChatRoomList");
+      try {
+        await api.post(`/chatroom/${resRoomId}/member`);
+      } catch (err) {
+        // TODO: 채팅방에 이미 멤버로 참여 중이면 post 요청 보내지 않도록 설정 필요
+        console.log("채팅방에 이미 멤버로 참여 중이면 post 요청 보내지 않도록 설정 필요");
+      }
+      
+      navigate("/chats");
     } catch (error: any) { // error 타입 명시
       console.error("채팅방 참여 처리 중 전체 오류 발생:", error);
       navigate(`/ChatRoomList`)
@@ -170,12 +173,12 @@ export const CardItem = ({ post }: CardItemProps) => {
           {user?.id === post.member_id && (
             <Dropdown inline renderTrigger={() => <HiOutlineDotsHorizontal className="text-xl cursor-pointer" />}>
               <div className="flex flex-col min-w-[80px] text-sm">
-                <button onClick={handleEdit} className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">
+                <button onClick={handleEdit} className="w-full px-4 py-2 text-left text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-500">
                   수정
                 </button>
                 <button
                   onClick={() => setShowDeleteModal(true)}
-                  className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-100"
+                  className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-100 dark:hover:bg-red-200"
                 >
                   삭제
                 </button>

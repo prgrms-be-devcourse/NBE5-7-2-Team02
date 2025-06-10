@@ -130,13 +130,17 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     }, [items])
 
     useEffect(() => {
+        setNewMessage("");
+    }, [chatRoomId]);
+
+    useEffect(() => {
         const fetchData = async () => {
             if (!chatRoomId) return;
             setLoading(true);
             setError(null);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/chatroom/${chatRoomId}/message`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${chatRoomId}/message`, {
                     method: 'GET',
                 });
 
@@ -150,7 +154,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const resultContainer = await response.json();
-                const resultFromServer: ServerChatItem[] = resultContainer.data;
+                const resultFromServer: ServerChatItem[] = resultContainer;
                 if (Array.isArray(resultFromServer)) {
                     const mappedResult: ChatRes[] = resultFromServer.map((item) => ({
                         id: item.id,
@@ -179,7 +183,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
             setLoadingParticipants(true);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/chatroom/${chatRoomId}/member`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${chatRoomId}/member`, {
                     method: 'GET',
                 });
 
@@ -191,7 +195,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json();
-                const serverParticipants: ServerChatParticipant[] = result.data || [];
+                const serverParticipants: ServerChatParticipant[] = result || [];
                 const mappedParticipants: ChatParticipant[] = serverParticipants.map((p) => ({
                     id: p.memberId,
                     name: p.memberName || "Unknown User",
@@ -222,10 +226,10 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         }
 
         const client = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:8080/ws/chatroom"),
-            // debug: (str) => {
-            //     console.log("STOMP DEBUG: " + str)
-            // },
+            webSocketFactory: () => new SockJS(`${import.meta.env.VITE_BASE_URL}/ws/chatroom`),
+            debug: (str) => {
+                console.log("STOMP DEBUG: " + str)
+            },
             reconnectDelay: 5000,
             connectHeaders: { Authorization: `Bearer ${token}` },
         });
@@ -370,28 +374,30 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <div className="flex-grow max-w-[70%]">
-                    <div className="font-bold text-[16px] truncate">{postTitle || `채팅방 ${chatRoomId}`}</div>
-                </div>                <button
-                    onClick={toggleParticipantsList}
-                    className="bg-transparent border-none cursor-pointer ml-auto text-[#1877f2] hover:text-[#166fe5]"
-                    aria-label="Show chat participants"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" />
-                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                    </svg>
-                </button>
+                <div className="flex-grow">
+                    <div className="font-bold text-[16px]">{postTitle || `채팅방 ${chatRoomId}`}</div>
+                </div>
+                {/* TODO: 채팅 Info 버튼 - 기능 구현 필요*/}
+                {/*<button*/}
+                {/*    onClick={toggleParticipantsList}*/}
+                {/*    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"*/}
+                {/*    aria-label="Show chat participants"*/}
+                {/*>*/}
+                {/*    <svg*/}
+                {/*        xmlns="http://www.w3.org/2000/svg"*/}
+                {/*        width="20"*/}
+                {/*        height="20"*/}
+                {/*        viewBox="0 0 24 24"*/}
+                {/*        fill="none"*/}
+                {/*        stroke="currentColor"*/}
+                {/*        strokeWidth="2"*/}
+                {/*        strokeLinecap="round"*/}
+                {/*        strokeLinejoin="round"*/}
+                {/*    >*/}
+                {/*        <circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" />*/}
+                {/*        <line x1="12" y1="8" x2="12.01" y2="8" />*/}
+                {/*    </svg>*/}
+                {/*</button>*/}
             </div>
 
             {/* Main Chat Area */}
@@ -586,7 +592,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                         value={newMessage}
                         onChange={handleMessageChange}
                         placeholder="메시지를 입력하세요..."
-                        className="flex-grow py-2 px-3 border border-[#e4e6eb] rounded-[20px] outline-none text-[14px]"
+                        className="flex-grow py-2 px-3 border border-[#e4e6eb] rounded-[20px] outline-none text-[14px] text-dark"
                     />
                     <button
                         type="submit"

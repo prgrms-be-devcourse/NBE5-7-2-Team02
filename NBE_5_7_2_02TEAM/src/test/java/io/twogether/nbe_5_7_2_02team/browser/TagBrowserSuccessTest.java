@@ -40,7 +40,7 @@ public class TagBrowserSuccessTest extends BrowserTestTemplate {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(
-                        jsonPath("$.data.tags")
+                        jsonPath("$.tags")
                                 .value(containsInAnyOrder(tagNames.toArray(new String[0]))));
     }
 

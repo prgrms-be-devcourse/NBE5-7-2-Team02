@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -224,13 +225,23 @@ public class OAuthService extends DefaultOAuth2UserService {
         return SignUpResponse.from(memberRepository.save(member));
     }
 
-    // organization에 "prgrms" 포함 여부 확인
+    private static final Set<String> ALLOWED_ORGS =
+            Set.of(
+                    "prgrms-web-devcourse",
+                    "prgrms-be-devcourse",
+                    "prgrms-fe-devcourse",
+                    "prgrms-ad-devcourse",
+                    "prgrms-aibe-devcourse",
+                    "prgrms-app-devcourse",
+                    "prgrms-linux-devcourse",
+                    "prgrms-fullcycle-devcourse");
+
     private void validatePrgrmsOrganization(List<String> organizations) {
         boolean hasPrgrms =
-                organizations.stream().anyMatch(org -> org.toLowerCase().contains("prgrms"));
+                organizations.stream().map(String::toLowerCase).anyMatch(ALLOWED_ORGS::contains);
 
         if (!hasPrgrms) {
-            throw new ErrorException(ErrorCode.OAUTH_PRGRMS_ORG_REQUIRED);
+            throw new OAuth2AuthenticationException("프로그래머스 교육 과정에 등록된 사용자만 가입할 수 있습니다.");
         }
     }
 

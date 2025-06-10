@@ -42,7 +42,7 @@ export function NavBar() {
           </NavbarBrand>
           <div className="flex md:order-2">
           <Link
-            to="/ChatRoomList"
+            to="/chats"
             className="inline-flex items-center justify-center mr-3 p-2 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             title="참여중인 채팅방 목록 보기"
           >

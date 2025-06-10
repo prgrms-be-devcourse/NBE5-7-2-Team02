@@ -15,7 +15,7 @@ export default function MyPage() {
   const navigate = useNavigate();
   const { setUser: setAuthUser } = useAuth();
   const [memberId, setMemberId] = useState<string | null>(null);
-  const { member_id } = useParams();
+  const { postMemberId } = useParams();
   const [limit] = useState<number>(10);
   const [user, setUser] = useState<Member | null>(null);
   const [showFollowers, setShowFollowers] = useState(false);
@@ -27,8 +27,8 @@ export default function MyPage() {
 // ✅ 사용자 정보 조회
   const fetchUser = async () => {
     try {
-      const res = await api.get(`/member/${member_id || "me"}`);
-      const raw = res.data.data;
+      const res = await api.get(`/member/${postMemberId || "me"}`);
+      const raw = res.data;
 
       const fetchedUser: Member = {
         id: raw.id,
@@ -43,13 +43,6 @@ export default function MyPage() {
       setUser(fetchedUser);
       setMemberId(raw.id?.toString()); // 여기가 InfiniteScroll에 들어감
 
-
-      // 👇 현재 로그인 사용자의 정보면 전역 상태도 동기화
-      if (!member_id || member_id === raw.id?.toString()) {
-        setAuthUser(fetchedUser);
-        localStorage.setItem("user", JSON.stringify(fetchedUser));
-      }
-
     } catch (e) {
       console.error("사용자 정보 조회 실패", e);
     }
@@ -57,18 +50,30 @@ export default function MyPage() {
 
   useEffect(() => {
     fetchUser();
-  }, [member_id]);
+  }, [postMemberId]);
 
-  // ✅ 팔로우 / 언팔로우 요청
+  // ✅ 팔로우 / 언팔로우 요청 및 수치 반영
   const handleFollowToggle = async () => {
     if (!user) return;
     try {
+      let res;
       if (user.following) {
         await api.delete(`/follow/${user.id}`);
+        // 팔로우 취소 시 count는 줄여줌
+        setUser((prev) => prev && {
+          ...prev,
+          following: false,
+          followerCount: prev.followerCount - 1
+        });
       } else {
-        await api.post(`/follow/${user.id}`);
+        res = await api.post(`/follow/${user.id}`);
+        const data = res.data;
+        setUser((prev) => prev && {
+          ...prev,
+          following: true,
+          followerCount: data.updated_follower_count,
+        });
       }
-      setUser((prev) => prev && { ...prev, following: !prev.following });
     } catch (e) {
       console.error("팔로우 상태 변경 실패", e);
     }
@@ -84,7 +89,7 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    const raw = res.data.data;
+    const raw = res.data;
     const updatedUser: Member = {
       id: raw.id,
       username: raw.name,
@@ -110,10 +115,10 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
     const res = await api.get(
       user.owner ? `/follow/me/followers` : `/follow/public/${user.id}/followers`
     );
-    const list: Follow[] = res.data.data.content.map((f: any) => ({
+    const list: Follow[] = res.data.content.map((f: any) => ({
       id: f.id,
       username: f.name,
-      profileImage: f.profileImage,
+      profileImage: f.profile_image,
     }));
     setFollowers(list);
     setShowFollowers(true);
@@ -125,10 +130,10 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
     const res = await api.get(
       user.owner ? `/follow/me/followings` : `/follow/public/${user.id}/followings`
     );
-    const list: Follow[] = res.data.data.content.map((f: any) => ({
+    const list: Follow[] = res.data.content.map((f: any) => ({
       id: f.id,
       username: f.name,
-      profileImage: f.profileImage,
+      profileImage: f.profile_image,
     }));
     setFollowings(list);
     setShowFollowings(true);
@@ -159,7 +164,9 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
           onClose={() => setShowFollowers(false)}
           title="팔로워"
           users={followers}
-          onProfileClick={(id) => navigate(`/mypage/${id}`)}
+          onProfileClick={(id) => {
+          setShowFollowers(false); // ✅ 추가
+          navigate(`/mypage/${id}`);}}
         />
 
         <FollowListModal
@@ -167,7 +174,9 @@ const handleSaveProfile = async (nickname: string, image: File | null) => {
           onClose={() => setShowFollowings(false)}
           title="팔로잉"
           users={followings}
-          onProfileClick={(id) => navigate(`/mypage/${id}`)}
+          onProfileClick={(id) => {
+          setShowFollowings(false); // ✅ 추가
+          navigate(`/mypage/${id}`);}}
         />
 
         <ProfileEditorModal

@@ -1,10 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.member.api;
 
-import static io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode.FOUND_FOLLOWS;
-
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
 import io.twogether.nbe_5_7_2_02team.member.dto.response.MemberCreateResponse;
 import io.twogether.nbe_5_7_2_02team.member.service.FollowService;
 
@@ -27,18 +24,30 @@ public class PublicFollowController {
     private final FollowService followService;
 
     @GetMapping("/{memberId}/followers")
-    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowers(
+    public ResponseEntity<Page<MemberCreateResponse>> getFollowers(
             @PathVariable Long memberId,
             @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followers = followService.getFollowers(memberId, pageable);
-        return BaseResponse.of(FOUND_FOLLOWS, followers, null);
+        return ResponseEntity.ok(followers);
     }
 
     @GetMapping("/{memberId}/followings")
-    public ResponseEntity<BaseResponse<Page<MemberCreateResponse>>> getFollowings(
+    public ResponseEntity<Page<MemberCreateResponse>> getFollowings(
             @PathVariable Long memberId,
             @PageableDefault(size = 20, sort = "id", direction = DESC) Pageable pageable) {
         Page<MemberCreateResponse> followings = followService.getFollowings(memberId, pageable);
-        return BaseResponse.of(FOUND_FOLLOWS, followings, null);
+        return ResponseEntity.ok(followings);
+    }
+
+    @GetMapping("/{memberId}/followers/count")
+    public ResponseEntity<Long> getFollwersCount(@PathVariable Long memberId) {
+        Long count = followService.getFollowerCount(memberId);
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/{memberId}/followings/count")
+    public ResponseEntity<Long> getFollwingsCount(@PathVariable Long memberId) {
+        Long count = followService.getFollowingCount(memberId);
+        return ResponseEntity.ok(count);
     }
 }

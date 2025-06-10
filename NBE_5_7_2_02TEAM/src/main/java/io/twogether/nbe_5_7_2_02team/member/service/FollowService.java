@@ -52,8 +52,10 @@ public class FollowService {
         }
 
         Follow follow = followRepository.save(new Follow(follower, following));
+        Long followerCount = followRepository.countByFollowing(following);
+        Long followingCount = followRepository.countByFollower(follower);
 
-        return FollowMapper.toFollowCreateResponse(follow);
+        return FollowMapper.toFollowCreateResponse(follow, followerCount, followingCount);
     }
 
     @Transactional
