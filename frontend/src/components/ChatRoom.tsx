@@ -190,9 +190,9 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 const serverParticipants: ServerChatParticipant[] = result || [];
                 const mappedParticipants: ChatParticipant[] = serverParticipants.map((p) => ({
                     id: p.memberId,
-                    name: p.memberName || "Unknown User",
-                    image: p.memberImage,
-                    status: p.chatMemberStatus || "UNKNOWN",
+                    name: p.member_name || "이름",
+                    image: p.member_image,
+                    status: p.chat_member_status || "상태",
                 }));
                 setParticipants(mappedParticipants);
             } catch (err: any) {
@@ -346,27 +346,26 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 <div className="flex-grow">
                     <div className="font-bold text-[16px]">{postTitle || `채팅방 ${chatRoomId}`}</div>
                 </div>
-                {/* TODO: 채팅 Info 버튼 - 기능 구현 필요*/}
-                {/*<button*/}
-                {/*    onClick={toggleParticipantsList}*/}
-                {/*    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"*/}
-                {/*    aria-label="Show chat participants"*/}
-                {/*>*/}
-                {/*    <svg*/}
-                {/*        xmlns="http://www.w3.org/2000/svg"*/}
-                {/*        width="20"*/}
-                {/*        height="20"*/}
-                {/*        viewBox="0 0 24 24"*/}
-                {/*        fill="none"*/}
-                {/*        stroke="currentColor"*/}
-                {/*        strokeWidth="2"*/}
-                {/*        strokeLinecap="round"*/}
-                {/*        strokeLinejoin="round"*/}
-                {/*    >*/}
-                {/*        <circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" />*/}
-                {/*        <line x1="12" y1="8" x2="12.01" y2="8" />*/}
-                {/*    </svg>*/}
-                {/*</button>*/}
+                <button
+                    onClick={toggleParticipantsList}
+                    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"
+                    aria-label="Show chat participants"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                    </svg>
+                </button>
             </div>
 
             {/* Main Chat Area */}
@@ -453,8 +452,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                 >
                                     <option value="ONLINE">ONLINE</option>
                                     <option value="OFFLINE">OFFLINE</option>
-                                    <option value="AWAY">AWAY (자리비움)</option>
-                                    <option value="DO_NOT_DISTURB">DO_NOT_DISTURB (방해금지)</option>
                                     <option value="LEFT">LEFT (나감)</option>
                                 </select>
                             </div>
