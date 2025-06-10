@@ -121,7 +121,9 @@ api.interceptors.response.use(
     const res = error.response;
     if (res?.data?.code && res?.data?.message) {
       console.error(`[${res.data.code}] ${res.data.message}`);
-      alert(res.data.message); // 💬 또는 toast, modal 등으로 교체 가능
+      if (res.data.code !== "CHAT-MEMBER-001") {
+        alert(res.data.message); // 💬 또는 toast, modal 등으로 교체 가능
+      }
     } else {
       alert("예기치 못한 오류가 발생했습니다.");
     }
