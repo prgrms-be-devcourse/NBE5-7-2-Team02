@@ -6,42 +6,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.database.rider.core.api.dataset.DataSet;
+
 import io.twogether.nbe_5_7_2_02team.browser.template.BrowserTestTemplate;
-import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
-import io.twogether.nbe_5_7_2_02team.tag.domain.Tag;
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+@FlywayReset
 public class TagBrowserSuccessTest extends BrowserTestTemplate {
 
-    @Autowired TagRepository tagRepository;
-
-    private final Random random = new Random();
-
     @Test
+    @DataSet(
+            value = {
+                "datasets/v2/member.yml",
+                "datasets/v2/post.yml",
+                "datasets/v2/tag.yml",
+            },
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("GET: /api/tags - 모든 태그 반환")
     void getAllTags() throws Exception {
         // given
-        List<String> tagNames = new ArrayList<>();
-        for (int i = 0; i < random.nextInt(10) + 1; i++) {
-            String tagName = "TAG-" + i;
-            tagRepository.save(new Tag(tagName));
-            tagNames.add(tagName);
-        }
+        String[] tagNames = {"TAG-1", "TAG-2"};
 
         // when & then
         mockMvc.perform(get("/api/tags"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(
-                        jsonPath("$.tags")
-                                .value(containsInAnyOrder(tagNames.toArray(new String[0]))));
+                .andExpect(jsonPath("$.tags").value(containsInAnyOrder(tagNames)));
     }
 
     @Test

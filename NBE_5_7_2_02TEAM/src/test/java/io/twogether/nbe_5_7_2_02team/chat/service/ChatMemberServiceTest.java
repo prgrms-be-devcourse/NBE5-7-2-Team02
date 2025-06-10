@@ -12,6 +12,7 @@ import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+@FlywayReset
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
