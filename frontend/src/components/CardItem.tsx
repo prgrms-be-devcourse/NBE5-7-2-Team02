@@ -213,7 +213,7 @@ export const CardItem = ({ post }: CardItemProps) => {
           )}
         </div>
 
-        <p className="font-normal text-gray-700 dark:text-gray-400">{post.content}</p>
+        <p className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre-wrap break-all">{post.content}</p>
 
         {post.images && post.images.length > 0 && (
           <div className="w-full mt-2">
