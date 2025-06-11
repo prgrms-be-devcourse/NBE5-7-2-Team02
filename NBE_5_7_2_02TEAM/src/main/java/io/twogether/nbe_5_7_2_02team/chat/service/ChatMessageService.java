@@ -80,11 +80,9 @@ public class ChatMessageService {
                                         .build())
                         .getId();
 
-        ChatMessage chatMessage = chatMessageRepository.findById(chatMessageId).get();
+        ChatMessage chatMessage = chatMessageRepository.findById(chatMessageId).orElseThrow();
 
-        int messageCount = chatMessageRepository.findByChatRoom(chatRoom).size();
-
-        chatRoom.setMessageCount((long) messageCount);
+        chatRoom.setLastChatId(chatMessageId);
 
         return ChatMessageGetResponse.from(chatMessage);
     }

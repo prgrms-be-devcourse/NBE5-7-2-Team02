@@ -34,8 +34,8 @@ public class ChatRoom extends BaseEntity {
     @Column(name = "member_count")
     private Long memberCount = 0L;
 
-    @Column(name = "message_count")
-    private Long messageCount = 0L;
+    @Column(name = "last_chat_id")
+    private Long lastChatId = 0L;
 
     @Builder(toBuilder = true)
     public ChatRoom(Post post) {
