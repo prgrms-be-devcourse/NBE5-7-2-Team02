@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,9 +21,12 @@ import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
+import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 
+import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
+import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 
 import org.junit.jupiter.api.DisplayName;
@@ -242,15 +246,15 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Test
     @DataSet(
-            value = {
-                "datasets/v2/member.yml",
-                "datasets/v2/post.yml",
-                "datasets/v2/tag.yml",
-            },
-            cleanBefore = true,
-            cleanAfter = true)
-    @DisplayName("DELETE: /api/posts/{postId} 회원 접근 - 게시글 삭제 시 연관 게시글이 없는 태그 또한 삭제")
-    void deletePostWithUnusedTags() throws Exception {
+        value = {
+            "datasets/v2/member.yml",
+            "datasets/v2/post.yml",
+            "datasets/v2/tag.yml",
+        },
+        cleanBefore = true,
+        cleanAfter = true)
+    @DisplayName("DELETE: /api/posts/{postId} 회원 접근 - 게시글 삭제 시 참조를 잃은 태그 또한 삭제")
+    void deletePostWithCheckingUnusedTags() throws Exception {
         // given
         long targetMemberId = 1L;
         long targetPostId = 2L;
@@ -264,6 +268,52 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
         // then : 2번 게시글 삭제 시 2번 태그는 참조를 잃어 삭제되어야 함
         assertThat(postRepository.findById(targetPostId).isPresent()).isFalse();
+        assertThat(tagRepository.findById(2L).isPresent()).isFalse();
+    }
+
+    @Test
+    @DataSet(
+        value = {
+            "datasets/v2/member.yml",
+            "datasets/v2/post.yml",
+            "datasets/v2/tag.yml",
+        },
+        cleanBefore = true,
+        cleanAfter = true)
+    @DisplayName("PATCH: /api/posts/{postId} 회원 접근 - 게시글 수정 시 참조를 잃은 태그 또한 삭제")
+    void patchPostWithCheckingUnusedTags() throws Exception {
+        // given
+        long targetMemberId = 1L;
+        long targetPostId = 2L;
+        TokenPair tokenPair = getTokenPair(targetMemberId);
+
+        PostUpdateRequest request = new PostUpdateRequest();
+        request.setTitle("NEW TITLE");
+        request.setContent("NEW CONTENT");
+        request.setRecruitmentStatus(DONE);
+
+        // when
+        mockMvc.perform(
+            patch("/api/posts/" + targetPostId)
+                .param("title", request.getTitle())
+                .param("content", request.getContent())
+                .param("recruitmentStatus", request.getRecruitmentStatus().name())
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
+            .andExpectAll(
+                status().isOk(),
+                jsonPath("$.id").value(targetPostId)
+            );
+
+        // then : 2번 게시글의 태그를 모두 삭제하는 것으로 2번 태그는 참조를 잃어 삭제되어야 함
+        Optional<Post> modifiedPostOptional = postRepository.findById(targetPostId);
+        assertThat(modifiedPostOptional.isPresent()).isTrue();
+
+        Post modifiedPost = modifiedPostOptional.get();
+        assertThat(modifiedPost.getTitle()).isEqualTo(request.getTitle());
+        assertThat(modifiedPost.getContent()).isEqualTo(request.getContent());
+        assertThat(modifiedPost.getRecruitmentStatus()).isEqualTo(request.getRecruitmentStatus());
+
         assertThat(tagRepository.findById(2L).isPresent()).isFalse();
     }
 

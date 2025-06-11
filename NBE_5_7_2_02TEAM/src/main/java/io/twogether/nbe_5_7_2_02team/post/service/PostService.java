@@ -96,13 +96,15 @@ public class PostService {
             }
         }
 
-        if (request.getTags() != null) {
-            postTagRepository.deleteAllByPost(updatePost);
-            deleteUnusedTags();
+        postTagRepository.deleteAllByPost(updatePost);
 
+        if (request.getTags() != null) {
             List<PostTag> newTags = postMapper.toPostTags(updatePost, request.getTags());
             postTagRepository.saveAll(newTags);
         }
+
+        deleteUnusedTags();
+
         return new PostResponse(updatePost.getId());
     }
 
