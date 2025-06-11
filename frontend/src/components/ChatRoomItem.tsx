@@ -4,6 +4,8 @@ interface ChatRoom {
   id: number
   post_id: number
   title: string
+  member_count: number;
+  updated_at: Date;
 }
 
 interface ChatRoomItemComponentProps {
@@ -32,9 +34,10 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
           <div className="flex items-center mb-2">
             <h3 className="text-[15px] font-semibold text-[#050505] truncate">{chatRoom.title}</h3>
           </div>
-          {/* <div className="text-[13px] text-[#65676b] mb-2">
-            Room ID: {chatRoom.id} • Post ID: {chatRoom.post_id}
-          </div> */}
+          <div className="text-[13px] text-[#65676b] mb-2">
+            멤버: {chatRoom.member_count}명</div>
+            <div className="text-[13px] text-[#65676b] mb-2"> 업데이트: {new Date(chatRoom.updated_at).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
+          </div >
           <button
             className="bg-[#1877f2] hover:bg-[#166fe5] text-white rounded-md py-2 text-sm font-medium transition-colors w-full"
             onClick={(e) => {
@@ -51,9 +54,9 @@ function ChatRoomItem({ chatRoom, onRoomSelect, isActive = false, isCompact = fa
           <div className="flex items-center flex-1 min-w-0 mr-3">
             <div className="w-full">
               <h3 className="text-[15px] font-semibold text-[#050505] truncate">{chatRoom.title}</h3>
-              {/* <div className="text-[13px] text-[#65676b]">
-                Room ID: {chatRoom.id} • Post ID: {chatRoom.post_id}
-              </div> */}
+              <div className="text-[13px] text-[#65676b]">
+                멤버: {chatRoom.member_count}명 • 업데이트: {new Date(chatRoom.updated_at).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}
+              </div>
             </div>
           </div>
           <button
