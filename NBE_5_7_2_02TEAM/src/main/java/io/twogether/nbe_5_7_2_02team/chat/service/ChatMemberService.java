@@ -81,9 +81,9 @@ public class ChatMemberService {
                                         .build())
                         .getId();
 
-        int size = chatMemberRepository.findByChatRoom(chatRoom).size();
+        long size = chatMemberRepository.countByChatRoom(chatRoom);
 
-        chatRoom.setMemberCount((long) size);
+        chatRoom.setMemberCount(size);
 
         return id;
     }
