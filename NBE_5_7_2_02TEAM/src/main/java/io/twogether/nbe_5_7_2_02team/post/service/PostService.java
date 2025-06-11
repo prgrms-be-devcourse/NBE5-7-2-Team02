@@ -25,6 +25,7 @@ import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
 
+import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,6 +47,7 @@ public class PostService {
     private final ImageUploader imageUploader;
     private final ChatRepository chatRepository;
     private final LikesRepository likesRepository;
+    private final TagRepository tagRepository;
 
     @Transactional
     public PostResponse createPost(PostCreateRequest request, Long memberId) {
@@ -96,6 +98,7 @@ public class PostService {
 
         if (request.getTags() != null) {
             postTagRepository.deleteAllByPost(updatePost);
+            deleteUnusedTags();
 
             List<PostTag> newTags = postMapper.toPostTags(updatePost, request.getTags());
             postTagRepository.saveAll(newTags);
@@ -119,6 +122,12 @@ public class PostService {
         chatRepository.deleteByPost(deletePost);
         imageUploader.deletePostImageByFolder(deletePost.getId());
         postRepository.delete(deletePost);
+        deleteUnusedTags();
+    }
+
+    private void deleteUnusedTags() {
+        List<Long> referredTagIds = postTagRepository.findAllTagIds();
+        tagRepository.deleteUnusedTags(referredTagIds);
     }
 
     @Transactional(readOnly = true)

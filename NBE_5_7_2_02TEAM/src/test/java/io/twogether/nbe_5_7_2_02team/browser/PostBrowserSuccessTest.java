@@ -4,7 +4,9 @@ import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.DONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.NONE;
 import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUITING;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,8 +19,10 @@ import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
+import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
+import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 import lombok.AllArgsConstructor;
 
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +39,10 @@ import java.util.stream.Stream;
 public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Autowired MemberRepository memberRepository;
+    @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @AllArgsConstructor
     static class PostCreateRequest {
@@ -232,6 +240,35 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
                         jsonPath("$.posts.length()").value(1),
                         jsonPath("$.posts[0].member_id").value(targetMemberId),
                         jsonPath("$.posts[0].post_id").value(1));
+    }
+
+    @Test
+    @DataSet(
+        value = {
+            "datasets/v2/member.yml",
+            "datasets/v2/post.yml",
+            "datasets/v2/tag.yml",
+        },
+        cleanBefore = true,
+        cleanAfter = true)
+    @DisplayName("DELETE: /api/posts/{postId} 회원 접근 - 게시글 삭제 시 연관 게시글이 없는 태그 또한 삭제")
+    void deletePostWithUnusedTags() throws Exception {
+        // given
+        long targetMemberId = 1L;
+        long targetPostId = 2L;
+        TokenPair tokenPair = getTokenPair(targetMemberId);
+
+        // when
+        mockMvc.perform(
+            delete("/api/posts/" + targetPostId)
+                .header("Authorization", "Bearer " + tokenPair.getAccessToken())
+        ).andExpect(
+            status().isOk()
+        );
+
+        // then : 2번 게시글 삭제 시 2번 태그는 참조를 잃어 삭제되어야 함
+        assertThat(postRepository.findById(targetPostId).isPresent()).isFalse();
+        assertThat(tagRepository.findById(2L).isPresent()).isFalse();
     }
 
     private TokenPair getTokenPair(Long memberId) {
