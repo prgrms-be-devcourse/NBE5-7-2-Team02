@@ -41,7 +41,7 @@ interface ChatRes {
 interface ServerChatItem {
     id: number
     member_id: number
-    member_name: string // 서버 응답에 이 필드가 포함되어야 가장 좋습니다.
+    member_name: string
     content: string
     created_at: string
 }
@@ -90,16 +90,14 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         const token = localStorage.getItem("accessToken");
         if (token) {
             const payload = decodeJwtPayload(token);
-            // Assuming the memberId is stored in a claim named 'memberId' or 'sub' (standard for subject)
-            // Adjust 'memberId' or 'sub' based on your actual JWT payload structure
             if (payload && payload.memberId) {
                 setCurrentMemberId(Number(payload.memberId));
-            } else if (payload && payload.sub) { // Fallback to 'sub' if 'memberId' is not present
+            } else if (payload && payload.sub) {
                 setCurrentMemberId(Number(payload.sub));
             }
         } else {
         }
-    }, []); // Run once on component mount
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -152,7 +150,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     const mappedResult: ChatRes[] = resultFromServer.map((item) => ({
                         id: item.id,
                         memberId: item.member_id,
-                        memberName: item.member_name, // 초기 로딩 시에는 서버가 이름을 줄 것으로 기대
+                        memberName: item.member_name,
                         content: item.content,
                         createdAt: new Date(item.created_at),
                     }));
@@ -247,7 +245,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                         const mappedData: ChatRes = {
                             id: serverData.id,
                             memberId: serverData.member_id,
-                            memberName: memberName, // 수정된 이름 사용
+                            memberName: memberName,
                             content: serverData.content,
                             createdAt: new Date(serverData.created_at),
                         };
@@ -292,8 +290,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
             return;
         }
 
-        // 메시지 전송 시에는 chatMemberName을 보내지 않습니다.
-        // 서버가 memberId를 기반으로 조회하여 응답 메시지에 포함시켜야 합니다.
         const messageToSend = { memberId: currentMemberId, content: newMessage };
         const destination = `/pub/${chatRoomId}/message`;
         try {
@@ -422,22 +418,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                         <div className="p-4 border-b border-[#e4e6eb] flex justify-between items-center bg-gradient-to-r from-[#f0f2f5] to-white">
                             <h3 className="font-bold text-md text-[#1877f2]">참여중인 멤버</h3>
                         </div>
-
-                        {/* TODO: 상태 변경 기능 보수 */}
-                        {/* {currentUserParticipant && (
-                            <div className="p-4 border-b border-[#e4e6eb] bg-[#f7f9fb]">
-                                <div className="text-xs font-bold uppercase text-[#65676B] mb-2">내 상태</div>
-                                <select
-                                    className="w-full p-2 bg-white border border-[#e4e6eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1877f2] focus:border-transparent"
-                                    value={currentUserParticipant.status || "ONLINE"}
-                                    onChange={(e) => handleSelfStatusChange(e.target.value)}
-                                >
-                                    <option value="ONLINE">ONLINE</option>
-                                    <option value="OFFLINE">OFFLINE</option>
-                                    <option value="LEFT">LEFT (나감)</option>
-                                </select>
-                            </div>
-                        )} */}
 
                         <div className="flex-grow p-2">
                             {loadingParticipants && (
