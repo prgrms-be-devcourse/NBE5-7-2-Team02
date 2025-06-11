@@ -189,7 +189,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 const result = await response.json();
                 const serverParticipants: ServerChatParticipant[] = result || [];
                 const mappedParticipants: ChatParticipant[] = serverParticipants.map((p) => ({
-                    id: p.memberId,
+                    id: p.member_id,
                     name: p.member_name || "이름",
                     image: p.member_image,
                     status: p.chat_member_status || "상태",
@@ -421,28 +421,10 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     <div className="absolute top-0 right-0 w-64 md:w-72 lg:w-80 h-full bg-white/95 backdrop-blur-sm flex flex-col overflow-y-auto transition-all duration-300 ease-in-out shadow-lg z-10 border-l border-[#e4e6eb]">
                         <div className="p-4 border-b border-[#e4e6eb] flex justify-between items-center bg-gradient-to-r from-[#f0f2f5] to-white">
                             <h3 className="font-bold text-md text-[#1877f2]">참여중인 멤버</h3>
-                            <button
-                                onClick={toggleParticipantsList}
-                                className="text-[#65676B] hover:text-[#1877f2] transition-colors"
-                                aria-label="Close participants list"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
                         </div>
 
-                        {currentUserParticipant && (
+                        {/* TODO: 상태 변경 기능 보수 */}
+                        {/* {currentUserParticipant && (
                             <div className="p-4 border-b border-[#e4e6eb] bg-[#f7f9fb]">
                                 <div className="text-xs font-bold uppercase text-[#65676B] mb-2">내 상태</div>
                                 <select
@@ -455,7 +437,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                     <option value="LEFT">LEFT (나감)</option>
                                 </select>
                             </div>
-                        )}
+                        )} */}
 
                         <div className="flex-grow p-2">
                             {loadingParticipants && (
@@ -490,7 +472,10 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                             key={participant.id}
                                             className="flex items-center justify-between p-2 hover:bg-[#f0f2f5] rounded-md transition-colors"
                                         >
-                                            <div className="flex items-center">
+                                            <button
+                                                onClick={() => window.location.href = `/mypage/${participant.id}`}
+                                                className="flex items-center w-full text-left hover:bg-[#f0f2f5] rounded-md p-1 transition-colors cursor-pointer"
+                                            >
                                                 {participant.image ? (
                                                     <img
                                                         src={participant.image || "/placeholder.svg"}
@@ -517,30 +502,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                                             : "상태 없음"}
                                                     </div>
                                                 </div>
-                                            </div>
-                                            {participant.id !== currentMemberId && (
-                                                <button
-                                                    onClick={() => handleChangeParticipantState(participant.id)}
-                                                    className="text-xs bg-white hover:bg-[#f0f2f5] text-[#1877f2] border border-[#e4e6eb] py-1 px-2 rounded-md transition-colors"
-                                                    aria-label={`${participant.name || "참가자"}님 상태 변경`}
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="12"
-                                                        height="12"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        className="inline"
-                                                    >
-                                                        <circle cx="12" cy="12" r="1"></circle> <circle cx="19" cy="12" r="1"></circle>
-                                                        <circle cx="5" cy="12" r="1"></circle>
-                                                    </svg>
-                                                </button>
-                                            )}
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
