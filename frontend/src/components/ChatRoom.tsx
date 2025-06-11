@@ -280,7 +280,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         return () => {
             disconnectStomp();
         };
-    }, [chatRoomId]); // participants를 의존성 배열에 추가 (memberName 찾기 위해)
+    }, [chatRoomId]);
 
     const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewMessage(event.target.value);
