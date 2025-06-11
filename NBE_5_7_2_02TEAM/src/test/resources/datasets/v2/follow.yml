@@ -1,0 +1,6 @@
+# member[1] follows member[2]
+
+follow:
+  - id: 1
+    follower_id: 1
+    following_id: 2

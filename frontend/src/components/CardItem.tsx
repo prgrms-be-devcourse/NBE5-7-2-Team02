@@ -12,6 +12,7 @@ import { DeleteConfirmModal } from "./mypage/DeleteConfirmModal";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import dayjs from 'dayjs';
 
 interface CardItemProps {
   post: Post;
@@ -120,13 +121,7 @@ export const CardItem = ({ post }: CardItemProps) => {
       navigate("/chats");
     } catch (error: any) { // error 타입 명시
       console.error("채팅방 참여 처리 중 전체 오류 발생:", error);
-      let errorMessage = "채팅방 처리 중 오류가 발생했습니다.";
-      if (error.response && error.response.data && error.response.data.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      alert(errorMessage);
+      navigate(`/ChatRoomList`)
     }
   };
 
@@ -196,7 +191,10 @@ export const CardItem = ({ post }: CardItemProps) => {
         <div className="flex items-center justify-between mb-2 mt-2">
           <div className={`flex items-center space-x-4 cursor-pointer w-full`} onClick={handleMemberClick}>
             <Avatar img={post.member_image} />
-            <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{post.member_name}</p>
+            <div className="flex flex-col space-y-1">
+              <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{post.member_name}</p>
+              <p className="text-xs text-gray-500">{dayjs(post.created_at).format('YYYY.MM.DD HH:mm:ss')}</p>
+            </div>
           </div>
         </div>
 
@@ -215,7 +213,7 @@ export const CardItem = ({ post }: CardItemProps) => {
           )}
         </div>
 
-        <p className="font-normal text-gray-700 dark:text-gray-400">{post.content}</p>
+        <p className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre-wrap break-all">{post.content}</p>
 
         {post.images && post.images.length > 0 && (
           <div className="w-full mt-2">

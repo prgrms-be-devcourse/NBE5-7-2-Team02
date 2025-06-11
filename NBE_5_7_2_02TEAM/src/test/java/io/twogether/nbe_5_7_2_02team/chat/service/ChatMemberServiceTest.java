@@ -12,6 +12,7 @@ import io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus;
 import io.twogether.nbe_5_7_2_02team.chat.domain.ChatRoom;
 import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatMemberGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
+import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+@FlywayReset
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -118,13 +120,9 @@ class ChatMemberServiceTest {
         System.out.println("========================================");
         for (ChatMemberGetResponse chatMemberGetResponse : chatMemberGetResponseList) {
             System.out.println(
-                    "chatMemberResponse ChatroomId: " + chatMemberGetResponse.getChatroomId());
-            System.out.println(
                     "chatMemberResponse MemberId: " + chatMemberGetResponse.getMemberId());
             System.out.println(
                     "chatMemberResponse MemberName: " + chatMemberGetResponse.getMemberName());
-            System.out.println(
-                    "chatMemberResponse CreatedAt: " + chatMemberGetResponse.getCreatedAt());
         }
         System.out.println("========================================");
     }

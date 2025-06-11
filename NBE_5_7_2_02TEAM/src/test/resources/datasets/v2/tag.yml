@@ -1,0 +1,22 @@
+# post[1]: TAG-1
+# post[2]: TAG-1, TAG-2
+
+tag:
+  - id: 1
+    name: "TAG-1"
+
+  - id: 2
+    name: "TAG-2"
+
+post_tag:
+  - id: 1
+    post_id: 1
+    tag_id: 1
+
+  - id: 2
+    post_id: 2
+    tag_id: 1
+
+  - id: 3
+    post_id: 2
+    tag_id: 2

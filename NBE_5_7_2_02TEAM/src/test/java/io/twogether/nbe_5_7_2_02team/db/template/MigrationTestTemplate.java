@@ -3,13 +3,20 @@ package io.twogether.nbe_5_7_2_02team.db.template;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.event.annotation.AfterTestClass;
 
 import javax.sql.DataSource;
 
 @SpringBootTest
 public abstract class MigrationTestTemplate {
 
-    @Autowired protected DataSource dataSource;
+    @Autowired private DataSource dataSource;
+    @Autowired private Flyway flyway;
+
+    @AfterTestClass
+    void tearDown() {
+        flyway.clean();
+    }
 
     public void migrate(String targetVersion) {
         Flyway flyway = getFlyway(targetVersion);
