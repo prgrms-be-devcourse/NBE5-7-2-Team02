@@ -23,10 +23,9 @@ import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostUpdateRequest;
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
-import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @FlywayReset
@@ -246,13 +246,13 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Test
     @DataSet(
-        value = {
-            "datasets/v2/member.yml",
-            "datasets/v2/post.yml",
-            "datasets/v2/tag.yml",
-        },
-        cleanBefore = true,
-        cleanAfter = true)
+            value = {
+                "datasets/v2/member.yml",
+                "datasets/v2/post.yml",
+                "datasets/v2/tag.yml",
+            },
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("DELETE: /api/posts/{postId} 회원 접근 - 게시글 삭제 시 참조를 잃은 태그 또한 삭제")
     void deletePostWithCheckingUnusedTags() throws Exception {
         // given
@@ -273,13 +273,13 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Test
     @DataSet(
-        value = {
-            "datasets/v2/member.yml",
-            "datasets/v2/post.yml",
-            "datasets/v2/tag.yml",
-        },
-        cleanBefore = true,
-        cleanAfter = true)
+            value = {
+                "datasets/v2/member.yml",
+                "datasets/v2/post.yml",
+                "datasets/v2/tag.yml",
+            },
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("PATCH: /api/posts/{postId} 회원 접근 - 게시글 수정 시 참조를 잃은 태그 또한 삭제")
     void patchPostWithCheckingUnusedTags() throws Exception {
         // given
@@ -294,16 +294,13 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
         // when
         mockMvc.perform(
-            patch("/api/posts/" + targetPostId)
-                .param("title", request.getTitle())
-                .param("content", request.getContent())
-                .param("recruitmentStatus", request.getRecruitmentStatus().name())
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
-            .andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").value(targetPostId)
-            );
+                        patch("/api/posts/" + targetPostId)
+                                .param("title", request.getTitle())
+                                .param("content", request.getContent())
+                                .param("recruitmentStatus", request.getRecruitmentStatus().name())
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
+                .andExpectAll(status().isOk(), jsonPath("$.id").value(targetPostId));
 
         // then : 2번 게시글의 태그를 모두 삭제하는 것으로 2번 태그는 참조를 잃어 삭제되어야 함
         Optional<Post> modifiedPostOptional = postRepository.findById(targetPostId);
