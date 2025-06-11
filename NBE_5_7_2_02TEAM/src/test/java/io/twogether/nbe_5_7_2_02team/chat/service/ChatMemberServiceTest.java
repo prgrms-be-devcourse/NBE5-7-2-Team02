@@ -120,13 +120,9 @@ class ChatMemberServiceTest {
         System.out.println("========================================");
         for (ChatMemberGetResponse chatMemberGetResponse : chatMemberGetResponseList) {
             System.out.println(
-                    "chatMemberResponse ChatroomId: " + chatMemberGetResponse.getChatroomId());
-            System.out.println(
                     "chatMemberResponse MemberId: " + chatMemberGetResponse.getMemberId());
             System.out.println(
                     "chatMemberResponse MemberName: " + chatMemberGetResponse.getMemberName());
-            System.out.println(
-                    "chatMemberResponse CreatedAt: " + chatMemberGetResponse.getCreatedAt());
         }
         System.out.println("========================================");
     }
