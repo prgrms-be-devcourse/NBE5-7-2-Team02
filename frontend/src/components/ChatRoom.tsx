@@ -417,6 +417,33 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     <div className="absolute top-0 right-0 w-64 md:w-72 lg:w-80 h-full bg-white/95 backdrop-blur-sm flex flex-col overflow-y-auto transition-all duration-300 ease-in-out shadow-lg z-10 border-l border-[#e4e6eb]">
                         <div className="p-4 border-b border-[#e4e6eb] flex justify-between items-center bg-gradient-to-r from-[#f0f2f5] to-white">
                             <h3 className="font-bold text-md text-[#1877f2]">참여중인 멤버</h3>
+                            <button
+                                onClick={() => {
+                                    if (window.confirm("채팅방을 나가시겠습니까?")) {
+                                        disconnectStomp()
+                                        onBack()
+                                    }
+                                }}
+                                className="bg-transparent border-none cursor-pointer text-black hover:text-gray-600"
+                                aria-label="Leave chat room"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16,17 21,12 16,7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                            </button>
+
                         </div>
 
                         <div className="flex-grow p-2">
