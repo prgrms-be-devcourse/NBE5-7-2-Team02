@@ -5,9 +5,6 @@ import { useState, useEffect, useRef } from "react"
 import { Client, type IMessage, type StompSubscription } from "@stomp/stompjs"
 import SockJS from "sockjs-client"
 
-// Helper function to decode JWT
-// WARNING: This is a very basic decoder and does not verify the token signature.
-// For production, use a library like jwt-decode and ensure server-side verification.
 function decodeJwtPayload(token: string): any | null {
     try {
         const base64Url = token.split('.')[1];
@@ -23,7 +20,6 @@ function decodeJwtPayload(token: string): any | null {
         );
         return JSON.parse(jsonPayload);
     } catch (e) {
-        // console.error("Failed to decode JWT payload:", e);
         return null;
     }
 }
@@ -83,6 +79,12 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
     const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
+    const participantsRef = useRef(participants);
+
+    useEffect(() => {
+        participantsRef.current = participants;
+    }, [participants]);
+
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
@@ -94,12 +96,8 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 setCurrentMemberId(Number(payload.memberId));
             } else if (payload && payload.sub) { // Fallback to 'sub' if 'memberId' is not present
                 setCurrentMemberId(Number(payload.sub));
-                // console.log("[Auth] Current member ID set from JWT 'sub' claim:", payload.sub);
-            } else {
-                // console.warn("[Auth] Could not find memberId or sub in JWT payload.", payload);
             }
         } else {
-            // console.warn("[Auth] No accessToken found in localStorage for setting currentMemberId.");
         }
     }, []); // Run once on component mount
 
@@ -109,18 +107,14 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
     // STOMP 연결 해제 함수
     const disconnectStomp = () => {
-        // console.log("[STOMP Disconnect Function] Attempting to disconnect STOMP client.");
         if (subscriptionRef.current) {
             subscriptionRef.current.unsubscribe();
             subscriptionRef.current = null;
-            // console.log("[STOMP Disconnect Function] Unsubscribed from STOMP topic.");
         }
         if (stompClientRef.current?.active) {
             stompClientRef.current.deactivate();
             stompClientRef.current = null;
-            // console.log("[STOMP Disconnect Function] Deactivated STOMP client.");
         } else {
-            // console.log("[STOMP Disconnect Function] STOMP client not active or already null.");
         }
     };
 
@@ -147,7 +141,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        // console.error("Authentication error:", response.status, await response.text());
                         setError("인증에 실패했습니다. 다시 로그인해주세요.");
                         return;
                     }
@@ -189,7 +182,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        // console.error("Authentication error fetching participants:", response.status, await response.text());
                         return;
                     }
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -197,14 +189,13 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 const result = await response.json();
                 const serverParticipants: ServerChatParticipant[] = result || [];
                 const mappedParticipants: ChatParticipant[] = serverParticipants.map((p) => ({
-                    id: p.member_id,
-                    name: p.member_name || "이름",
-                    image: p.member_image,
-                    status: p.chat_member_status || "상태",
+                    id: p.memberId,
+                    name: p.memberName || "Unknown User",
+                    image: p.memberImage,
+                    status: p.chatMemberStatus || "UNKNOWN",
                 }));
                 setParticipants(mappedParticipants);
             } catch (err: any) {
-                // console.error("Failed to fetch participants:", err.message);
                 setParticipants([]);
             } finally {
                 setLoadingParticipants(false);
@@ -222,13 +213,11 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         const token = localStorage.getItem("accessToken");
 
         if (!token) {
-            // console.warn("[STOMP Setup] No accessToken found in localStorage. STOMP connection might fail or be unauthorized.");
         }
 
         const client = new Client({
             webSocketFactory: () => new SockJS(`${import.meta.env.VITE_BASE_URL}/ws/chatroom`),
             debug: (str) => {
-                console.log("STOMP DEBUG: " + str)
             },
             reconnectDelay: 5000,
             connectHeaders: { Authorization: `Bearer ${token}` },
@@ -236,21 +225,16 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
 
         client.onConnect = (frame) => {
-            // console.log("[STOMP] Connected to server:", frame);
             stompClientRef.current = client;
             const topic = `/sub/${chatRoomId}/message`;
             subscriptionRef.current = client.subscribe(topic, (message: IMessage) => {
-                // console.log("[STOMP MSG RECEIVED] Raw body (string):", message.body);
                 try {
-                    const serverData: ServerChatItem = JSON.parse(message.body); // 직접 파싱
-                    // console.log("[STOMP MSG RECEIVED] Parsed serverData (object):", serverData);
-
-                    // serverData가 유효한지 확인 (id 필드 존재 여부 등)
+                    const serverData: ServerChatItem = JSON.parse(message.body);
                     if (serverData && typeof serverData.id !== 'undefined') {
-                        // chat_member_name이 STOMP 메시지에 없다면, participants 목록에서 찾거나 임시 이름 사용
-                        let memberName = serverData.member_name; // 서버가 이름을 준다면 사용
+                        let memberName = serverData.member_name;
                         if (!memberName) {
-                            const participant = participants.find(p => p.id === serverData.member_id);
+                            // ref를 사용해서 최신 participants 목록을 참조
+                            const participant = participantsRef.current.find(p => p.id === serverData.member_id);
                             memberName = participant ? participant.name : `User ${serverData.member_id}`;
                         }
                         if (!memberName && serverData.member_id === currentMemberId) {
@@ -267,46 +251,36 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                             content: serverData.content,
                             createdAt: new Date(serverData.created_at),
                         };
-                        // console.log("[STOMP] Mapped data for state update:", mappedData);
 
                         setItems((prevItems) => {
                             const currentItems = Array.isArray(prevItems) ? prevItems : [];
                             const exists = currentItems.some((item) => item.id === mappedData.id);
                             if (exists) {
-                                // console.warn(`[STOMP setItems] Duplicate message ID ${mappedData.id} (content: "${mappedData.content}") detected. Not adding.`);
                                 return currentItems;
                             }
-                            // console.log(`[STOMP setItems] Adding new message ID ${mappedData.id} (content: "${mappedData.content}")`);
                             return [...currentItems, mappedData];
                         });
                     } else {
-                        // console.warn("[STOMP] Parsed message does not appear to be a valid ServerChatItem. Parsed data:", serverData);
                     }
                 } catch (errorInCallback) {
-                    // console.error("[STOMP] Error parsing or processing message:", errorInCallback, "Raw message body for error:", message.body);
                 }
             });
         };
         client.onStompError = (frame) => {
-            // console.error("[STOMP] Broker error:", frame.headers["message"], frame.body);
             setError(`STOMP Error: ${frame.headers["message"] || "Connection failed"}`);
         };
         client.onWebSocketError = (event) => {
-            // console.error("[STOMP] WebSocket error event:", event);
             setError("WebSocket 연결에 실패했습니다. 네트워크 상태를 확인해주세요.");
         };
         client.onDisconnect = () => {
-            // console.log("[STOMP] Disconnected (from onDisconnect callback)");
         };
 
-        // console.log("[STOMP Setup] Activating STOMP client...");
         client.activate();
 
         return () => {
-            // console.log(`[STOMP Cleanup Effect] Cleaning up STOMP for chatRoomId: ${chatRoomId}`);
             disconnectStomp();
         };
-    }, [chatRoomId, participants]); // participants를 의존성 배열에 추가 (memberName 찾기 위해)
+    }, [chatRoomId]);
 
     const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewMessage(event.target.value);
@@ -315,7 +289,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!newMessage.trim() || !stompClientRef.current?.connected || currentMemberId === null) {
-            // console.warn("[SendMessage] Cannot send: message empty, STOMP not connected, or currentMemberId is null.");
             return;
         }
 
@@ -327,7 +300,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
             stompClientRef.current.publish({ destination: destination, body: JSON.stringify(messageToSend) });
             setNewMessage("");
         } catch (error) {
-            // console.error("[SendMessage] Failed to send message:", error);
         }
     };
 
@@ -336,17 +308,14 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     };
 
     const handleChangeParticipantState = (participantId: number) => {
-        // console.log(`Change state for participant ID: ${participantId}`);
     };
 
     const handleSelfStatusChange = async (newStatus: string) => {
-        // console.log(`My (ID: ${currentMemberId}) status changed to: ${newStatus}`);
     };
 
     const currentUserParticipant = participants.find((p) => p.id === currentMemberId);
 
     const handleBackButtonPress = () => {
-        // console.log("[handleBackButtonPress] Back button pressed. Disconnecting STOMP and calling onBack.");
         disconnectStomp();
         onBack();
     };
@@ -377,26 +346,27 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                 <div className="flex-grow">
                     <div className="font-bold text-[16px]">{postTitle || `채팅방 ${chatRoomId}`}</div>
                 </div>
-                <button
-                    onClick={toggleParticipantsList}
-                    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"
-                    aria-label="Show chat participants"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" />
-                        <line x1="12" y1="8" x2="12.01" y2="8" />
-                    </svg>
-                </button>
+                {/* TODO: 채팅 Info 버튼 - 기능 구현 필요*/}
+                {/*<button*/}
+                {/*    onClick={toggleParticipantsList}*/}
+                {/*    className="bg-transparent border-none cursor-pointer ml-2 text-[#1877f2] hover:text-[#166fe5]"*/}
+                {/*    aria-label="Show chat participants"*/}
+                {/*>*/}
+                {/*    <svg*/}
+                {/*        xmlns="http://www.w3.org/2000/svg"*/}
+                {/*        width="20"*/}
+                {/*        height="20"*/}
+                {/*        viewBox="0 0 24 24"*/}
+                {/*        fill="none"*/}
+                {/*        stroke="currentColor"*/}
+                {/*        strokeWidth="2"*/}
+                {/*        strokeLinecap="round"*/}
+                {/*        strokeLinejoin="round"*/}
+                {/*    >*/}
+                {/*        <circle cx="12" cy="12" r="10" /> <line x1="12" y1="16" x2="12" y2="12" />*/}
+                {/*        <line x1="12" y1="8" x2="12.01" y2="8" />*/}
+                {/*    </svg>*/}
+                {/*</button>*/}
             </div>
 
             {/* Main Chat Area */}
@@ -452,10 +422,28 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     <div className="absolute top-0 right-0 w-64 md:w-72 lg:w-80 h-full bg-white/95 backdrop-blur-sm flex flex-col overflow-y-auto transition-all duration-300 ease-in-out shadow-lg z-10 border-l border-[#e4e6eb]">
                         <div className="p-4 border-b border-[#e4e6eb] flex justify-between items-center bg-gradient-to-r from-[#f0f2f5] to-white">
                             <h3 className="font-bold text-md text-[#1877f2]">참여중인 멤버</h3>
+                            <button
+                                onClick={toggleParticipantsList}
+                                className="text-[#65676B] hover:text-[#1877f2] transition-colors"
+                                aria-label="Close participants list"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
                         </div>
 
-                        {/* TODO: 상태 변경 기능 보수 */}
-                        {/* {currentUserParticipant && (
+                        {currentUserParticipant && (
                             <div className="p-4 border-b border-[#e4e6eb] bg-[#f7f9fb]">
                                 <div className="text-xs font-bold uppercase text-[#65676B] mb-2">내 상태</div>
                                 <select
@@ -465,10 +453,12 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                 >
                                     <option value="ONLINE">ONLINE</option>
                                     <option value="OFFLINE">OFFLINE</option>
+                                    <option value="AWAY">AWAY (자리비움)</option>
+                                    <option value="DO_NOT_DISTURB">DO_NOT_DISTURB (방해금지)</option>
                                     <option value="LEFT">LEFT (나감)</option>
                                 </select>
                             </div>
-                        )} */}
+                        )}
 
                         <div className="flex-grow p-2">
                             {loadingParticipants && (
@@ -503,10 +493,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                             key={participant.id}
                                             className="flex items-center justify-between p-2 hover:bg-[#f0f2f5] rounded-md transition-colors"
                                         >
-                                            <button
-                                                onClick={() => window.location.href = `/mypage/${participant.id}`}
-                                                className="flex items-center w-full text-left hover:bg-[#f0f2f5] rounded-md p-1 transition-colors cursor-pointer"
-                                            >
+                                            <div className="flex items-center">
                                                 {participant.image ? (
                                                     <img
                                                         src={participant.image || "/placeholder.svg"}
@@ -533,7 +520,30 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                                                             : "상태 없음"}
                                                     </div>
                                                 </div>
-                                            </button>
+                                            </div>
+                                            {participant.id !== currentMemberId && (
+                                                <button
+                                                    onClick={() => handleChangeParticipantState(participant.id)}
+                                                    className="text-xs bg-white hover:bg-[#f0f2f5] text-[#1877f2] border border-[#e4e6eb] py-1 px-2 rounded-md transition-colors"
+                                                    aria-label={`${participant.name || "참가자"}님 상태 변경`}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="12"
+                                                        height="12"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        className="inline"
+                                                    >
+                                                        <circle cx="12" cy="12" r="1"></circle> <circle cx="19" cy="12" r="1"></circle>
+                                                        <circle cx="5" cy="12" r="1"></circle>
+                                                    </svg>
+                                                </button>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
