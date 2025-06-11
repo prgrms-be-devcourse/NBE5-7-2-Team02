@@ -21,8 +21,8 @@ import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
-
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
+
 import lombok.AllArgsConstructor;
 
 import org.junit.jupiter.api.DisplayName;
@@ -39,10 +39,8 @@ import java.util.stream.Stream;
 public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Autowired MemberRepository memberRepository;
-    @Autowired
-    private TagRepository tagRepository;
-    @Autowired
-    private PostRepository postRepository;
+    @Autowired private TagRepository tagRepository;
+    @Autowired private PostRepository postRepository;
 
     @AllArgsConstructor
     static class PostCreateRequest {
@@ -244,13 +242,13 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
     @Test
     @DataSet(
-        value = {
-            "datasets/v2/member.yml",
-            "datasets/v2/post.yml",
-            "datasets/v2/tag.yml",
-        },
-        cleanBefore = true,
-        cleanAfter = true)
+            value = {
+                "datasets/v2/member.yml",
+                "datasets/v2/post.yml",
+                "datasets/v2/tag.yml",
+            },
+            cleanBefore = true,
+            cleanAfter = true)
     @DisplayName("DELETE: /api/posts/{postId} 회원 접근 - 게시글 삭제 시 연관 게시글이 없는 태그 또한 삭제")
     void deletePostWithUnusedTags() throws Exception {
         // given
@@ -260,11 +258,9 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
 
         // when
         mockMvc.perform(
-            delete("/api/posts/" + targetPostId)
-                .header("Authorization", "Bearer " + tokenPair.getAccessToken())
-        ).andExpect(
-            status().isOk()
-        );
+                        delete("/api/posts/" + targetPostId)
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
+                .andExpect(status().isOk());
 
         // then : 2번 게시글 삭제 시 2번 태그는 참조를 잃어 삭제되어야 함
         assertThat(postRepository.findById(targetPostId).isPresent()).isFalse();

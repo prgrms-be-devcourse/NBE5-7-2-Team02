@@ -24,8 +24,8 @@ import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
-
 import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.userdetails.UserDetails;
