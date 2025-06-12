@@ -5,14 +5,15 @@ import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.member.domain.Role;
-import io.twogether.nbe_5_7_2_02team.member.dto.LoginResponse;
-import io.twogether.nbe_5_7_2_02team.member.dto.SignUpRequest;
-import io.twogether.nbe_5_7_2_02team.member.dto.SignUpResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.GitHubLoginResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.GitHubUserInfoResponse;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.MemberDetails;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.LoginResponse;
+import io.twogether.nbe_5_7_2_02team.member.dto.response.SignUpResponse;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubLoginResponse;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.response.GitHubUserInfoResponse;
 import io.twogether.nbe_5_7_2_02team.oauth.jwt.JwtTokenProvider;
+import io.twogether.nbe_5_7_2_02team.oauth.jwt.MemberDetailsFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -34,12 +39,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OAuthService {
+public class OAuthService extends DefaultOAuth2UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
@@ -50,6 +57,24 @@ public class OAuthService {
 
     @Value("${spring.security.oauth2.client.registration.github.client-secret}")
     private String clientSecret;
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+        log.info("oAuth2User = {}", oAuth2User);
+        LoginResponse loginResponse = login(userRequest.getAccessToken().getTokenValue());
+
+        String providerId = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+
+        MemberDetails memberDetails = MemberDetailsFactory.memberDetails(providerId, oAuth2User);
+
+        Optional<Member> memberOptional = memberRepository.findById(loginResponse.getMemberId());
+
+        return memberDetails
+                .setId(memberOptional.get().getId())
+                .setRole(memberOptional.get().getRole());
+    }
 
     // GitHub에서 받은 code로 GitHub의 AccessToken 발급
     public GitHubLoginResponse getAccessToken(String code) {
@@ -179,7 +204,11 @@ public class OAuthService {
                         .findByEmail(userInfo.getEmail())
                         .orElseGet(() -> saveUserInfo(userInfo));
         TokenPair tokenPair = jwtTokenProvider.generateTokenPair(member);
-        return LoginResponse.builder().tokenPair(tokenPair).role(member.getRole()).build();
+        return LoginResponse.builder()
+                .tokenPair(tokenPair)
+                .role(member.getRole())
+                .memberId(member.getId())
+                .build();
     }
 
     // 추가 회원 가입 정보 등록
@@ -196,13 +225,23 @@ public class OAuthService {
         return SignUpResponse.from(memberRepository.save(member));
     }
 
-    // organization에 "prgrms" 포함 여부 확인
+    private static final Set<String> ALLOWED_ORGS =
+            Set.of(
+                    "prgrms-web-devcourse",
+                    "prgrms-be-devcourse",
+                    "prgrms-fe-devcourse",
+                    "prgrms-ad-devcourse",
+                    "prgrms-aibe-devcourse",
+                    "prgrms-app-devcourse",
+                    "prgrms-linux-devcourse",
+                    "prgrms-fullcycle-devcourse");
+
     private void validatePrgrmsOrganization(List<String> organizations) {
         boolean hasPrgrms =
-                organizations.stream().anyMatch(org -> org.toLowerCase().contains("prgrms"));
+                organizations.stream().map(String::toLowerCase).anyMatch(ALLOWED_ORGS::contains);
 
         if (!hasPrgrms) {
-            throw new ErrorException(ErrorCode.OAUTH_PRGRMS_ORG_REQUIRED);
+            throw new OAuth2AuthenticationException("프로그래머스 교육 과정에 등록된 사용자만 가입할 수 있습니다.");
         }
     }
 

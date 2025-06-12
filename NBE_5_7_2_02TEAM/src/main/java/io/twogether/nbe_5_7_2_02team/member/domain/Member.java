@@ -1,18 +1,21 @@
 package io.twogether.nbe_5_7_2_02team.member.domain;
 
+import io.twogether.nbe_5_7_2_02team.global.common.BaseEntity;
+
 import jakarta.persistence.*;
 
 import lombok.*;
+
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
-    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -32,6 +35,15 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void updateProfile(String nickname, String profileImageUrl) {
+        if (StringUtils.hasText(nickname)) {
+            this.name = nickname;
+        }
+        if (StringUtils.hasText(profileImageUrl)) {
+            this.profileImage = profileImageUrl;
+        }
+    }
 
     @Builder
     public Member(

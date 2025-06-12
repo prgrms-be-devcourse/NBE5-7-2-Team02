@@ -9,7 +9,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,6 @@ import java.util.List;
 public class Post extends BaseEntity {
 
     @Id
-    @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -30,12 +31,19 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private RecruitmentStatus recruitmentStatus;
+
+    @Setter private LocalDate recruitmentDeadline;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecruitmentField> recruitmentFields = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostTag> postTags = new ArrayList<>();
 
+    @Setter
     @ElementCollection
     @CollectionTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
     @Column(name = "image_url")
@@ -62,7 +70,9 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void update(String title, String content, RecruitmentStatus status) {
+        if (title != null) this.title = title;
+        if (content != null) this.content = content;
+        if (status != null) this.recruitmentStatus = status;
     }
 }

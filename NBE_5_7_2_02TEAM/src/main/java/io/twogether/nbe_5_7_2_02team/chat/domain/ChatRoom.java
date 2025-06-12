@@ -15,22 +15,29 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatroom_id")
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Builder
+    @Column(name = "member_count")
+    private Long memberCount = 0L;
+
+    @Column(name = "last_chat_id")
+    private Long lastChatId = 0L;
+
+    @Builder(toBuilder = true)
     public ChatRoom(Post post) {
         this.post = post;
     }

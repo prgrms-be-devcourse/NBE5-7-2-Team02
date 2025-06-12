@@ -6,11 +6,12 @@ import {
   TextInput
 } from "flowbite-react";
 import {useState} from "react";
-import {ModalBoardForm} from "./ModalBoardForm.tsx";
+import {ModalBoardForm} from "./ModalBoardForm";
+import { useAuth } from "../context/AuthContext";
 
 export function PreBoardForm() {
   const [openModal, setOpenModal] = useState(false);
-
+  const { user } = useAuth();
   const closeModalHandler = () => setOpenModal(false);
 
   return (
@@ -20,7 +21,7 @@ export function PreBoardForm() {
             <li className="py-3 sm:py-4">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0">
-                  <Avatar img="https://picsum.photos/200" rounded/>
+                  <Avatar img={user?.profileImage} rounded/>
                 </div>
                 <div className="min-w-0 flex-1">
                   <TextInput

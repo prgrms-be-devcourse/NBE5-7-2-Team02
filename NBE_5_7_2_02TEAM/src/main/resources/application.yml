@@ -5,11 +5,14 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   servlet:
     multipart:
+      enabled: true
       max-file-size: 10MB
       max-request-size: 100MB
-
 
   datasource:
     url: ${DB_URL}
@@ -21,6 +24,8 @@ spring:
     hibernate:
       ddl-auto: update
 
+  flyway:
+    enabled: false
 
   security:
     oauth2:
@@ -30,7 +35,7 @@ spring:
             client-name: GitHub
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/api/oauth2/callback/{registrationId}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - read:user
               - user:email
@@ -45,7 +50,21 @@ custom:
       access: ${JWT_ACCESS_EXP}
       refresh: ${JWT_REFRESH_EXP}
     redirection:
-      base: http://localhost8080
+      base: ${REDIRECTION_BASE}
     secrets:
       origin-key: ${JWT_ORIGIN_KEY}
       app-key: ${JWT_APP_KEY}
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration/prod
+
+  jpa:
+    hibernate:
+      ddl-auto: none

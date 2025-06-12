@@ -1,5 +1,5 @@
 import { CardItem } from "./CardItem";
-import {Post} from "../types/Post.ts";
+import { Post } from "../types/Post";
 
 interface CardListProps {
   posts: Post[];
@@ -7,6 +7,10 @@ interface CardListProps {
 }
 
 const CardList = ({ posts, lastPostRef }: CardListProps) => {
+  if (posts.length === 0) {
+    return;
+  }
+
   return (
       <div className="grid gap-4">
         {posts.map((post, index) => (

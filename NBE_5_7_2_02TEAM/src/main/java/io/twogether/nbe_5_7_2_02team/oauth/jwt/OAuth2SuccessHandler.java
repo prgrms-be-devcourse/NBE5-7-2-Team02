@@ -3,8 +3,8 @@ package io.twogether.nbe_5_7_2_02team.oauth.jwt;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.domain.RefreshToken;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.MemberDetails;
-import io.twogether.nbe_5_7_2_02team.oauth.dto.TokenPair;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.MemberDetails;
+import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.service.OAuthService;
 
 import jakarta.servlet.ServletException;
@@ -42,7 +42,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         MemberDetails principal = (MemberDetails) authentication.getPrincipal();
-
         Member findMember =
                 memberRepository
                         .findById(principal.getId())
@@ -70,8 +69,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private String genUrlStr(HashMap<String, String> params) {
         return UriComponentsBuilder.fromUriString(baseUrl)
-                .queryParam("access", params.get("access"))
-                .queryParam("refresh", params.get("refresh"))
+                .queryParam("accessToken", params.get("access"))
+                .queryParam("refreshToken", params.get("refresh"))
                 .build()
                 .toUri()
                 .toString();

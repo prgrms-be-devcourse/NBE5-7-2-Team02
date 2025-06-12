@@ -1,9 +1,9 @@
 package io.twogether.nbe_5_7_2_02team.chat.api;
 
-import io.twogether.nbe_5_7_2_02team.chat.dto.ChatRoomResponse;
+import static org.springframework.http.HttpStatus.CREATED;
+
+import io.twogether.nbe_5_7_2_02team.chat.dto.response.ChatRoomGetResponse;
 import io.twogether.nbe_5_7_2_02team.chat.service.ChatRoomService;
-import io.twogether.nbe_5_7_2_02team.global.response.success.BaseResponse;
-import io.twogether.nbe_5_7_2_02team.global.response.success.SuccessCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,17 +24,24 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     @GetMapping
-    public ResponseEntity<?> getChatRoomList() {
-        List<ChatRoomResponse> chatRoomList = chatRoomService.getChatRoomList();
+    public ResponseEntity<List<ChatRoomGetResponse>> getChatRoomList() {
+        List<ChatRoomGetResponse> chatRoomGetResponse = chatRoomService.getChatRoomList();
 
-        return BaseResponse.of(SuccessCode.FOUND_CHATROOM, chatRoomList, null);
+        return ResponseEntity.ok(chatRoomGetResponse);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<ChatRoomGetResponse> getChatRoomByPost(
+            @PathVariable("postId") Long postId) {
+        ChatRoomGetResponse chatRoomGetResponse = chatRoomService.getChatRoomByPost(postId);
+
+        return ResponseEntity.ok(chatRoomGetResponse);
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<?> createChatRoom(@PathVariable("postId") Long postId) {
+    public ResponseEntity<Long> createChatRoom(@PathVariable("postId") Long postId) {
         Long id = chatRoomService.createChatroom(postId);
 
-        return BaseResponse.of(
-                SuccessCode.CREATE_CHATROOM, null, URI.create("/api/chatroom/" + id));
+        return ResponseEntity.status(CREATED).body(id);
     }
 }
