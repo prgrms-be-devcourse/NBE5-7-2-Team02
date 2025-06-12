@@ -27,6 +27,7 @@ import io.twogether.nbe_5_7_2_02team.post.dto.response.PostGetResponse;
 import io.twogether.nbe_5_7_2_02team.post.dto.response.PostResponse;
 import io.twogether.nbe_5_7_2_02team.post.util.ImageUploader;
 import io.twogether.nbe_5_7_2_02team.post.util.PostMapper;
+import io.twogether.nbe_5_7_2_02team.tag.dao.TagRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,6 +51,7 @@ public class PostService {
     private final ChatRepository chatRepository;
     private final LikesRepository likesRepository;
     private final PostApplicationRepository postApplicationRepository;
+    private final TagRepository tagRepository;
 
     @Transactional
     public PostResponse createPost(PostCreateRequest request, Long memberId) {
@@ -90,12 +92,13 @@ public class PostService {
             List<String> savedPaths = imageUploader.saveImages(request.getImages(), postId);
             updatePost.setImageUrls(savedPaths);
         }
-
+      
+        postTagRepository.deleteAllByPost(updatePost);
         if (request.getTags() != null) {
-            postTagRepository.deleteAllByPost(updatePost);
             List<PostTag> newTags = postMapper.toPostTags(updatePost, request.getTags());
             postTagRepository.saveAll(newTags);
         }
+        deleteUnusedTags();
 
         if (request.getRecruitmentFields() != null) {
             updatePost.getRecruitmentFields().clear();
@@ -103,7 +106,7 @@ public class PostService {
                     postMapper.toRecruitmentFields(updatePost, request.getRecruitmentFields());
             updatePost.getRecruitmentFields().addAll(newFields);
         }
-
+          
         return new PostResponse(updatePost.getId());
     }
 
@@ -123,6 +126,12 @@ public class PostService {
         chatRepository.deleteByPost(deletePost);
         imageUploader.deletePostImageByFolder(deletePost.getId());
         postRepository.delete(deletePost);
+        deleteUnusedTags();
+    }
+
+    private void deleteUnusedTags() {
+        List<Long> referredTagIds = postTagRepository.findAllTagIds();
+        tagRepository.deleteUnusedTags(referredTagIds);
     }
 
     @Transactional(readOnly = true)
