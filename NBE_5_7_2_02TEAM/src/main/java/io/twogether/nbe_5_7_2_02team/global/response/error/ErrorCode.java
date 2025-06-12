@@ -44,6 +44,11 @@ public enum ErrorCode {
     UNAUTHORIZED_POST_ACCESS(UNAUTHORIZED, "POST-002", "게시글에 대한 권한이 없습니다."),
     LIKE_ALREADY_EXIST(BAD_REQUEST, "POST-003", "좋아요가 이미 존재합니다."),
     NOT_FOUND_LIKE(NOT_FOUND, "POST-004", "해당 좋아요가 존재하지 않습니다."),
+    RECRUITMENT_NOT_AVAILABLE(BAD_REQUEST, "POST-005", "모집 중인 게시글에만 지원 가능합니다."),
+    NOT_FOUND_RECRUITMENT_FIELD(NOT_FOUND, "POST-006", "해당 모집 분야가 존재하지 않습니다."),
+    RECRUITMENT_CLOSED(BAD_REQUEST, "POST-007", "해당 모집 분야는 마감되었습니다."),
+    ALREADY_APPLIED(BAD_REQUEST, "POST-008", "이미 지원한 분야입니다."),
+    CANNOT_APPLY_TO_OWN_POST(BAD_REQUEST, "POST-009", "본인 글에는 지원할 수 없습니다."),
 
     // CHAT MESSAGE
     CHAT_MESSAGE_CONTENT_BLANK(BAD_REQUEST, "CHAT-00", "메세지 내용이 비어있습니다."),
