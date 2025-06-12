@@ -4,6 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
 
+import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,8 @@ public class PostGetResponse {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private String recruitmentStatus;
+        private LocalDate recruitmentDeadline;
+        private List<RecruitmentFieldResponse> recruitmentFields;
         private Long numLikes;
         private Long chatRoomId;
         private Long memberId;
@@ -52,6 +56,10 @@ public class PostGetResponse {
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
             this.recruitmentStatus = post.getRecruitmentStatus().name();
+            this.recruitmentDeadline = post.getRecruitmentDeadline();
+            this.recruitmentFields = post.getRecruitmentFields().stream()
+                .map(RecruitmentFieldResponse::from)
+                .toList();
             this.numLikes = numLikes;
             this.tags = tags;
             this.images = post.getImageUrls();
