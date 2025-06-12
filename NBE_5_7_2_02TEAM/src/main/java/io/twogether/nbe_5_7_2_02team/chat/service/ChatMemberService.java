@@ -71,14 +71,21 @@ public class ChatMemberService {
             throw new ErrorException(CHAT_MEMBER_ALREADY_EXISTS);
         }
 
-        return chatMemberRepository
-                .save(
-                        ChatMember.builder()
-                                .chatRoom(chatRoom)
-                                .member(member)
-                                .chatMemberStatus(ONLINE)
-                                .build())
-                .getId();
+        Long id =
+                chatMemberRepository
+                        .save(
+                                ChatMember.builder()
+                                        .chatRoom(chatRoom)
+                                        .member(member)
+                                        .chatMemberStatus(ONLINE)
+                                        .build())
+                        .getId();
+
+        long size = chatMemberRepository.countByChatRoom(chatRoom);
+
+        chatRoom.setMemberCount(size);
+
+        return id;
     }
 
     @Transactional
