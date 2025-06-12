@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.post.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
 import jakarta.validation.constraints.FutureOrPresent;
@@ -8,13 +9,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,5 @@ public class PostCreateRequest {
 
     private String recruitmentFieldsJson;
 
-    @JsonIgnore
-    private List<RecruitmentFieldRequest> recruitmentFields = new ArrayList<>();
+    @JsonIgnore private List<RecruitmentFieldRequest> recruitmentFields = new ArrayList<>();
 }

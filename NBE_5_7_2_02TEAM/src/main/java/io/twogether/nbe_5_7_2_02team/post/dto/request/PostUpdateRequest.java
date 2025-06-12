@@ -2,14 +2,14 @@ package io.twogether.nbe_5_7_2_02team.post.dto.request;
 
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter

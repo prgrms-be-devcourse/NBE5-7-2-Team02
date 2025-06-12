@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostApplyRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
@@ -16,8 +17,6 @@ import io.twogether.nbe_5_7_2_02team.post.service.PostService;
 
 import jakarta.validation.Valid;
 
-import java.util.Arrays;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.MediaType;
@@ -36,6 +35,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -48,11 +50,15 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails,
             @ModelAttribute @Valid PostCreateRequest request) {
 
-        if (request.getRecruitmentFieldsJson() != null && !request.getRecruitmentFieldsJson().isBlank()) {
+        if (request.getRecruitmentFieldsJson() != null
+                && !request.getRecruitmentFieldsJson().isBlank()) {
             try {
                 ObjectMapper mapper = new ObjectMapper();
-                List<RecruitmentFieldRequest> fields = Arrays.asList(
-                    mapper.readValue(request.getRecruitmentFieldsJson(), RecruitmentFieldRequest[].class));
+                List<RecruitmentFieldRequest> fields =
+                        Arrays.asList(
+                                mapper.readValue(
+                                        request.getRecruitmentFieldsJson(),
+                                        RecruitmentFieldRequest[].class));
                 request.setRecruitmentFields(fields);
             } catch (Exception e) {
                 // TODO: 커스텀 Exception으로 변경
@@ -131,12 +137,12 @@ public class PostController {
 
     @PostMapping("/{postId}/apply")
     public ResponseEntity<Void> applyToField(
-        @PathVariable Long postId,
-        @RequestBody @Valid PostApplyRequest request,
-        @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable Long postId,
+            @RequestBody @Valid PostApplyRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        postService.apply(postId, request.getFieldName(), Long.parseLong(userDetails.getUsername()));
+        postService.apply(
+                postId, request.getFieldName(), Long.parseLong(userDetails.getUsername()));
         return ResponseEntity.ok().build();
     }
-
 }

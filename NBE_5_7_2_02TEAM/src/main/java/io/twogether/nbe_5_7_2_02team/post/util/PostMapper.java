@@ -25,26 +25,30 @@ public class PostMapper {
     private final TagRepository tagRepository;
 
     public Post toEntity(PostCreateRequest request, Member member) {
-        Post post = Post.builder()
-            .title(request.getTitle())
-            .content(request.getContent())
-            .recruitmentStatus(request.getRecruitmentStatus())
-            .imageUrls(new ArrayList<>())
-            .member(member)
-            .build();
+        Post post =
+                Post.builder()
+                        .title(request.getTitle())
+                        .content(request.getContent())
+                        .recruitmentStatus(request.getRecruitmentStatus())
+                        .imageUrls(new ArrayList<>())
+                        .member(member)
+                        .build();
 
         post.setRecruitmentDeadline(request.getRecruitmentDeadline());
 
         if (request.getRecruitmentFields() != null) {
-            List<RecruitmentField> fields = request.getRecruitmentFields().stream()
-                .map(r -> RecruitmentField.builder()
-                    .post(post)
-                    .fieldName(r.getFieldName())
-                    .totalCount(r.getTotalCount())
-                    .currentCount(0)
-                    .closed(false)
-                    .build())
-                .toList();
+            List<RecruitmentField> fields =
+                    request.getRecruitmentFields().stream()
+                            .map(
+                                    r ->
+                                            RecruitmentField.builder()
+                                                    .post(post)
+                                                    .fieldName(r.getFieldName())
+                                                    .totalCount(r.getTotalCount())
+                                                    .currentCount(0)
+                                                    .closed(false)
+                                                    .build())
+                            .toList();
             post.getRecruitmentFields().addAll(fields);
         }
 
@@ -62,25 +66,36 @@ public class PostMapper {
         }
 
         return tags.stream()
-            .map(name -> {
-                Tag tag = tagRepository.findByName(name)
-                    .orElseGet(() -> tagRepository.save(Tag.builder().name(name).build()));
-                return PostTag.builder().post(post).tag(tag).build();
-            })
-            .toList();
+                .map(
+                        name -> {
+                            Tag tag =
+                                    tagRepository
+                                            .findByName(name)
+                                            .orElseGet(
+                                                    () ->
+                                                            tagRepository.save(
+                                                                    Tag.builder()
+                                                                            .name(name)
+                                                                            .build()));
+                            return PostTag.builder().post(post).tag(tag).build();
+                        })
+                .toList();
     }
 
-    public List<RecruitmentField> toRecruitmentFields(Post post, List<RecruitmentFieldRequest> requests) {
+    public List<RecruitmentField> toRecruitmentFields(
+            Post post, List<RecruitmentFieldRequest> requests) {
         if (requests == null || requests.isEmpty()) return Collections.emptyList();
 
         return requests.stream()
-            .map(r -> RecruitmentField.builder()
-                .post(post)
-                .fieldName(r.getFieldName())
-                .totalCount(r.getTotalCount())
-                .currentCount(0)
-                .closed(false)
-                .build())
-            .toList();
+                .map(
+                        r ->
+                                RecruitmentField.builder()
+                                        .post(post)
+                                        .fieldName(r.getFieldName())
+                                        .totalCount(r.getTotalCount())
+                                        .currentCount(0)
+                                        .closed(false)
+                                        .build())
+                .toList();
     }
 }

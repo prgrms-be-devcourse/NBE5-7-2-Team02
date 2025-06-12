@@ -5,13 +5,13 @@ import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +35,7 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RecruitmentStatus recruitmentStatus;
 
-    @Setter
-    private LocalDate recruitmentDeadline;
+    @Setter private LocalDate recruitmentDeadline;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecruitmentField> recruitmentFields = new ArrayList<>();

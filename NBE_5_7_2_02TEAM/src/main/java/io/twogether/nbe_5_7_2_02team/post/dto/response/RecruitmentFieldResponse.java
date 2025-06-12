@@ -1,6 +1,7 @@
 package io.twogether.nbe_5_7_2_02team.post.dto.response;
 
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentField;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,10 @@ public class RecruitmentFieldResponse {
 
     public static RecruitmentFieldResponse from(RecruitmentField field) {
         return RecruitmentFieldResponse.builder()
-            .fieldName(field.getFieldName())
-            .totalCount(field.getTotalCount())
-            .currentCount(field.getCurrentCount())
-            .closed(field.isClosed())
-            .build();
+                .fieldName(field.getFieldName())
+                .totalCount(field.getTotalCount())
+                .currentCount(field.getCurrentCount())
+                .closed(field.isClosed())
+                .build();
     }
 }

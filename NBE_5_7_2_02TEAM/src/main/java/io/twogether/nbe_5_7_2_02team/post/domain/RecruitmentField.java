@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +40,8 @@ public class RecruitmentField {
     private boolean closed = false;
 
     @Builder
-    public RecruitmentField(Post post, String fieldName, int totalCount, int currentCount, boolean closed) {
+    public RecruitmentField(
+            Post post, String fieldName, int totalCount, int currentCount, boolean closed) {
         this.post = post;
         this.fieldName = fieldName;
         this.totalCount = totalCount;

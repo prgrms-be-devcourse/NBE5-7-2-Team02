@@ -53,8 +53,10 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(PostCreateRequest request, Long memberId) {
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         Post post = postMapper.toEntity(request, member);
         postRepository.save(post);
@@ -72,8 +74,10 @@ public class PostService {
 
     @Transactional
     public PostResponse updatePost(Long postId, PostUpdateRequest request, Long memberId) {
-        Post updatePost = postRepository.findById(postId)
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+        Post updatePost =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
         if (!updatePost.getMember().getId().equals(memberId)) {
             throw new ErrorException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
@@ -95,7 +99,8 @@ public class PostService {
 
         if (request.getRecruitmentFields() != null) {
             updatePost.getRecruitmentFields().clear();
-            List<RecruitmentField> newFields = postMapper.toRecruitmentFields(updatePost, request.getRecruitmentFields());
+            List<RecruitmentField> newFields =
+                    postMapper.toRecruitmentFields(updatePost, request.getRecruitmentFields());
             updatePost.getRecruitmentFields().addAll(newFields);
         }
 
@@ -213,14 +218,14 @@ public class PostService {
     public void apply(Long postId, String fieldName, Long memberId) {
 
         Member member =
-            memberRepository
-                .findById(memberId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
 
         Post post =
-            postRepository
-                .findById(postId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
 
         if (post.getRecruitmentStatus() != RECRUITING) {
             throw new ErrorException(ErrorCode.RECRUITMENT_NOT_AVAILABLE);
@@ -230,10 +235,12 @@ public class PostService {
             throw new ErrorException(ErrorCode.CANNOT_APPLY_TO_OWN_POST);
         }
 
-        RecruitmentField field = post.getRecruitmentFields().stream()
-            .filter(f -> f.getFieldName().trim().equalsIgnoreCase(fieldName.trim()))
-            .findFirst()
-            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_RECRUITMENT_FIELD));
+        RecruitmentField field =
+                post.getRecruitmentFields().stream()
+                        .filter(f -> f.getFieldName().trim().equalsIgnoreCase(fieldName.trim()))
+                        .findFirst()
+                        .orElseThrow(
+                                () -> new ErrorException(ErrorCode.NOT_FOUND_RECRUITMENT_FIELD));
 
         if (field.isClosed()) {
             throw new ErrorException(ErrorCode.RECRUITMENT_CLOSED);
@@ -244,11 +251,8 @@ public class PostService {
             throw new ErrorException(ErrorCode.ALREADY_APPLIED);
         }
 
-        PostApplication application = PostApplication.builder()
-            .member(member)
-            .post(post)
-            .field(field)
-            .build();
+        PostApplication application =
+                PostApplication.builder().member(member).post(post).field(field).build();
         postApplicationRepository.save(application);
 
         field.increaseCount();
