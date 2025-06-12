@@ -10,7 +10,6 @@ import static org.springframework.http.HttpMethod.PATCH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,13 +34,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.springframework.mock.web.MockMultipartFile;
 
 @FlywayReset
 public class PostBrowserSuccessTest extends BrowserTestTemplate {
@@ -297,17 +295,14 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         request.setContent("NEW CONTENT");
         request.setRecruitmentStatus(DONE);
 
-        MockMultipartFile jsonPart = new MockMultipartFile(
-            "post",
-            "",
-            "application/json",
-            objectMapper.writeValueAsBytes(request)
-        );
+        MockMultipartFile jsonPart =
+                new MockMultipartFile(
+                        "post", "", "application/json", objectMapper.writeValueAsBytes(request));
 
         // when
         mockMvc.perform(
                         multipart(PATCH, "/api/posts/" + targetPostId)
-                            .file(jsonPart)
+                                .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpectAll(status().isOk(), jsonPath("$.id").value(targetPostId));
