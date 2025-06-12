@@ -2,6 +2,7 @@ package io.twogether.nbe_5_7_2_02team.member;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.database.rider.core.api.dataset.DataSet;
@@ -28,7 +29,8 @@ public class MemberBrowserFailureTest extends BrowserTestTemplate {
     void getMyProfile_Unauthorized() throws Exception {
 
         mockMvc.perform(get("/api/member/me"))
-            .andExpect(status().isUnauthorized()); // 401
+            .andExpect(status().isFound())
+            .andExpect(redirectedUrl("http://localhost/oauth2/authorization/github"));
     }
 
     @Test
@@ -61,7 +63,8 @@ public class MemberBrowserFailureTest extends BrowserTestTemplate {
         mockMvc.perform(multipart(HttpMethod.PATCH, "/api/member/me")
                 .file(image)
                 .param("nickname", "memberNickname"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isFound())
+            .andExpect(redirectedUrl("http://localhost/oauth2/authorization/github"));
     }
 
     @Test

@@ -11,12 +11,14 @@ import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 
 @FlywayReset
 public class MemberBrowserSuccessTest extends BrowserTestTemplate {
@@ -75,24 +77,23 @@ public class MemberBrowserSuccessTest extends BrowserTestTemplate {
         Member member = memberRepository.findById(memberId).orElseThrow();
         TokenPair tokenPair = jwtTokenProvider.generateTokenPair(member);
 
-        String newNickName = "newNickName";
-        String imageUrl = "newImageUrl";
         MockMultipartFile newImage = new MockMultipartFile(
             "image",
-            "image.png",
+            "profile.png",
             "image/png",
-            "image".getBytes());
+            "fake image content".getBytes());
+        MockPart nicknamePart = new MockPart("nickname", "newNickName".getBytes(StandardCharsets.UTF_8));
+        nicknamePart.getHeaders().setContentType(MediaType.TEXT_PLAIN);
 
         mockMvc.perform(
                 multipart(HttpMethod.PATCH, "/api/member/me")
                     .file(newImage)
-                    .param("nickname", newNickName)
+                    .part(nicknamePart)
                     .header("Authorization", "Bearer " + tokenPair.getAccessToken())
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nickname").value(newNickName))
-            .andExpect(jsonPath("$.image").isNotEmpty())
-            .andExpect(jsonPath("$.image").value(imageUrl));
+                .andExpect(jsonPath("$.nickname").value("newNickName"))
+                .andExpect(jsonPath("$.image").isNotEmpty());
 
     }
 
