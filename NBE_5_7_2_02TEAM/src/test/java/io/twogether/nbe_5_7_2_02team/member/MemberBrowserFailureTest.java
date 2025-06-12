@@ -5,11 +5,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+
 import io.twogether.nbe_5_7_2_02team.browser.template.BrowserTestTemplate;
 import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,14 @@ import org.springframework.mock.web.MockMultipartFile;
 @FlywayReset
 public class MemberBrowserFailureTest extends BrowserTestTemplate {
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberRepository memberRepository;
 
     @Test
     @DataSet(value = "datasets/v2/member.yml", cleanBefore = true, cleanAfter = true)
     @DisplayName("GET: /api/member/me - 인증 토큰 없음")
     void getMyProfile_Unauthorized() throws Exception {
 
-        mockMvc.perform(get("/api/member/me"))
-            .andExpect(status().isUnauthorized()); // 401
+        mockMvc.perform(get("/api/member/me")).andExpect(status().isUnauthorized()); // 401
     }
 
     @Test
@@ -42,26 +42,24 @@ public class MemberBrowserFailureTest extends BrowserTestTemplate {
 
         long invalidId = 9999L;
 
-        mockMvc.perform(get("/api/member/" + invalidId)
-                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
-            .andExpect(status().isNotFound()); // 404
-
+        mockMvc.perform(
+                        get("/api/member/" + invalidId)
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
+                .andExpect(status().isNotFound()); // 404
     }
 
     @Test
     @DataSet(value = "datasets/v2/member.yml", cleanBefore = true, cleanAfter = true)
     @DisplayName("PATCH: /api/member/me - 인증 토큰 없음")
     void updateMyProfile_Unauthorized() throws Exception {
-        MockMultipartFile image = new MockMultipartFile(
-            "image",
-            "a.png",
-            "image/png",
-            "dummy".getBytes());
+        MockMultipartFile image =
+                new MockMultipartFile("image", "a.png", "image/png", "dummy".getBytes());
 
-        mockMvc.perform(multipart(HttpMethod.PATCH, "/api/member/me")
-                .file(image)
-                .param("nickname", "memberNickname"))
-            .andExpect(status().isUnauthorized());
+        mockMvc.perform(
+                        multipart(HttpMethod.PATCH, "/api/member/me")
+                                .file(image)
+                                .param("nickname", "memberNickname"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -74,17 +72,14 @@ public class MemberBrowserFailureTest extends BrowserTestTemplate {
         Member member = memberRepository.findById(memberId).orElseThrow();
         TokenPair tokenPair = jwtTokenProvider.generateTokenPair(member);
 
-        MockMultipartFile image = new MockMultipartFile(
-            "image",
-            "a.png",
-            "image/png",
-            "dummy".getBytes());
+        MockMultipartFile image =
+                new MockMultipartFile("image", "a.png", "image/png", "dummy".getBytes());
 
-        mockMvc.perform(multipart(HttpMethod.PATCH, "/api/member/me")
-                .file(image)
-                .param("nickname", " ") // 공백
-                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
-            .andExpect(status().isBadRequest());
+        mockMvc.perform(
+                        multipart(HttpMethod.PATCH, "/api/member/me")
+                                .file(image)
+                                .param("nickname", " ") // 공백
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
+                .andExpect(status().isBadRequest());
     }
-
 }
