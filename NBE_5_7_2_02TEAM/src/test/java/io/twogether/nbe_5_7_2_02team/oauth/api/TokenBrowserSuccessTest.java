@@ -1,36 +1,33 @@
 package io.twogether.nbe_5_7_2_02team.oauth.api;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+
 import io.twogether.nbe_5_7_2_02team.browser.template.BrowserTestTemplate;
 import io.twogether.nbe_5_7_2_02team.global.annotation.FlywayReset;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
+import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.dao.RefreshTokenBlackListRepository;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.common.TokenPair;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.request.LogoutRequest;
 import io.twogether.nbe_5_7_2_02team.oauth.dto.request.RefreshRequest;
-import io.twogether.nbe_5_7_2_02team.member.dto.request.SignUpRequest;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @FlywayReset
 public class TokenBrowserSuccessTest extends BrowserTestTemplate {
 
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
-    RefreshTokenBlackListRepository refreshTokenBlackListRepository;
+    @Autowired MemberRepository memberRepository;
+    @Autowired ObjectMapper objectMapper;
+    @Autowired RefreshTokenBlackListRepository refreshTokenBlackListRepository;
 
     @Test
     @DataSet(value = "datasets/v2/member.yml", cleanBefore = true, cleanAfter = true)
@@ -41,12 +38,13 @@ public class TokenBrowserSuccessTest extends BrowserTestTemplate {
         RefreshRequest request = new RefreshRequest(tokenPair.getRefreshToken());
 
         // when & then
-        mockMvc.perform(post("/api/token/refresh")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.access_token").value(tokenPair.getAccessToken()))
-            .andExpect(jsonPath("$.refresh_token").value(tokenPair.getRefreshToken()));
+        mockMvc.perform(
+                        post("/api/token/refresh")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.access_token").value(tokenPair.getAccessToken()))
+                .andExpect(jsonPath("$.refresh_token").value(tokenPair.getRefreshToken()));
     }
 
     @Test
@@ -58,11 +56,12 @@ public class TokenBrowserSuccessTest extends BrowserTestTemplate {
         LogoutRequest request = new LogoutRequest(tokenPair.getRefreshToken());
 
         // when & then
-        mockMvc.perform(post("/api/logout")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
-                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
-            .andExpect(status().isOk());
+        mockMvc.perform(
+                        post("/api/logout")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -73,22 +72,20 @@ public class TokenBrowserSuccessTest extends BrowserTestTemplate {
         long memberId = 1L;
         TokenPair tokenPair = genTokenPair(memberId);
 
-        SignUpRequest request = SignUpRequest.builder()
-            .name("신규가입자")
-            .job("DEVELOPER")
-            .course("SPRING")
-            .build();
+        SignUpRequest request =
+                SignUpRequest.builder().name("신규가입자").job("DEVELOPER").course("SPRING").build();
 
         // when & then
-        mockMvc.perform(post("/api/signup")
-                .header("Authorization", "Bearer " + tokenPair.getAccessToken())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id").value(memberId))
-            .andExpect(jsonPath("$.name").value(request.getName()))
-            .andExpect(jsonPath("$.job").value(request.getJob()))
-            .andExpect(jsonPath("$.course").value(request.getCourse()));
+        mockMvc.perform(
+                        post("/api/signup")
+                                .header("Authorization", "Bearer " + tokenPair.getAccessToken())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(memberId))
+                .andExpect(jsonPath("$.name").value(request.getName()))
+                .andExpect(jsonPath("$.job").value(request.getJob()))
+                .andExpect(jsonPath("$.course").value(request.getCourse()));
     }
 
     private TokenPair genTokenPair(Long memberId) {
