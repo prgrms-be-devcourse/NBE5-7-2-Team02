@@ -215,14 +215,14 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
         const client = new Client({
             webSocketFactory: () => new SockJS(`${import.meta.env.VITE_BASE_URL}/ws/chatroom`),
-            debug: (str) => {
+            debug: () => {
             },
             reconnectDelay: 5000,
             connectHeaders: { Authorization: `Bearer ${token}` },
         });
 
 
-        client.onConnect = (frame) => {
+        client.onConnect = () => {
             stompClientRef.current = client;
             const topic = `/sub/${chatRoomId}/message`;
             subscriptionRef.current = client.subscribe(topic, (message: IMessage) => {
@@ -267,7 +267,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         client.onStompError = (frame) => {
             setError(`STOMP Error: ${frame.headers["message"] || "Connection failed"}`);
         };
-        client.onWebSocketError = (event) => {
+        client.onWebSocketError = () => {
             setError("WebSocket 연결에 실패했습니다. 네트워크 상태를 확인해주세요.");
         };
         client.onDisconnect = () => {
@@ -302,14 +302,6 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
     const toggleParticipantsList = () => {
         setShowParticipants((prev) => !prev);
     };
-
-    const handleChangeParticipantState = (participantId: number) => {
-    };
-
-    const handleSelfStatusChange = async (newStatus: string) => {
-    };
-
-    const currentUserParticipant = participants.find((p) => p.id === currentMemberId);
 
     const handleBackButtonPress = () => {
         disconnectStomp();
