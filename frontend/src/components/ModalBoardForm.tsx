@@ -11,8 +11,8 @@ import {
   TextInput,
 } from "flowbite-react";
 import { TagForm } from "./TagForm";
-import api from "../api/axiosInstance";
-import { ImageLimitModal } from "./ImageLimitModal"; // 모달 추가
+import api from "../api/axiosInstance.ts";
+import { AlertModal } from "./AlertModal";
 
 interface ModalComponentProps {
   open: boolean;
@@ -24,14 +24,22 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [recruitmentStatus, setRecruitmentStatus] = useState<string>("NONE");
+  const [recruitmentDeadline, setRecruitmentDeadline] = useState<string>("");
+  const [recruitmentFields, setRecruitmentFields] = useState([
+    { fieldName: "", totalCount: 1 },
+  ]);
   const [files, setFiles] = useState<File[]>([]);
-  const [showLimitModal, setShowLimitModal] = useState(false); // 모달 상태
+
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const resetForm = () => {
     setTags([]);
     setTitle("");
     setContent("");
     setRecruitmentStatus("NONE");
+    setRecruitmentDeadline("");
+    setRecruitmentFields([{ fieldName: "", totalCount: 1 }]);
     setFiles([]);
   };
 
@@ -48,7 +56,10 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
       if (totalFiles > 10) {
         setFiles([]);
         e.target.value = "";
-        setShowLimitModal(true);
+        setAlertMessage(
+          "이미지는 최대 10장까지만 업로드할 수 있습니다.\n다시 선택해주세요.",
+        );
+        setShowAlertModal(true);
       } else {
         setFiles((prev) => [...prev, ...newFiles]);
       }
@@ -56,11 +67,39 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
   };
 
   const handleSubmit = async () => {
+    const today = new Date();
+    const deadlineDate = new Date(recruitmentDeadline);
+
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+
+    if (
+      recruitmentStatus === "RECRUITING" &&
+      recruitmentDeadline &&
+      deadlineDate < today
+    ) {
+      setAlertMessage("마감일은 작성일 이후의 날짜여야 합니다.");
+      setShowAlertModal(true);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
     formData.append("recruitmentStatus", recruitmentStatus);
+
+    if (recruitmentStatus === "RECRUITING" && recruitmentDeadline) {
+      formData.append("recruitmentDeadline", recruitmentDeadline);
+    }
+
     tags.forEach((tag) => formData.append("tags", tag));
+    formData.append(
+      "recruitmentFieldsJson",
+      JSON.stringify(
+        recruitmentStatus === "RECRUITING" ? recruitmentFields : [],
+      ),
+    );
+
     files.forEach((file) => formData.append("images", file));
 
     try {
@@ -69,6 +108,7 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
           "Content-Type": "multipart/form-data",
         },
       });
+
       window.location.reload();
       handleClose();
     } catch (error) {
@@ -127,11 +167,84 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
               </div>
             </div>
 
+            {recruitmentStatus === "RECRUITING" && (
+              <div className="space-y-2">
+                <Label>모집 마감일</Label>
+                <TextInput
+                  type="date"
+                  value={recruitmentDeadline}
+                  onChange={(e) => setRecruitmentDeadline(e.target.value)}
+                  min={new Date().toISOString().split("T")[0]}
+                />
+
+                <Label>모집 분야별 인원</Label>
+                {recruitmentFields.map((field, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <TextInput
+                      placeholder="분야명 (예: 프론트엔드)"
+                      value={field.fieldName}
+                      onChange={(e) =>
+                        setRecruitmentFields((prev) =>
+                          prev.map((f, i) =>
+                            i === idx ? { ...f, fieldName: e.target.value } : f,
+                          ),
+                        )
+                      }
+                    />
+                    <TextInput
+                      type="number"
+                      min={1}
+                      placeholder="모집 인원"
+                      value={field.totalCount}
+                      onChange={(e) =>
+                        setRecruitmentFields((prev) =>
+                          prev.map((f, i) =>
+                            i === idx
+                              ? {
+                                  ...f,
+                                  totalCount: Number(e.target.value),
+                                }
+                              : f,
+                          ),
+                        )
+                      }
+                    />
+                    <Button
+                      color="gray"
+                      onClick={() =>
+                        setRecruitmentFields((prev) =>
+                          prev.filter((_, i) => i !== idx),
+                        )
+                      }
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  size="sm"
+                  className="bg-blue-700 text-white hover:bg-blue-800"
+                  onClick={() =>
+                    setRecruitmentFields((prev) => [
+                      ...prev,
+                      { fieldName: "", totalCount: 1 },
+                    ])
+                  }
+                >
+                  분야 추가
+                </Button>
+              </div>
+            )}
+
             <div>
               <Label htmlFor="file">
                 이미지 (최대 10장까지만 업로드할 수 있습니다)
               </Label>
-              <FileInput id="file" multiple onChange={handleFileChange} />
+              <FileInput
+                id="file"
+                multiple={true}
+                onChange={handleFileChange}
+              />
               <ul className="mt-2 text-sm text-gray-600">
                 {files.map((file, idx) => (
                   <li key={idx}>📎 {file.name}</li>
@@ -139,7 +252,10 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
               </ul>
             </div>
 
-            <TagForm externalTags={tags} onTagsChange={setTags} />
+            <TagForm
+              externalTags={tags}
+              onTagsChange={(updatedTags) => setTags(updatedTags)}
+            />
           </div>
         </ModalBody>
         <ModalFooter className="flex justify-end space-x-2">
@@ -155,10 +271,10 @@ export const ModalBoardForm = ({ open, onClose }: ModalComponentProps) => {
         </ModalFooter>
       </Modal>
 
-      {/* 이미지 제한 모달 */}
-      <ImageLimitModal
-        show={showLimitModal}
-        onClose={() => setShowLimitModal(false)}
+      <AlertModal
+        show={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        message={alertMessage}
       />
     </>
   );
