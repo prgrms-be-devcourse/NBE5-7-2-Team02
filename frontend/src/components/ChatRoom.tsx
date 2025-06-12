@@ -215,14 +215,14 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
 
         const client = new Client({
             webSocketFactory: () => new SockJS(`${import.meta.env.VITE_BASE_URL}/ws/chatroom`),
-            debug: (str) => {
+            debug: () => {
             },
             reconnectDelay: 5000,
             connectHeaders: { Authorization: `Bearer ${token}` },
         });
 
 
-        client.onConnect = (frame) => {
+        client.onConnect = () => {
             stompClientRef.current = client;
             const topic = `/sub/${chatRoomId}/message`;
             subscriptionRef.current = client.subscribe(topic, (message: IMessage) => {
@@ -267,7 +267,7 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         client.onStompError = (frame) => {
             setError(`STOMP Error: ${frame.headers["message"] || "Connection failed"}`);
         };
-        client.onWebSocketError = (event) => {
+        client.onWebSocketError = () => {
             setError("WebSocket 연결에 실패했습니다. 네트워크 상태를 확인해주세요.");
         };
         client.onDisconnect = () => {
@@ -303,17 +303,40 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
         setShowParticipants((prev) => !prev);
     };
 
-    const handleChangeParticipantState = (participantId: number) => {
-    };
-
-    const handleSelfStatusChange = async (newStatus: string) => {
-    };
-
-    const currentUserParticipant = participants.find((p) => p.id === currentMemberId);
-
     const handleBackButtonPress = () => {
         disconnectStomp();
         onBack();
+    };
+
+    const handleLeaveChatRoom = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chatroom/${chatRoomId}/member`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ chatMemberStatus: 'LEFT' }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: '서버 응답 오류' }));
+                throw new Error(errorData.message || `채팅방 나가기 실패: ${response.status}`);
+            }
+
+            disconnectStomp();
+            onBack();
+
+        } catch (error) {
+            console.error("Failed to leave chat room:", error);
+            alert(`채팅방을 나가는 중 오류가 발생했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+        }
     };
 
     return (
@@ -417,6 +440,32 @@ function ChatRoom({ chatRoomId, postTitle, onBack }: ChatRoomProps) {
                     <div className="absolute top-0 right-0 w-64 md:w-72 lg:w-80 h-full bg-white/95 backdrop-blur-sm flex flex-col overflow-y-auto transition-all duration-300 ease-in-out shadow-lg z-10 border-l border-[#e4e6eb]">
                         <div className="p-4 border-b border-[#e4e6eb] flex justify-between items-center bg-gradient-to-r from-[#f0f2f5] to-white">
                             <h3 className="font-bold text-md text-[#1877f2]">참여중인 멤버</h3>
+                            <button
+                                onClick={() => {
+                                    if (window.confirm("채팅방을 나가시겠습니까?")) {
+                                        handleLeaveChatRoom();
+                                    }
+                                }}
+                                className="bg-transparent border-none cursor-pointer text-black hover:text-gray-600"
+                                aria-label="Leave chat room"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16,17 21,12 16,7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                            </button>
+
                         </div>
 
                         <div className="flex-grow p-2">

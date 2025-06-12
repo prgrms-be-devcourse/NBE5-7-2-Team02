@@ -198,19 +198,6 @@ class ChatMemberServiceTest {
     }
 
     @Test
-    @DisplayName("채팅방 입장 테스트: 에러 - 이미 참여중")
-    void createChatMemberAlreadyJoinTest() {
-        chatMemberService.createChatMember(chatRoomId, userDetails1);
-
-        ErrorException errorException =
-                assertThrows(
-                        ErrorException.class,
-                        () -> chatMemberService.createChatMember(chatRoomId, userDetails1));
-
-        assertEquals(CHAT_MEMBER_ALREADY_EXISTS, errorException.getErrorCode());
-    }
-
-    @Test
     @DisplayName("멤버 상태 변경 테스트: 성공")
     void updateChatMemberTest() {
         chatMemberService.createChatMember(chatRoomId, userDetails1);

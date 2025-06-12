@@ -1,7 +1,8 @@
 package io.twogether.nbe_5_7_2_02team.chat.service;
 
+import static io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus.LEFT;
+import static io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus.OFFLINE;
 import static io.twogether.nbe_5_7_2_02team.chat.domain.ChatMemberStatus.ONLINE;
-import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_ALREADY_EXISTS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_NOT_ENTER;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_MEMBER_UNDEFINED_STATUS;
 import static io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode.CHAT_ROOM_EMPTY;
@@ -23,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -39,7 +41,9 @@ public class ChatMemberService {
             @AuthenticationPrincipal UserDetails userDetails) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
-        List<ChatMember> chatMemberList = chatMemberRepository.findByMember(member);
+        List<ChatMember> chatMemberList =
+                chatMemberRepository.findByMemberAndChatMemberStatusIn(
+                        member, Arrays.asList(ONLINE, OFFLINE));
 
         return chatMemberList.stream()
                 .map(chatMember -> ChatRoomGetResponse.from(chatMember.getChatRoom()))
@@ -68,7 +72,11 @@ public class ChatMemberService {
         ChatMember chatMember = chatMemberRepository.findByChatRoomAndMember(chatRoom, member);
 
         if (chatMember != null) {
-            throw new ErrorException(CHAT_MEMBER_ALREADY_EXISTS);
+            if (chatMember.getChatMemberStatus() == LEFT) {
+                chatMember.setChatMemberStatus(ONLINE);
+            }
+
+            return chatMember.getId();
         }
 
         Long id =
@@ -105,7 +113,7 @@ public class ChatMemberService {
             throw new ErrorException(CHAT_MEMBER_UNDEFINED_STATUS);
         }
 
-        chatMember.updateStatus(chatMemberStatus);
+        chatMember.setChatMemberStatus(chatMemberStatus);
         return chatMemberRepository.save(chatMember).getId();
     }
 }

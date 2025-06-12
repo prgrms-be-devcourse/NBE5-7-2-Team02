@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -35,6 +36,7 @@ public class ChatMember extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Setter
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ChatMemberStatus chatMemberStatus;
@@ -43,10 +45,6 @@ public class ChatMember extends BaseEntity {
     public ChatMember(ChatRoom chatRoom, Member member, ChatMemberStatus chatMemberStatus) {
         this.chatRoom = chatRoom;
         this.member = member;
-        this.chatMemberStatus = chatMemberStatus;
-    }
-
-    public void updateStatus(ChatMemberStatus chatMemberStatus) {
         this.chatMemberStatus = chatMemberStatus;
     }
 }
