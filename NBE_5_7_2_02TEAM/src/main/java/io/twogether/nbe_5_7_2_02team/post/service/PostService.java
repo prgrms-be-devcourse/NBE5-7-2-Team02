@@ -10,11 +10,14 @@ import io.twogether.nbe_5_7_2_02team.global.response.error.ErrorCode;
 import io.twogether.nbe_5_7_2_02team.member.dao.MemberRepository;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 import io.twogether.nbe_5_7_2_02team.post.dao.LikesRepository;
+import io.twogether.nbe_5_7_2_02team.post.dao.PostApplicationRepository;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostRepository;
 import io.twogether.nbe_5_7_2_02team.post.dao.PostTagRepository;
 import io.twogether.nbe_5_7_2_02team.post.domain.Likes;
 import io.twogether.nbe_5_7_2_02team.post.domain.Post;
+import io.twogether.nbe_5_7_2_02team.post.domain.PostApplication;
 import io.twogether.nbe_5_7_2_02team.post.domain.PostTag;
+import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentField;
 import io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostCreateRequest;
 import io.twogether.nbe_5_7_2_02team.post.dto.request.PostGetRequest;
@@ -47,11 +50,11 @@ public class PostService {
     private final ImageUploader imageUploader;
     private final ChatRepository chatRepository;
     private final LikesRepository likesRepository;
+    private final PostApplicationRepository postApplicationRepository;
     private final TagRepository tagRepository;
 
     @Transactional
     public PostResponse createPost(PostCreateRequest request, Long memberId) {
-
         Member member =
                 memberRepository
                         .findById(memberId)
@@ -73,7 +76,6 @@ public class PostService {
 
     @Transactional
     public PostResponse updatePost(Long postId, PostUpdateRequest request, Long memberId) {
-
         Post updatePost =
                 postRepository
                         .findById(postId)
@@ -86,24 +88,24 @@ public class PostService {
         postMapper.updateFromRequest(updatePost, request);
 
         if (!CollectionUtils.isEmpty(request.getImages())) {
-            try {
-                imageUploader.deletePostImageByFolder(postId);
-
-                List<String> savedPaths = imageUploader.saveImages(request.getImages(), postId);
-                updatePost.setImageUrls(savedPaths);
-            } catch (Exception e) {
-                throw new ErrorException(ErrorCode.IMAGE_UPLOAD_FAILED);
-            }
+            imageUploader.deletePostImageByFolder(postId);
+            List<String> savedPaths = imageUploader.saveImages(request.getImages(), postId);
+            updatePost.setImageUrls(savedPaths);
         }
 
         postTagRepository.deleteAllByPost(updatePost);
-
         if (request.getTags() != null) {
             List<PostTag> newTags = postMapper.toPostTags(updatePost, request.getTags());
             postTagRepository.saveAll(newTags);
         }
-
         deleteUnusedTags();
+
+        if (request.getRecruitmentFields() != null) {
+            updatePost.getRecruitmentFields().clear();
+            List<RecruitmentField> newFields =
+                    postMapper.toRecruitmentFields(updatePost, request.getRecruitmentFields());
+            updatePost.getRecruitmentFields().addAll(newFields);
+        }
 
         return new PostResponse(updatePost.getId());
     }
@@ -219,5 +221,49 @@ public class PostService {
         } else {
             throw new ErrorException(ErrorCode.NOT_FOUND_LIKE);
         }
+    }
+
+    @Transactional
+    public void apply(Long postId, String fieldName, Long memberId) {
+
+        Member member =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_MEMBER));
+
+        Post post =
+                postRepository
+                        .findById(postId)
+                        .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_POST));
+
+        if (post.getRecruitmentStatus() != RECRUITING) {
+            throw new ErrorException(ErrorCode.RECRUITMENT_NOT_AVAILABLE);
+        }
+
+        if (post.getMember().getId().equals(memberId)) {
+            throw new ErrorException(ErrorCode.CANNOT_APPLY_TO_OWN_POST);
+        }
+
+        RecruitmentField field =
+                post.getRecruitmentFields().stream()
+                        .filter(f -> f.getFieldName().trim().equalsIgnoreCase(fieldName.trim()))
+                        .findFirst()
+                        .orElseThrow(
+                                () -> new ErrorException(ErrorCode.NOT_FOUND_RECRUITMENT_FIELD));
+
+        if (field.isClosed()) {
+            throw new ErrorException(ErrorCode.RECRUITMENT_CLOSED);
+        }
+
+        boolean alreadyApplied = postApplicationRepository.existsByMemberAndField(member, field);
+        if (alreadyApplied) {
+            throw new ErrorException(ErrorCode.ALREADY_APPLIED);
+        }
+
+        PostApplication application =
+                PostApplication.builder().member(member).post(post).field(field).build();
+        postApplicationRepository.save(application);
+
+        field.increaseCount();
     }
 }

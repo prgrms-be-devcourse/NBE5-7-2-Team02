@@ -6,13 +6,14 @@ import static io.twogether.nbe_5_7_2_02team.post.domain.RecruitmentStatus.RECRUI
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.springframework.http.HttpMethod.PATCH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 
 import io.twogether.nbe_5_7_2_02team.browser.template.BrowserTestTemplate;
@@ -34,6 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +47,7 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
     @Autowired MemberRepository memberRepository;
     @Autowired private TagRepository tagRepository;
     @Autowired private PostRepository postRepository;
+    @Autowired private ObjectMapper objectMapper;
 
     @AllArgsConstructor
     static class PostCreateRequest {
@@ -292,12 +295,14 @@ public class PostBrowserSuccessTest extends BrowserTestTemplate {
         request.setContent("NEW CONTENT");
         request.setRecruitmentStatus(DONE);
 
+        MockMultipartFile jsonPart =
+                new MockMultipartFile(
+                        "post", "", "application/json", objectMapper.writeValueAsBytes(request));
+
         // when
         mockMvc.perform(
-                        patch("/api/posts/" + targetPostId)
-                                .param("title", request.getTitle())
-                                .param("content", request.getContent())
-                                .param("recruitmentStatus", request.getRecruitmentStatus().name())
+                        multipart(PATCH, "/api/posts/" + targetPostId)
+                                .file(jsonPart)
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                                 .header("Authorization", "Bearer " + tokenPair.getAccessToken()))
                 .andExpectAll(status().isOk(), jsonPath("$.id").value(targetPostId));
