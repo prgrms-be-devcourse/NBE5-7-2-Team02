@@ -92,7 +92,7 @@ public class PostService {
             List<String> savedPaths = imageUploader.saveImages(request.getImages(), postId);
             updatePost.setImageUrls(savedPaths);
         }
-      
+
         postTagRepository.deleteAllByPost(updatePost);
         if (request.getTags() != null) {
             List<PostTag> newTags = postMapper.toPostTags(updatePost, request.getTags());
@@ -106,7 +106,7 @@ public class PostService {
                     postMapper.toRecruitmentFields(updatePost, request.getRecruitmentFields());
             updatePost.getRecruitmentFields().addAll(newFields);
         }
-          
+
         return new PostResponse(updatePost.getId());
     }
 
