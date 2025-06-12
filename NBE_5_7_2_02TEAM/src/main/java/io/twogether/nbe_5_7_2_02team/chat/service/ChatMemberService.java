@@ -17,7 +17,6 @@ import io.twogether.nbe_5_7_2_02team.chat.util.CheckUserLogin;
 import io.twogether.nbe_5_7_2_02team.global.exception.ErrorException;
 import io.twogether.nbe_5_7_2_02team.member.domain.Member;
 
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -41,7 +41,9 @@ public class ChatMemberService {
             @AuthenticationPrincipal UserDetails userDetails) {
         Member member = checkUserLogin.checkUserLogin(userDetails);
 
-        List<ChatMember> chatMemberList = chatMemberRepository.findByMemberAndChatMemberStatusIn(member, Arrays.asList(ONLINE, OFFLINE));
+        List<ChatMember> chatMemberList =
+                chatMemberRepository.findByMemberAndChatMemberStatusIn(
+                        member, Arrays.asList(ONLINE, OFFLINE));
 
         return chatMemberList.stream()
                 .map(chatMember -> ChatRoomGetResponse.from(chatMember.getChatRoom()))
