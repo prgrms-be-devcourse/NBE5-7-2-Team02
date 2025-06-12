@@ -9,8 +9,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 // 2a. 서버 응답 객체의 인터페이스 (스네이크 케이스)
 interface ServerChatRoom {
   id: number;
-  post_id: number; // 서버에서 오는 필드명
+  post_id: number;
   title: string;
+  member_count: number;
+  updated_at: Date;
 }
 
 function ChatRoomList() {
@@ -21,19 +23,16 @@ function ChatRoomList() {
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
   const [selectedRoomTitle, setSelectedRoomTitle] = useState("");
 
-
   const fetchData = async () => {
     setLoading(true);
     setError(null);
-    const token = localStorage.getItem("accessToken"); // 토큰 가져오기
+    const token = localStorage.getItem("accessToken");
 
     if (!token) {
       console.error("[fetchData] Authorization token not found in localStorage.");
       setError("로그인이 필요합니다. 로그인 후 다시 시도해주세요.");
       setLoading(false);
       setItems([]);
-      // 여기서 로그인 페이지로 리디렉션하거나 사용자에게 명확한 안내를 할 수 있습니다.
-      // 예: router.push('/login'); (Next.js 사용 시)
       return;
     }
 
@@ -42,18 +41,16 @@ function ChatRoomList() {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // Authorization 헤더 추가
+          "Authorization": `Bearer ${token}`,
         },
       });
 
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) {
-          const errorText = await res.text(); // 에러 본문을 읽어옴 (JSON 형태일 수도 있음)
+          const errorText = await res.text();
           console.error(`[fetchData] Authentication error (${res.status}):`, errorText);
           setError(`인증에 실패했습니다 (${res.status}). 세션이 만료되었거나 권한이 없습니다. 다시 로그인해주세요.`);
-          // 필요하다면 여기서 로그아웃 처리 또는 로그인 페이지로 강제 이동
         } else {
-          // 기타 HTTP 에러
           const errorText = await res.text();
           console.error(`[fetchData] HTTP error! status: ${res.status}, message: ${errorText}`);
           throw new Error(`HTTP error! status: ${res.status}, message: ${errorText}`);
@@ -66,7 +63,13 @@ function ChatRoomList() {
       const responseData: ServerChatRoom[] = await res.json();
 
       if (responseData && Array.isArray(responseData)) {
-        setItems(responseData);
+        const sortedData = responseData.map(room => ({
+          ...room,
+          updated_at: new Date(room.updated_at)
+        })).sort((a, b) => {
+          return b.updated_at.getTime() - a.updated_at.getTime()
+        });
+        setItems(sortedData);
       } else {
         setItems([]);
         console.warn("[fetchData] API 응답에서 data 필드를 찾을 수 없거나 형식이 배열이 아닙니다.", responseData);
@@ -74,7 +77,6 @@ function ChatRoomList() {
       }
     } catch (e: any) {
       console.error("[fetchData] 채팅방 목록을 가져오는 중 오류 발생: ", e);
-      // 네트워크 에러 등의 경우 e.message가 있을 수 있음
       setError(e.message || "알 수 없는 오류가 발생했습니다. 네트워크 연결을 확인해주세요.");
       setItems([]);
     } finally {
@@ -84,7 +86,7 @@ function ChatRoomList() {
 
   useEffect(() => {
     fetchData();
-  }, [retryCount]); // retryCount 변경 시 fetchData 재호출
+  }, [retryCount]);
 
   const handleRetry = () => {
     setRetryCount((prev) => prev + 1);
@@ -97,21 +99,21 @@ function ChatRoomList() {
 
   const handleCloseRoom = () => {
     setSelectedRoom(null);
-    setSelectedRoomTitle(""); // 선택된 방 제목도 초기화
+    setSelectedRoomTitle("");
   };
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-[#f0f2f5] overflow-hidden p-4">
-      <div className={`transition-all duration-300 ease-in-out ${selectedRoom ? "w-1/3 md:w-1/4 lg:w-1/5" : "w-full"}`}>
+      <div className={`transition-all duration-300 ease-in-out ${selectedRoom ? "w-[280px] min-w-[280px]" : "w-full"}`}>
         <div className="h-full flex flex-col max-w-[480px] mx-auto">
           <div className="flex-grow overflow-hidden rounded-xl bg-white shadow-lg flex flex-col">
-            <div className="flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-[#e4e6eb]">
-              <h1 className="text-xl font-bold text-[#1877f2] mb-2 xl:mb-0">참여중인 채팅방 목록</h1>
+            <div className="flex flex-col p-4 border-b border-[#e4e6eb]">
+              <h1 className="text-xl font-bold text-[#1877f2] mb-3 whitespace-nowrap truncate">참여중인 채팅방 목록</h1>
               <Button
                 variant="outline"
                 onClick={handleRetry}
                 disabled={loading}
-                className="flex items-center gap-2 text-[#1877f2] border-[#e4e6eb] hover:bg-[#f0f2f5] w-full xl:w-auto"
+                className="flex items-center gap-2 text-[#1877f2] border-[#e4e6eb] hover:bg-[#f0f2f5] w-full"
               >
                 <RefreshIcon className="h-4 w-4" />
                 새로고침
@@ -162,8 +164,8 @@ function ChatRoomList() {
       </div>
 
       <div
-        className={`transition-all duration-300 ease-in-out ${selectedRoom ? "w-2/3 md:w-3/4 lg:w-4/5 opacity-100" : "w-0 opacity-0"
-        } h-full flex items-center justify-center`}
+        className={`transition-all duration-300 ease-in-out ${selectedRoom ? "flex-1 opacity-100" : "w-0 opacity-0"
+          } h-full flex items-center justify-center`}
       >
         {selectedRoom && (
           <div className="w-[500px] h-[95%] rounded-xl overflow-hidden shadow-lg bg-white">
@@ -171,8 +173,8 @@ function ChatRoomList() {
           </div>
         )}
       </div>
-    </div >
-  );
+    </div>
+  )
 }
 
 function ChatRoomSkeleton() {
@@ -184,10 +186,10 @@ function ChatRoomSkeleton() {
       </div>
       <Skeleton className="h-4 w-32 mt-2" />
     </div>
-  );
+  )
 }
 
-function RefreshIcon(props: React.SVGProps<SVGSVGElement>) { // props 타입 추가
+function RefreshIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -204,10 +206,10 @@ function RefreshIcon(props: React.SVGProps<SVGSVGElement>) { // props 타입 추
       <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
       <path d="M3 21v-5h5" />
     </svg>
-  );
+  )
 }
 
-function AlertCircleIcon(props: React.SVGProps<SVGSVGElement>) { // props 타입 추가
+function AlertCircleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -223,10 +225,10 @@ function AlertCircleIcon(props: React.SVGProps<SVGSVGElement>) { // props 타입
       <line x1="12" y1="8" x2="12" y2="12" />
       <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
-  );
+  )
 }
 
-function ChatBubbleIcon(props: React.SVGProps<SVGSVGElement>) { // props 타입 추가
+function ChatBubbleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +243,7 @@ function ChatBubbleIcon(props: React.SVGProps<SVGSVGElement>) { // props 타입 
       <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z" />
       <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
     </svg>
-  );
+  )
 }
 
-export default ChatRoomList;
+export default ChatRoomList
